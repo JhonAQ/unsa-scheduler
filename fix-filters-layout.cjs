@@ -1,7 +1,8 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
-const regexFilters = /<div className="bg-\[\#FF9100\] border-4 border-black p-3 md:p-4\s*neo-brutalist shadow-\[4px_4px_0px_\#111\] font-mono shrink-0">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>\s*<div className="bg-white border-4 border-black/s;
+const regexFilters =
+  /<div className="bg-\[\#FF9100\] border-4 border-black p-3 md:p-4\s*neo-brutalist shadow-\[4px_4px_0px_\#111\] font-mono shrink-0">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>\s*<div className="bg-white border-4 border-black/s;
 
 const newFilters = `<div className="bg-[#FF9100] border-4 border-black p-3 md:p-4 neo-brutalist shadow-[4px_4px_0px_#111] font-mono shrink-0">
                 <div className="flex flex-col gap-4">
@@ -120,4 +121,4 @@ const newFilters = `<div className="bg-[#FF9100] border-4 border-black p-3 md:p-
 
 code = code.replace(regexFilters, newFilters);
 
-fs.writeFileSync('src/App.tsx', code);
+fs.writeFileSync("src/App.tsx", code);

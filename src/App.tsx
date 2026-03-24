@@ -100,7 +100,7 @@ export default function App() {
   const [wantedFreeDays, setWantedFreeDays] = useState<string[]>([]);
   const [minTime, setMinTime] = useState<number>(7 * 60); // 7:00
   const [maxTime, setMaxTime] = useState<number>(20 * 60 + 10); // 20:10
-  const [maxTotalGaps, setMaxTotalGaps] = useState<number>(12 * 60); // Max hours empty
+  const [maxTotalGaps] = useState<number>(12 * 60); // Max hours empty
 
   // Restart combo idx when filters change
   React.useEffect(() => {
@@ -298,32 +298,8 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Max Huecos */}
-                    <div className="space-y-2 col-span-2 2xl:col-span-1">
-                      <label className="block text-black font-black uppercase text-xs leading-tight whitespace-nowrap">
-                        Max Huecos (
-                        <span className="text-black font-extrabold">
-                          {maxTotalGaps >= 720
-                            ? "Libre"
-                            : (maxTotalGaps / 60).toFixed(0) + "h"}
-                        </span>
-                        )
-                      </label>
-                      <div className="flex items-center gap-2 h-[28px]">
-                        <input
-                          type="range"
-                          min="0"
-                          max="720"
-                          step="60"
-                          value={maxTotalGaps}
-                          onChange={(e) => setMaxTotalGaps(Number(e.target.value))}
-                          className="w-full accent-black cursor-pointer"
-                        />
-                      </div>
-                    </div>
-
                     {/* Rango Horario */}
-                    <div className="space-y-2 col-span-2">
+                    <div className="space-y-2 col-span-2 2xl:col-span-1">
                       <label className="block text-black font-black uppercase text-xs leading-tight">
                         Rango Horario
                       </label>
@@ -937,22 +913,29 @@ function CalendarGrid({
     return all;
   }, [combo]);
 
-  const { startHour, endHour } = useMemo(() => {
+  const { startHour, endHour, uniqueTimes } = useMemo(() => {
     let minT = 24 * 60;
     let maxT = 0;
-    if (sessions.length === 0) return { startHour: 7, endHour: 20 };
+    const times = new Set<string>();
+
+    if (sessions.length === 0) return { startHour: 7, endHour: 20, uniqueTimes: [] };
     for (const s of sessions) {
+      times.add(s.hora_inicio);
+      times.add(s.hora_fin);
       const st = parseTimeStr(s.hora_inicio);
       const et = parseTimeStr(s.hora_fin);
       if (st < minT) minT = st;
       if (et > maxT) maxT = et;
     }
-    let sH = Math.floor(minT / 60) - 1;
-    let eH = Math.ceil(maxT / 60);
+    let sH = Math.floor(minT / 60) - 1; 
+    let eH = Math.ceil(maxT / 60); 
     if (sH < 7) sH = 7;
     if (eH > 22) eH = 22;
     if (eH <= sH) eH = sH + 1;
-    return { startHour: sH, endHour: eH };
+
+    const sortedTimes = Array.from(times).sort((a,b) => parseTimeStr(a) - parseTimeStr(b));
+
+    return { startHour: sH, endHour: eH, uniqueTimes: sortedTimes };
   }, [sessions]);
 
   return (
@@ -972,22 +955,30 @@ function CalendarGrid({
       </div>
 
       <div
-        className="relative border-b-2 border-black opacity-90 bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)]"
+        className="relative border-b-2 border-black bg-[#fafafa]"
         style={{
-          height: `${(endHour - startHour + 1) * CELL_HEIGHT}px`,
-          backgroundSize: `100% ${CELL_HEIGHT}px`,
+          height: `${(endHour - startHour + 1) * CELL_HEIGHT}px`
         }}
       >
-        <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
-          {Array.from({ length: endHour - startHour + 1 }).map((_, i) => (
-            <div
-              key={i}
-              style={{ height: `${CELL_HEIGHT}px` }}
-              className="border-b-2 border-gray-200 text-xs font-bold text-center pt-1 text-gray-500"
-            >
-              {String(startHour + i).padStart(2, "0")}:00
-            </div>
-          ))}
+        {/* Custom Exact Time Horizontal Lines */}
+        {uniqueTimes.map(t => {
+          const top = ((parseTimeStr(t) - startHour * 60) / 60) * CELL_HEIGHT;
+          return <div key={"line-"+t} className="absolute left-[80px] right-0 border-b border-gray-300 border-dashed pointer-events-none" style={{ top: `${top}px` }} />;
+        })}
+
+        <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/80 backdrop-blur-sm z-30 pointer-events-none">
+          {uniqueTimes.map((t) => {
+            const top = ((parseTimeStr(t) - startHour * 60) / 60) * CELL_HEIGHT;
+            return (
+              <div
+                key={"label-"+t}
+                style={{ top: `${top}px` }}
+                className="absolute left-0 w-full text-center text-[11px] font-black text-gray-600 -translate-y-1/2 bg-white/60 px-1"
+              >
+                {t}
+              </div>
+            );
+          })}
         </div>
 
         <div className="absolute left-[80px] right-0 top-0 bottom-0">
@@ -1028,16 +1019,12 @@ function CalendarGrid({
                     left: `calc(${left}% + 5px)`,
                   }}
                 >
-                  <p className="font-bold text-[10px] sm:text-xs uppercase truncate">
-                    {s.curso}
-                  </p>
-                  <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5">
-                    SEC {s.seccion}
-                  </p>
-                  <p className="text-[10px] mt-0.5 truncate">{s.tipo}</p>
-                  <p className="text-[10px] mt-0.5 font-bold">
-                    {s.hora_inicio} - {s.hora_fin}
-                  </p>
+                  <p className="font-bold text-[10px] leading-tight sm:text-xs uppercase line-clamp-2">
+                      {s.curso}
+                    </p>
+                    <p className="text-[10px] sm:text-[11px] font-sans font-black bg-black text-white px-1.5 inline-block mt-1 shadow-[1px_1px_0px_#fff] border border-black/20">
+                      {s.seccion}
+                    </p>
                 </motion.div>
               );
             })}
