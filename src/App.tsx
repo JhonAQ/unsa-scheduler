@@ -1,10 +1,5 @@
 import React, { useState, useMemo, useRef } from "react";
-import {
-  Upload,
-  AlertTriangle,
-  ArrowRight,
-  ArrowLeft,
-} from "lucide-react";
+import { Upload, AlertTriangle, ArrowRight, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -20,7 +15,7 @@ function parseTimeStr(time: string) {
   return h * 60 + m;
 }
 
-const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
 const COLORS = [
   "bg-[#FF3366]",
@@ -56,34 +51,51 @@ export default function App() {
       try {
         const json = JSON.parse(event.target?.result as string);
         if (json.horario_academico) {
-          const normalizedCourses: Course[] = json.horario_academico.map((c: any) => {
-            const teoriasMap: Record<string, any> = {};
-            const laboratoriosMap: Record<string, any> = {};
+          const normalizedCourses: Course[] = json.horario_academico.map(
+            (c: any) => {
+              const teoriasMap: Record<string, any> = {};
+              const laboratoriosMap: Record<string, any> = {};
 
-            c.secciones.forEach((sec: any) => {
-              sec.sesiones.forEach((ses: any) => {
-                const tipoLower = ses.tipo.toLowerCase();
-                if (tipoLower.includes("teoría") || tipoLower.includes("teoria")) {
-                  if (!teoriasMap[sec.seccion]) {
-                    teoriasMap[sec.seccion] = { seccion: sec.seccion, total_sesiones_semanales: 0, sesiones: [] };
+              c.secciones.forEach((sec: any) => {
+                sec.sesiones.forEach((ses: any) => {
+                  const tipoLower = ses.tipo.toLowerCase();
+                  if (
+                    tipoLower.includes("teoría") ||
+                    tipoLower.includes("teoria")
+                  ) {
+                    if (!teoriasMap[sec.seccion]) {
+                      teoriasMap[sec.seccion] = {
+                        seccion: sec.seccion,
+                        total_sesiones_semanales: 0,
+                        sesiones: [],
+                      };
+                    }
+                    teoriasMap[sec.seccion].sesiones.push(ses);
+                  } else if (
+                    tipoLower.includes("laboratorio") ||
+                    tipoLower.includes("práctica") ||
+                    tipoLower.includes("practica")
+                  ) {
+                    if (!laboratoriosMap[sec.seccion]) {
+                      laboratoriosMap[sec.seccion] = {
+                        seccion: sec.seccion,
+                        total_sesiones_semanales: 0,
+                        sesiones: [],
+                      };
+                    }
+                    laboratoriosMap[sec.seccion].sesiones.push(ses);
                   }
-                  teoriasMap[sec.seccion].sesiones.push(ses);
-                } else if (tipoLower.includes("laboratorio") || tipoLower.includes("práctica") || tipoLower.includes("practica")) {
-                  if (!laboratoriosMap[sec.seccion]) {
-                    laboratoriosMap[sec.seccion] = { seccion: sec.seccion, total_sesiones_semanales: 0, sesiones: [] };
-                  }
-                  laboratoriosMap[sec.seccion].sesiones.push(ses);
-                }
+                });
               });
-            });
 
-            return {
-              curso: c.curso,
-              secciones: c.secciones,
-              teorias: Object.values(teoriasMap),
-              laboratorios: Object.values(laboratoriosMap),
-            };
-          });
+              return {
+                curso: c.curso,
+                secciones: c.secciones,
+                teorias: Object.values(teoriasMap),
+                laboratorios: Object.values(laboratoriosMap),
+              };
+            },
+          );
 
           setCourses(normalizedCourses);
           setError(null);
@@ -216,7 +228,9 @@ export default function App() {
                       <div className="pl-7 space-y-3 mt-1">
                         {course.teorias.length > 0 && (
                           <div>
-                            <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">Teoría</span>
+                            <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">
+                              Teoría
+                            </span>
                             <div className="flex flex-wrap gap-2">
                               {course.teorias.map((sec) => {
                                 const key = `${course.curso}-teoria-${sec.seccion}`;
@@ -225,7 +239,10 @@ export default function App() {
                                   <button
                                     key={key}
                                     onClick={() =>
-                                      toggleSection(course.curso, `teoria-${sec.seccion}`)
+                                      toggleSection(
+                                        course.curso,
+                                        `teoria-${sec.seccion}`,
+                                      )
                                     }
                                     disabled={isExcluded}
                                     className={cn(
@@ -233,7 +250,8 @@ export default function App() {
                                       !secExcluded && !isExcluded
                                         ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
                                         : "bg-gray-200 text-gray-400",
-                                      isExcluded && "opacity-50 cursor-not-allowed",
+                                      isExcluded &&
+                                        "opacity-50 cursor-not-allowed",
                                     )}
                                   >
                                     Sec {sec.seccion}
@@ -246,7 +264,9 @@ export default function App() {
 
                         {course.laboratorios.length > 0 && (
                           <div>
-                            <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">Laboratorio</span>
+                            <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">
+                              Laboratorio
+                            </span>
                             <div className="flex flex-wrap gap-2">
                               {course.laboratorios.map((sec) => {
                                 const key = `${course.curso}-lab-${sec.seccion}`;
@@ -255,7 +275,10 @@ export default function App() {
                                   <button
                                     key={key}
                                     onClick={() =>
-                                      toggleSection(course.curso, `lab-${sec.seccion}`)
+                                      toggleSection(
+                                        course.curso,
+                                        `lab-${sec.seccion}`,
+                                      )
                                     }
                                     disabled={isExcluded}
                                     className={cn(
@@ -263,7 +286,8 @@ export default function App() {
                                       !secExcluded && !isExcluded
                                         ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
                                         : "bg-gray-200 text-gray-400",
-                                      isExcluded && "opacity-50 cursor-not-allowed",
+                                      isExcluded &&
+                                        "opacity-50 cursor-not-allowed",
                                     )}
                                   >
                                     Sec {sec.seccion}
@@ -340,7 +364,7 @@ function CalendarGrid({
   coursesMap: Course[];
 }) {
   const startHour = 7;
-  const endHour = 22;
+  const endHour = 20; // Hasta las 8:00 PM (las 20:00, cubriendo hasta 20:10 o similar)
 
   const courseColors = useMemo(() => {
     const map: Record<string, string> = {};
@@ -360,7 +384,11 @@ function CalendarGrid({
       }
       if (sel.laboratorio) {
         for (const sesion of sel.laboratorio.sesiones) {
-          all.push({ curso, seccion: `Lab ${sel.laboratorio.seccion}`, ...sesion });
+          all.push({
+            curso,
+            seccion: `Lab ${sel.laboratorio.seccion}`,
+            ...sesion,
+          });
         }
       }
     }
@@ -369,7 +397,7 @@ function CalendarGrid({
 
   return (
     <div className="min-w-[800px] border-l-2 border-t-2 border-black font-mono relative">
-      <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr] bg-gray-100 font-bold text-center">
+      <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] bg-gray-100 font-bold text-center">
         <div className="border-r-2 border-b-2 border-black p-2 bg-black text-[#FFEA00]">
           HORA
         </div>
@@ -383,7 +411,12 @@ function CalendarGrid({
         ))}
       </div>
 
-      <div className="relative border-b-2 border-black opacity-90 h-[900px] bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)] bg-[length:100%_60px]">
+      <div
+        className="relative border-b-2 border-black opacity-90 bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)] bg-[length:100%_60px]"
+        style={{
+          height: `${(endHour - startHour + 1) * 60}px`
+        }}
+      >
         <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
           {Array.from({ length: endHour - startHour + 1 }).map((_, i) => (
             <div
