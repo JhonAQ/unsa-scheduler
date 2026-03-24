@@ -67,7 +67,7 @@
           "total_sesiones_semanales": 2,
           "sesiones": [
             { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "11:30" },
-            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" }
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "11:30", "hora_fin": "13:10" }
           ]
         },
         {
