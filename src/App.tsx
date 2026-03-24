@@ -1106,7 +1106,7 @@ function SocialView() {
               <p className="font-black text-lg">¿Ya yapeaste?</p>
               <p className="font-bold text-gray-600 mt-2">
                 Pon tu nombre o mensaje corto en el concepto de yape para
-                aparecer aquí (se actualiza periodicamente).
+                aparecer aquí.
               </p>
             </div>
 
