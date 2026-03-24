@@ -1,8 +1,9 @@
-const fs = require('fs');
-let content = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let content = fs.readFileSync("src/App.tsx", "utf-8");
 
 // 1. the new metrics
-const oldMetrics = /function getScheduleMetrics.*?return \{ freeDaysCount, totalGapsMinutes, hasEarlyClasses, hasLateClasses \};\n\s*\}/s;
+const oldMetrics =
+  /function getScheduleMetrics.*?return \{ freeDaysCount, totalGapsMinutes, hasEarlyClasses, hasLateClasses \};\n\s*\}/s;
 const newMetrics = `function getScheduleMetrics(combo: ScheduleCombination) {
   const daysMap: Record<string, {start: number, end: number}[]> = {
     "Lunes": [], "Martes": [], "Miércoles": [], "Jueves": [], "Viernes": []
@@ -48,7 +49,8 @@ const newMetrics = `function getScheduleMetrics(combo: ScheduleCombination) {
 }`;
 
 // 2. State
-const oldState = /const \[sortBy, setSortBy\] = useState.*?\}\, \[sortBy, filterFreeDays, filterNoEarly, filterNoLate\]\);/s;
+const oldState =
+  /const \[sortBy, setSortBy\] = useState.*?\}\, \[sortBy, filterFreeDays, filterNoEarly, filterNoLate\]\);/s;
 const newState = `const [sortBy, setSortBy] = useState<"default" | "compact" | "free_days" | "start_late" | "end_early">("default");
   
   const [wantedFreeDays, setWantedFreeDays] = useState<string[]>([]);
@@ -67,7 +69,8 @@ const newState = `const [sortBy, setSortBy] = useState<"default" | "compact" | "
   };`;
 
 // 3. processing logic
-const oldProcess = /const processedCombinations = useMemo\(\(\) => \{[\s\S]*?\n\s*const activeCombo = processedCombinations\[currentComboIdx\];/s;
+const oldProcess =
+  /const processedCombinations = useMemo\(\(\) => \{[\s\S]*?\n\s*const activeCombo = processedCombinations\[currentComboIdx\];/s;
 const newProcess = `const processedCombinations = useMemo(() => {
     let processed = combinations.map(combo => ({
        combo,
@@ -106,11 +109,13 @@ const newProcess = `const processedCombinations = useMemo(() => {
   const activeCombo = processedCombinations[currentComboIdx];`;
 
 // 4. Remove UI from aside (Search the div chunk that opens bg-[#FF9100])
-const oldAsideUI = /<div className="bg-\[\#FF9100\].*?<\/div>\s*<\/div>\s*<\/div>\s*<div className="bg-\[\#2979FF\]/s;
+const oldAsideUI =
+  /<div className="bg-\[\#FF9100\].*?<\/div>\s*<\/div>\s*<\/div>\s*<div className="bg-\[\#2979FF\]/s;
 const newAsideUI = `<div className="bg-[#2979FF]`;
 
 // 5. Inject new settings bar to the right section
-const sectionTopMatch = /<section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">/s;
+const sectionTopMatch =
+  /<section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">/s;
 const newSettingsBar = `<section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">
 <div className="bg-[#FF9100] border-4 border-black p-4 md:p-6 neo-brutalist shadow-[4px_4px_0px_#111] font-mono mb-6">
   <div className="flex flex-col xl:flex-row gap-6 justify-between items-start xl:items-center">
@@ -193,5 +198,5 @@ content = content.replace(oldProcess, newProcess);
 content = content.replace(oldAsideUI, newAsideUI);
 content = content.replace(sectionTopMatch, newSettingsBar);
 
-fs.writeFileSync('src/App.tsx', content);
-console.log('App updated with advanced filters layout!');
+fs.writeFileSync("src/App.tsx", content);
+console.log("App updated with advanced filters layout!");

@@ -39,9 +39,13 @@ export default function App() {
   );
 
   const [currentComboIdx, setCurrentComboIdx] = useState(0);
-    const [viewMode, setViewMode] = useState<"generator" | "all_schedules">("generator");
+  const [viewMode, setViewMode] = useState<"generator" | "all_schedules">(
+    "generator",
+  );
 
-  const [sortBy, setSortBy] = useState<"default" | "compact" | "free_days" | "start_late" | "end_early">("default");
+  const [sortBy, setSortBy] = useState<
+    "default" | "compact" | "free_days" | "start_late" | "end_early"
+  >("default");
   const [wantedFreeDays, setWantedFreeDays] = useState<string[]>([]);
   const [minTime, setMinTime] = useState<number>(7 * 60); // 7:00
   const [maxTime, setMaxTime] = useState<number>(20 * 60 + 10); // 20:10
@@ -53,8 +57,8 @@ export default function App() {
   }, [sortBy, wantedFreeDays, minTime, maxTime, maxTotalGaps]);
 
   const toggleWantedFreeDay = (day: string) => {
-    setWantedFreeDays(prev => 
-      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+    setWantedFreeDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
     );
   };
 
@@ -150,39 +154,49 @@ export default function App() {
   }, [activeCourses]);
 
   const processedCombinations = useMemo(() => {
-    let processed = combinations.map(combo => ({
-       combo,
-       metrics: getScheduleMetrics(combo)
+    let processed = combinations.map((combo) => ({
+      combo,
+      metrics: getScheduleMetrics(combo),
     }));
 
     if (wantedFreeDays.length > 0) {
-      processed = processed.filter(p => wantedFreeDays.every(d => p.metrics.freeDays.includes(d)));
+      processed = processed.filter((p) =>
+        wantedFreeDays.every((d) => p.metrics.freeDays.includes(d)),
+      );
     }
-    
+
     if (minTime > 7 * 60) {
-      processed = processed.filter(p => p.metrics.earliestStart >= minTime);
+      processed = processed.filter((p) => p.metrics.earliestStart >= minTime);
     }
-    
+
     if (maxTime < 21 * 60) {
-      processed = processed.filter(p => p.metrics.latestEnd <= maxTime);
+      processed = processed.filter((p) => p.metrics.latestEnd <= maxTime);
     }
 
     // Default max gap filter ignores if maxTotalGaps is basically "infinite"
     if (maxTotalGaps < 12 * 60) {
-      processed = processed.filter(p => p.metrics.totalGapsMinutes <= maxTotalGaps);
+      processed = processed.filter(
+        (p) => p.metrics.totalGapsMinutes <= maxTotalGaps,
+      );
     }
 
     if (sortBy === "compact") {
-       processed.sort((a, b) => a.metrics.totalGapsMinutes - b.metrics.totalGapsMinutes);
+      processed.sort(
+        (a, b) => a.metrics.totalGapsMinutes - b.metrics.totalGapsMinutes,
+      );
     } else if (sortBy === "free_days") {
-       processed.sort((a, b) => b.metrics.freeDays.length - a.metrics.freeDays.length);
+      processed.sort(
+        (a, b) => b.metrics.freeDays.length - a.metrics.freeDays.length,
+      );
     } else if (sortBy === "start_late") {
-       processed.sort((a, b) => b.metrics.earliestStart - a.metrics.earliestStart);
+      processed.sort(
+        (a, b) => b.metrics.earliestStart - a.metrics.earliestStart,
+      );
     } else if (sortBy === "end_early") {
-       processed.sort((a, b) => a.metrics.latestEnd - b.metrics.latestEnd);
+      processed.sort((a, b) => a.metrics.latestEnd - b.metrics.latestEnd);
     }
 
-    return processed.map(p => p.combo);
+    return processed.map((p) => p.combo);
   }, [combinations, sortBy, wantedFreeDays, minTime, maxTime, maxTotalGaps]);
 
   const activeCombo = processedCombinations[currentComboIdx];
@@ -385,12 +399,13 @@ export default function App() {
               </div>
             </div>
 
-            
             <div className="bg-[#2979FF] text-white neo-brutalist p-6 flex flex-col gap-2">
               <h2 className="text-2xl font-bold uppercase">Estado</h2>
               <div className="font-mono text-xl">
                 Opciones validas:{" "}
-                <span className="bg-black px-2">{processedCombinations.length}</span>
+                <span className="bg-black px-2">
+                  {processedCombinations.length}
+                </span>
               </div>
             </div>
           </aside>
@@ -398,12 +413,13 @@ export default function App() {
           <section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">
             <div className="bg-[#FF9100] border-4 border-black p-4 md:p-6 neo-brutalist shadow-[4px_4px_0px_#111] font-mono">
               <div className="flex flex-col xl:flex-row gap-6 justify-between items-start xl:items-center">
-                
                 <div className="space-y-2 flex-shrink-0">
-                  <label className="block text-black font-black uppercase text-sm">Ordenar Resultados</label>
-                  <select 
-                    value={sortBy} 
-                    onChange={e => setSortBy(e.target.value as any)}
+                  <label className="block text-black font-black uppercase text-sm">
+                    Ordenar Resultados
+                  </label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
                     className="w-full xl:w-64 p-2 border-4 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[4px_4px_0px_#111] cursor-pointer"
                   >
                     <option value="default">Por defecto</option>
@@ -416,17 +432,25 @@ export default function App() {
 
                 <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div className="space-y-2">
-                    <label className="block text-black font-black uppercase text-sm">Exigir Día Libre</label>
+                    <label className="block text-black font-black uppercase text-sm">
+                      Exigir Día Libre
+                    </label>
                     <div className="flex gap-2">
-                      {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(d => (
+                      {[
+                        "Lunes",
+                        "Martes",
+                        "Miércoles",
+                        "Jueves",
+                        "Viernes",
+                      ].map((d) => (
                         <button
                           key={d}
                           onClick={() => toggleWantedFreeDay(d)}
                           className={cn(
                             "p-2 border-2 border-black font-bold uppercase transition-transform w-[40px] text-center",
-                            wantedFreeDays.includes(d) 
-                              ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5" 
-                              : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                            wantedFreeDays.includes(d)
+                              ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
+                              : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
                           )}
                           title={"Exigir " + d + " libre"}
                         >
@@ -437,38 +461,75 @@ export default function App() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-black font-black uppercase text-sm">Rango Horario Permitido</label>
+                    <label className="block text-black font-black uppercase text-sm">
+                      Rango Horario Permitido
+                    </label>
                     <div className="flex flex-col gap-2">
-                       <div className="flex items-center gap-2">
-                         <span className="text-xs font-bold w-12">Desde</span>
-                         <input type="time" min="07:00" max="21:00" step="1800"
-                           value={String(Math.floor(minTime/60)).padStart(2,'0') + ":" + String(minTime%60).padStart(2,'0')}
-                           onChange={(e) => { const [h,m] = e.target.value.split(':').map(Number); setMinTime(h*60+m); }}
-                           className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
-                         />
-                       </div>
-                       <div className="flex items-center gap-2">
-                         <span className="text-xs font-bold w-12">Hasta</span>
-                         <input type="time" min="07:00" max="21:00" step="1800"
-                           value={String(Math.floor(maxTime/60)).padStart(2,'0') + ":" + String(maxTime%60).padStart(2,'0')}
-                           onChange={(e) => { const [h,m] = e.target.value.split(':').map(Number); setMaxTime(h*60+m); }}
-                           className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
-                         />
-                       </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold w-12">Desde</span>
+                        <input
+                          type="time"
+                          min="07:00"
+                          max="21:00"
+                          step="1800"
+                          value={
+                            String(Math.floor(minTime / 60)).padStart(2, "0") +
+                            ":" +
+                            String(minTime % 60).padStart(2, "0")
+                          }
+                          onChange={(e) => {
+                            const [h, m] = e.target.value
+                              .split(":")
+                              .map(Number);
+                            setMinTime(h * 60 + m);
+                          }}
+                          className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold w-12">Hasta</span>
+                        <input
+                          type="time"
+                          min="07:00"
+                          max="21:00"
+                          step="1800"
+                          value={
+                            String(Math.floor(maxTime / 60)).padStart(2, "0") +
+                            ":" +
+                            String(maxTime % 60).padStart(2, "0")
+                          }
+                          onChange={(e) => {
+                            const [h, m] = e.target.value
+                              .split(":")
+                              .map(Number);
+                            setMaxTime(h * 60 + m);
+                          }}
+                          className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
+                        />
+                      </div>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-black font-black uppercase text-sm">Max Horas (Huecos/Semana)</label>
+                    <label className="block text-black font-black uppercase text-sm">
+                      Max Horas (Huecos/Semana)
+                    </label>
                     <div className="flex items-center gap-4 h-full pb-3">
-                      <input 
-                        type="range" min="0" max="720" step="60" 
-                        value={maxTotalGaps} 
-                        onChange={e => setMaxTotalGaps(Number(e.target.value))} 
-                        className="w-full accent-black cursor-pointer" 
+                      <input
+                        type="range"
+                        min="0"
+                        max="720"
+                        step="60"
+                        value={maxTotalGaps}
+                        onChange={(e) =>
+                          setMaxTotalGaps(Number(e.target.value))
+                        }
+                        className="w-full accent-black cursor-pointer"
                       />
                       <span className="font-extrabold text-black w-14 text-right">
-                        {maxTotalGaps >= 720 ? "Libre" : (maxTotalGaps / 60).toFixed(0) + "h"}
+                        {maxTotalGaps >= 720
+                          ? "Libre"
+                          : (maxTotalGaps / 60).toFixed(0) + "h"}
                       </span>
                     </div>
                   </div>
@@ -496,10 +557,13 @@ export default function App() {
                     <ArrowLeft strokeWidth={3} />
                   </button>
                   <span className="font-mono font-bold text-xl md:text-2xl uppercase text-center">
-                    Opción {currentComboIdx + 1} / {processedCombinations.length}
+                    Opción {currentComboIdx + 1} /{" "}
+                    {processedCombinations.length}
                   </span>
                   <button
-                    disabled={currentComboIdx === processedCombinations.length - 1}
+                    disabled={
+                      currentComboIdx === processedCombinations.length - 1
+                    }
                     onClick={() => setCurrentComboIdx((i) => i + 1)}
                     className="p-2 border-2 border-black disabled:opacity-50 hover:bg-[#FFEA00]"
                   >
@@ -528,21 +592,32 @@ export default function App() {
   );
 }
 
-
 function getScheduleMetrics(combo: ScheduleCombination) {
-  const daysMap: Record<string, {start: number, end: number}[]> = {
-    "Lunes": [], "Martes": [], "Miércoles": [], "Jueves": [], "Viernes": []
+  const daysMap: Record<string, { start: number; end: number }[]> = {
+    Lunes: [],
+    Martes: [],
+    Miércoles: [],
+    Jueves: [],
+    Viernes: [],
   };
 
   for (const course of Object.values(combo.selection)) {
     if (course.teoria) {
       for (const s of course.teoria.sesiones) {
-         if (daysMap[s.dia]) daysMap[s.dia].push({start: parseTimeStr(s.hora_inicio), end: parseTimeStr(s.hora_fin)});
+        if (daysMap[s.dia])
+          daysMap[s.dia].push({
+            start: parseTimeStr(s.hora_inicio),
+            end: parseTimeStr(s.hora_fin),
+          });
       }
     }
     if (course.laboratorio) {
       for (const s of course.laboratorio.sesiones) {
-         if (daysMap[s.dia]) daysMap[s.dia].push({start: parseTimeStr(s.hora_inicio), end: parseTimeStr(s.hora_fin)});
+        if (daysMap[s.dia])
+          daysMap[s.dia].push({
+            start: parseTimeStr(s.hora_inicio),
+            end: parseTimeStr(s.hora_fin),
+          });
       }
     }
   }
@@ -569,7 +644,7 @@ function getScheduleMetrics(combo: ScheduleCombination) {
     }
 
     for (let i = 1; i < sessions.length; i++) {
-      const gap = sessions[i].start - sessions[i-1].end;
+      const gap = sessions[i].start - sessions[i - 1].end;
       if (gap > 0) {
         totalGapsMinutes += gap;
       }
