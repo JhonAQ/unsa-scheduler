@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { AlertTriangle, ArrowRight, ArrowLeft } from "lucide-react";
 import { cn } from "./utils/tw";
 import { ScheduleGrid } from "./components/ScheduleGrid";
@@ -13,6 +13,44 @@ import { useScheduleGenerator } from "./hooks/useScheduleGenerator";
 import { getAllCoursesFlat } from "./utils/scheduler";
 
 export default function App() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-white text-text p-6 flex flex-col items-center justify-center text-center">
+        <div className="max-w-md w-full bg-[var(--color-accent-5)] border-4 border-text shadow-neo p-8 rounded-base space-y-6">
+          <div className="bg-[var(--color-accent-1)] border-4 border-text rounded-full w-20 h-20 flex items-center justify-center mx-auto shadow-[4px_4px_0px_0px_#111111]">
+            <AlertTriangle className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold font-heading bg-white inline-block px-3 py-1 border-2 border-text rotate-[-2deg] shadow-[2px_2px_0px_0px_#111]">
+            ¡Ups! Pantalla muy pequeña
+          </h1>
+          <p className="font-base text-lg font-medium leading-relaxed bg-white border-2 border-text p-4 rounded-base text-left">
+            Por la naturaleza de esta aplicación (es una malla de horarios con
+            bastantes cruces), es{" "}
+            <strong className="text-[var(--color-accent-1)] font-bold">
+              imposible adaptarla a teléfonos.
+            </strong>
+          </p>
+          <div className="bg-[var(--color-accent-2)] p-4 border-4 border-text rounded-base shadow-[4px_4px_0px_0px_#111111] hover:translate-y-1 hover:translate-x-1 hover:shadow-[0px_0px_0px_0px_#111111] transition-all">
+            <p className="font-bold text-xl uppercase tracking-wide">
+              ¡Ingresa desde una PC!
+            </p>
+            <p className="text-sm font-bold mt-1">
+              Para una experiencia óptima 💻
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [errorError] = useState<string | null>(null);
 
   // Tabs: "generator", "my_schedules", "global_schedules", "social"
