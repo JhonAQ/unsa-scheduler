@@ -11,7 +11,10 @@ const TOUR_STEPS: Step[] = [
           ¡Oculta lo que no quieras!
         </h3>
         <p className="font-bold text-sm leading-snug">
-          Aquí puedes ver todos los horarios disponibles a la vez. Si hay una clase en un horario que detestas o con un docente que prefieres evitar, <strong>simplemente hazle clic encima</strong>. <br /><br />
+          Aquí puedes ver todos los horarios disponibles a la vez. Si hay una
+          clase en un horario que detestas o con un docente que prefieres
+          evitar, <strong>simplemente hazle clic encima</strong>. <br />
+          <br />
           Se atenuará y quedará descartada para el generador. ¡Así de fácil!
         </p>
       </div>
@@ -25,7 +28,9 @@ export function AllSchedulesTour() {
 
   useEffect(() => {
     // Check if the user has seen the all schedules tour already
-    const hasSeenTour = localStorage.getItem("unsa_scheduler_all_schedules_tour_seen");
+    const hasSeenTour = localStorage.getItem(
+      "unsa_scheduler_all_schedules_tour_seen",
+    );
     if (!hasSeenTour) {
       // Small delay to ensure grid is rendered
       setTimeout(() => setRun(true), 500);
