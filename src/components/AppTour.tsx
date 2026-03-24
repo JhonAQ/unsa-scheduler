@@ -11,8 +11,9 @@ const TOUR_STEPS: Step[] = [
           ¡Bienvenido a tu Scheduler!
         </h3>
         <p className="font-bold text-sm leading-snug">
-          Esta es la herramienta definitiva para armar tu horario universitario sin dolor.
-          Te daré un recorrido rápido para que le saques el máximo provecho. ¡Vamos!
+          Esta es la herramienta definitiva para armar tu horario universitario
+          sin dolor. Te daré un recorrido rápido para que le saques el máximo
+          provecho. ¡Vamos!
         </p>
       </div>
     ),
@@ -27,10 +28,17 @@ const TOUR_STEPS: Step[] = [
           Navegación
         </h3>
         <p className="font-bold text-sm leading-snug">
-          Tienes tres vistas principales:<br/><br/>
-          🔹 <strong>Generador:</strong> Crea combinaciones perfectas al instante.<br/>
-          🔹 <strong>Todos los horarios:</strong> Mira todas las secciones disponibles a la vez y haz clic en ellas para ocultarlas.<br/>
-          🔹 <strong>Social:</strong> Comparte y compara horarios con tus amigos.
+          Tienes tres vistas principales:
+          <br />
+          <br />
+          🔹 <strong>Generador:</strong> Crea combinaciones perfectas al
+          instante.
+          <br />
+          🔹 <strong>Todos los horarios:</strong> Mira todas las secciones
+          disponibles a la vez y haz clic en ellas para ocultarlas.
+          <br />
+          🔹 <strong>Social:</strong> Comparte y compara horarios con tus
+          amigos.
         </p>
       </div>
     ),
@@ -44,9 +52,10 @@ const TOUR_STEPS: Step[] = [
           Filtros Inteligentes
         </h3>
         <p className="font-bold text-sm leading-snug">
-          ¿Quieres salir temprano o tener los viernes libres? 
-          Selecciona tus días libres deseados y restringe tu rango horario. 
-          Además, puedes ordenar las opciones para ver primero horarios compactos o de solo mañanas/tardes.
+          ¿Quieres salir temprano o tener los viernes libres? Selecciona tus
+          días libres deseados y restringe tu rango horario. Además, puedes
+          ordenar las opciones para ver primero horarios compactos o de solo
+          mañanas/tardes.
         </p>
       </div>
     ),
@@ -63,8 +72,14 @@ const TOUR_STEPS: Step[] = [
           Aquí puedes ver todos los cursos de tu malla.
         </p>
         <ul className="text-sm font-bold border-l-2 border-black pl-2 space-y-1">
-          <li>• Desmarca un curso entero si <strong>ya lo tomaste</strong> o no lo llevarás.</li>
-          <li>• Despliega un curso y desmarca secciones individuales (ej. Grupo "A") si <strong>ya se llenaron</strong> o no te agradan.</li>
+          <li>
+            • Desmarca un curso entero si <strong>ya lo tomaste</strong> o no lo
+            llevarás.
+          </li>
+          <li>
+            • Despliega un curso y desmarca secciones individuales (ej. Grupo
+            "A") si <strong>ya se llenaron</strong> o no te agradan.
+          </li>
         </ul>
         <p className="font-bold text-sm mt-2 text-gray-600">
           *El generador ignorará automáticamente lo que desmarques aquí.
@@ -81,9 +96,13 @@ const TOUR_STEPS: Step[] = [
           Explora tus Opciones
         </h3>
         <p className="font-bold text-sm leading-snug">
-          Aquí verás los horarios autogenerados que cumplen con tus filtros y grupos seleccionados. 
-          ¡Usa las flechas azules de arriba para navegar entre ellos!<br/><br/>
-          Si dice <strong>"Cruces o Sin Opciones"</strong>, relaja tus filtros o habilita más grupos en la barra lateral.
+          Aquí verás los horarios autogenerados que cumplen con tus filtros y
+          grupos seleccionados. ¡Usa las flechas azules de arriba para navegar
+          entre ellos!
+          <br />
+          <br />
+          Si dice <strong>"Cruces o Sin Opciones"</strong>, relaja tus filtros o
+          habilita más grupos en la barra lateral.
         </p>
       </div>
     ),

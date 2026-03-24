@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { cn } from "../utils/tw";
 import { COLORS, checkSectionOverlapWithinGrid } from "../utils/scheduler";
 import { ScheduleGrid } from "./ScheduleGrid";
+import { AllSchedulesTour } from "./AllSchedulesTour";
 import type { Course } from "../lib/types";
 
 interface AllSchedulesViewProps {
@@ -105,7 +106,8 @@ export function AllSchedulesView({
   const gridToRender = currentGrid || theoryGrids[0] || labGrids[0];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 font-mono flex-1 min-h-0 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 font-mono flex-1 min-h-0 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
+      <AllSchedulesTour />
       <aside className="w-full lg:w-72 shrink-0 flex flex-col min-h-0 gap-4 md:gap-6 pb-2">
         <div className="bg-[#FFEA00] border-4 border-black p-4 neo-brutalist shadow-[4px_4px_0px_#111] shrink-0">
           <h2 className="text-xl font-black uppercase">Vistas Disponibles</h2>
@@ -177,7 +179,7 @@ export function AllSchedulesView({
               </div>
             </div>
 
-            <div className="overflow-auto border-4 border-black box-border shadow-[4px_4px_0px_#111] flex-1">
+            <div className="tour-all-schedules-grid overflow-auto border-4 border-black box-border shadow-[4px_4px_0px_#111] flex-1 bg-white">
               <div className="min-w-[800px] h-full relative">
                 <ScheduleGrid
                   sessions={gridToRender.sessions}
