@@ -1,0 +1,208 @@
+{
+  "horario_academico": [
+    {
+      "curso": "Sistemas Distribuidos",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Teoría", "dia": "Jueves", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Lunes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Teoría", "dia": "Martes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Tecnologia de Informacion",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Teoría", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Miércoles", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Martes", "hora_inicio": "17:40", "hora_fin": "19:20" },
+            { "tipo": "Teoría", "dia": "Miércoles", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Miércoles", "hora_inicio": "09:40", "hora_fin": "11:30" },
+            { "tipo": "Teoría", "dia": "Viernes", "hora_inicio": "10:40", "hora_fin": "12:20" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Miércoles", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "E",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "F",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Miércoles", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Ingenieria de Requerimientos",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Teoría", "dia": "Jueves", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Teoría", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "10:40", "hora_fin": "12:20" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "11:30", "hora_fin": "13:10" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Calculo en Varias Variables",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Lunes", "hora_inicio": "10:40", "hora_fin": "12:20" },
+            { "tipo": "Teoría", "dia": "Martes", "hora_inicio": "09:40", "hora_fin": "12:20" },
+            { "tipo": "Teoría", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "20:10" },
+            { "tipo": "Teoría", "dia": "Miércoles", "hora_inicio": "18:30", "hora_fin": "20:10" },
+            { "tipo": "Teoría", "dia": "Jueves", "hora_inicio": "18:30", "hora_fin": "20:10" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Pruebas de Software",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Jueves", "hora_inicio": "10:40", "hora_fin": "12:20" },
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Viernes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Etica General y Profesional",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "09:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoría", "dia": "Miércoles", "hora_inicio": "14:00", "hora_fin": "16:40" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neo-bg: #f4f4f0;
+  --color-neo-border: #111111;
+  --shadow-neo: 6px 6px 0px 0px var(--color-neo-border);
+  --shadow-neo-hover: 2px 2px 0px 0px var(--color-neo-border);
+  --shadow-neo-active: 0px 0px 0px 0px var(--color-neo-border);
+
+  --color-accent-1: #ff3366;
+  --color-accent-2: #00e676;
+  --color-accent-3: #2979ff;
+  --color-accent-4: #ff9100;
+  --color-accent-5: #ffea00;
+  --color-accent-6: #d500f9;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-neo-bg);
+    color: var(--color-neo-border);
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family:
+      ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+  }
+}
+
+.neo-brutalist {
+  border: 3px solid var(--color-neo-border);
+  box-shadow: var(--shadow-neo);
+  transition: all 0.1s ease-out;
+}
+
+.neo-brutalist:hover:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: var(--shadow-neo-hover);
+}
+
+.neo-brutalist:active:not(:disabled) {
+  transform: translate(6px, 6px);
+  box-shadow: var(--shadow-neo-active);
+}
+
+.neo-input {
+  border: 3px solid var(--color-neo-border);
+  background: white;
+  transition: all 0.2s ease-out;
+}
+.neo-input:focus {
+  outline: none;
+  box-shadow: var(--shadow-neo-hover);
+  transform: translate(-2px, -2px);
+}
