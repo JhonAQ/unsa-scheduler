@@ -89,7 +89,7 @@ export default function App() {
   );
 
   const [currentComboIdx, setCurrentComboIdx] = useState(0);
-  const [viewMode, setViewMode] = useState<"generator" | "all_schedules">(
+  const [viewMode, setViewMode] = useState<"generator" | "all_schedules" | "social">(
     "generator",
   );
 
@@ -278,6 +278,17 @@ export default function App() {
               )}
             >
               Todos los horarios
+            </button>
+            <button
+              onClick={() => setViewMode("social")}
+              className={cn(
+                "px-4 py-2 border-2 border-black transition-transform uppercase",
+                viewMode === "social"
+                  ? "bg-[#FF3366] text-white shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
+              )}
+            >
+              Social
             </button>
           </div>
         )}
@@ -555,6 +566,8 @@ export default function App() {
           toggleSection={toggleSection}
         />
       )}
+
+      {viewMode === "social" && <SocialView />}
     </div>
   );
 }
@@ -983,6 +996,135 @@ function ScheduleGrid({
           </AnimatePresence>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SocialView() {
+  const [messages] = useState([
+    { id: 1, name: "Cachimbo Ansioso", msg: "¡Gracias mano! Me salvaste de cruzar Progra con Conta.", color: "bg-[#00E676]" },
+    { id: 2, name: "Estudiante a Punto de Egreso", msg: "Toma para tu café, excelente app.", color: "bg-[#00E5FF]" },
+    { id: 3, name: "Delegada", msg: "Lo compartí con toda mi base, te pasaste 👍", color: "bg-[#FFEA00]" },
+    { id: 4, name: "Anónimo", msg: "Si paso este semestre gracias a tu horario, te invito unas chelas. 🙏", color: "bg-[#D500F9]" },
+    { id: 5, name: "Ing. de Sistemas", msg: "Buen manejo de algoritmos, mis respetos rey. 🤖", color: "bg-[#FF3366]" },
+  ]);
+
+  return (
+    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 font-mono flex-1 min-h-0 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      {/* Columna Izquierda: QR y Estado */}
+      <aside className="w-full lg:w-96 shrink-0 flex flex-col min-h-0 gap-4 md:gap-6 pb-2 overflow-y-auto custom-scrollbar">
+        
+        {/* Call to action */}
+        <div className="bg-[#FF3366] text-white border-4 border-black p-6 neo-brutalist shadow-[4px_4px_0px_#111] shrink-0 text-center relative overflow-hidden">
+          <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/20 rounded-full blur-xl"></div>
+          <h2 className="text-3xl font-black uppercase mb-2 rotate-[-2deg] bg-black inline-block px-3 py-1 shadow-[2px_2px_0px_rgba(255,255,255,1)]">
+            Mantenlo Vivo
+          </h2>
+          <p className="mt-4 font-bold text-sm tracking-wide">
+            Apoya el proyecto, claude no es gratis :'v
+          </p>
+        </div>
+
+        {/* QR Section */}
+        <div className="bg-white border-4 border-black p-6 shadow-[4px_4px_0px_#111] text-center flex flex-col items-center">
+          <h3 className="font-black uppercase text-xl mb-4 border-b-4 border-black inline-block bg-[#00E5FF] px-2">
+            Yapea aquí
+          </h3>
+          <div className="w-48 h-48 border-4 border-black bg-gray-200 mb-4 flex items-center justify-center shadow-[4px_4px_0px_#111] overflow-hidden p-2">
+            {/* You can replace the src when ready */}
+            <img src="/yape.png" alt="QR Yape" className="w-full h-full object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+            <span className="font-bold text-gray-500 absolute -z-10">[QR de Yape]</span>
+          </div>
+          <p className="text-3xl font-black bg-[#FFEA00] px-4 py-2 border-4 border-black rotate-[-1deg] shadow-[4px_4px_0px_#111]">
+            943 606 092
+          </p>
+          <p className="text-xs font-bold text-gray-800 mt-4 bg-gray-100 px-2 py-1 border-2 border-black inline-block">
+            Jhonatan Acuña Quecara
+          </p>
+        </div>
+
+        {/* Botón WhatsApp */}
+        <a 
+          href="https://wa.me/+51943606092"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-[#00E676] hover:bg-[#00C853] text-black border-4 border-black p-4 neo-brutalist shadow-[4px_4px_0px_#111] text-center flex flex-col items-center gap-2 transition-transform hover:-translate-y-1 active:translate-y-0"
+        >
+          <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+          </svg>
+          <span className="font-black uppercase text-lg">¿Encontraste un bug?</span>
+          <span className="text-xs font-bold bg-white px-2 py-1 border-2 border-black">Escríbeme por WhatsApp</span>
+        </a>
+
+        {/* Panel Administrativo */}
+        <div className="bg-[#2979FF] text-white border-4 border-black p-4 neo-brutalist shadow-[4px_4px_0px_#111]">
+          <h3 className="font-black uppercase border-b-2 border-white pb-2 mb-3">Info / Estado</h3>
+          
+          <div className="space-y-3 font-bold text-sm">
+            <div className="flex justify-between items-center bg-black/20 p-2 border-2 border-transparent">
+              <span>Matrículas Habilitadas:</span>
+              <span className="bg-[#FF3366] text-white px-2 py-0.5 border-2 border-black rotate-2">No</span>
+            </div>
+            <div className="flex justify-between items-center bg-black/20 p-2 border-2 border-transparent">
+              <span>Talón de Pago:</span>
+              <span className="bg-[#00E676] text-black px-2 py-0.5 border-2 border-black -rotate-2">Sí</span>
+            </div>
+            <div className="flex justify-between items-center bg-black/20 p-2 border-2 border-transparent">
+              <span>Semestre:</span>
+              <span className="bg-white text-black px-2 py-0.5 border-2 border-black">2026-A</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+      {/* Columna Derecha: Panel de Mensajes */}
+      <main className="flex-1 min-w-0 flex flex-col min-h-0 gap-4">
+        <div className="bg-white border-4 border-black p-4 md:p-6 relative shadow-[8px_8px_0px_#111] flex flex-col flex-1 min-h-0">
+          
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 shrink-0 border-b-4 border-black pb-4">
+            <h3 className="text-xl md:text-3xl font-black uppercase bg-black text-white inline-block px-4 py-2 rotate-[1deg]">
+              CONFESIONES & DONADORES 🏆
+            </h3>
+            <span className="font-bold text-sm bg-[#FF9100] text-black border-2 border-black px-3 py-2 shadow-[2px_2px_0px_#111] -rotate-1">
+              (Yo los subo manualmente)
+            </span>
+          </div>
+
+          <div className="overflow-y-auto custom-scrollbar flex-1 pr-4 space-y-4">
+            <div className="bg-gray-100 border-4 border-dashed border-black p-6 text-center">
+              <p className="font-black text-lg">¿Ya yapeaste?</p>
+              <p className="font-bold text-gray-600 mt-2">Pon tu nombre o mensaje corto en el concepto de yape para aparecer aquí (se actualiza periodicamente).</p>
+            </div>
+
+            <div className="grid gap-4 auto-rows-max lg:grid-cols-2">
+              {messages.map((m, i) => (
+                <div 
+                  key={m.id} 
+                  className={cn(
+                    "p-4 border-4 border-black shadow-[4px_4px_0px_#111] transition-transform hover:-translate-y-1 hover:translate-x-1 flex flex-col",
+                    m.color,
+                    i % 2 === 0 ? "rotate-1" : "-rotate-1"
+                  )}
+                >
+                  <p className="font-black text-lg truncate border-b-2 border-black/40 pb-1 mb-2">
+                    {m.name}
+                  </p>
+                  <p className="font-bold text-sm bg-white/80 p-3 border-2 border-black text-black flex-1 flex items-center justify-center text-center leading-relaxed">
+                    "{m.msg}"
+                  </p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="py-8 text-center opacity-50">
+              <p className="font-bold">--- Fin de los mensajes ---</p>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
