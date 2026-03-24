@@ -10,6 +10,8 @@ interface FilterSidebarProps {
   setMinTime: (v: number) => void;
   maxTime: number;
   setMaxTime: (v: number) => void;
+  maxTotalGaps: number;
+  setMaxTotalGaps: (val: number) => void;
   courses: Course[];
   excludedCourses: Set<string>;
   excludedSections: Set<string>;
@@ -232,3 +234,4 @@ export function FilterSidebar({
     </aside>
   );
 }
+

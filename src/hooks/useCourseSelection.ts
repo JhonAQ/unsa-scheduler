@@ -1,15 +1,18 @@
-import { useState, useMemo } from "react";
+﻿import { useState, useMemo, useEffect } from "react";
 import type { Course } from "../lib/types";
-import { getInitialCourses } from "../utils/scheduler";
 
-export function useCourseSelection() {
-  const [courses] = useState<Course[]>(getInitialCourses);
+export function useCourseSelection(initialCourses: Course[]) {
+  const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [excludedCourses, setExcludedCourses] = useState<Set<string>>(
     new Set()
   );
   const [excludedSections, setExcludedSections] = useState<Set<string>>(
     new Set()
   );
+
+  useEffect(() => {
+    setCourses(initialCourses);
+  }, [initialCourses]);
 
   const toggleCourse = (curso: string, onFiltersChange?: () => void) => {
     setExcludedCourses((prev) => {
@@ -56,3 +59,4 @@ export function useCourseSelection() {
     toggleSection,
   };
 }
+

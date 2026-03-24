@@ -1,5 +1,9 @@
 import type { Course, ScheduleCombination } from "../lib/types";
-import initialData from "../../data/schedule.json";
+import primeroData from "../../data/primero.json";
+import segundoData from "../../data/segundo.json";
+import terceroData from "../../data/tercero.json";
+import cuartoData from "../../data/cuarto.json";
+import quintoData from "../../data/quinto.json";
 
 export const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
@@ -18,9 +22,9 @@ export function parseTimeStr(time: string) {
   return h * 60 + m;
 }
 
-export function getInitialCourses(): Course[] {
-  if (!initialData || !(initialData as any).horario_academico) return [];
-  return (initialData as any).horario_academico.map((c: any) => {
+export function processCoursesData(data: any): Course[] {
+  if (!data || !data.horario_academico) return [];
+  return data.horario_academico.map((c: any) => {
     const teoriasMap: Record<string, any> = {};
     const laboratoriosMap: Record<string, any> = {};
 
@@ -44,7 +48,8 @@ export function getInitialCourses(): Course[] {
           tipoLower.includes("laboratorio") ||
           tipoLower.includes("práctica") ||
           tipoLower.includes("practica") ||
-          tipoLower.includes("pr\u00c3\u00a1ctica")
+          tipoLower.includes("pr\u00c3\u00a1ctica") ||
+          tipoLower.includes("jefatura") // handling rare cases naturally
         ) {
           if (!laboratoriosMap[sec.seccion]) {
             laboratoriosMap[sec.seccion] = {
@@ -67,20 +72,43 @@ export function getInitialCourses(): Course[] {
   });
 }
 
+export function getAllYearsData() {
+  return [
+    { year: "Primer Año", courses: processCoursesData(primeroData) },
+    { year: "Segundo Año", courses: processCoursesData(segundoData) },
+    { year: "Tercer Año", courses: processCoursesData(terceroData) },
+    { year: "Cuarto Año", courses: processCoursesData(cuartoData) },
+    { year: "Quinto Año", courses: processCoursesData(quintoData) },
+  ];
+}
+
+export function getAllCoursesFlat(): Course[] {
+  const allYears = getAllYearsData();
+  return allYears.flatMap((y) => y.courses);
+}
+
+// Retro-compatibility (for initial startup or if needed)
+export function getInitialCourses(): Course[] {
+  return getAllCoursesFlat();
+}
+
 export function getScheduleMetrics(combo: ScheduleCombination) {
-  const daysMap: Record<string, { start: number; end: number }[]> = {
-    Lunes: [],
-    Martes: [],
-    Miércoles: [],
-    Jueves: [],
-    Viernes: [],
+  // It's possible original data used MiÃ©rcoles, lets just fallback
+  const fallbackDaysMap: Record<string, { start: number; end: number }[]> = {
+    "Lunes": [],
+    "Martes": [],
+    "Miércoles": [],
+    "MiÃ©rcoles": [], // dirty map for bad data
+    "Miercoles": [],
+    "Jueves": [],
+    "Viernes": [],
   };
 
   for (const course of Object.values(combo.selection)) {
     if (course.teoria) {
       for (const s of course.teoria.sesiones) {
-        if (daysMap[s.dia])
-          daysMap[s.dia].push({
+        if (fallbackDaysMap[s.dia])
+          fallbackDaysMap[s.dia].push({
             start: parseTimeStr(s.hora_inicio),
             end: parseTimeStr(s.hora_fin),
           });
@@ -88,8 +116,8 @@ export function getScheduleMetrics(combo: ScheduleCombination) {
     }
     if (course.laboratorio) {
       for (const s of course.laboratorio.sesiones) {
-        if (daysMap[s.dia])
-          daysMap[s.dia].push({
+        if (fallbackDaysMap[s.dia])
+          fallbackDaysMap[s.dia].push({
             start: parseTimeStr(s.hora_inicio),
             end: parseTimeStr(s.hora_fin),
           });
@@ -97,12 +125,21 @@ export function getScheduleMetrics(combo: ScheduleCombination) {
     }
   }
 
+  // Merge variants
+  const mergedDays = {
+    Lunes: fallbackDaysMap["Lunes"],
+    Martes: fallbackDaysMap["Martes"],
+    Miércoles: [...fallbackDaysMap["Miércoles"], ...fallbackDaysMap["MiÃ©rcoles"], ...fallbackDaysMap["Miercoles"]],
+    Jueves: fallbackDaysMap["Jueves"],
+    Viernes: fallbackDaysMap["Viernes"],
+  };
+
   let freeDays: string[] = [];
   let totalGapsMinutes = 0;
   let earliestStart = 24 * 60;
   let latestEnd = 0;
 
-  for (const [day, sessions] of Object.entries(daysMap)) {
+  for (const [day, sessions] of Object.entries(mergedDays)) {
     if (sessions.length === 0) {
       freeDays.push(day);
       continue;
@@ -132,7 +169,13 @@ export function getScheduleMetrics(combo: ScheduleCombination) {
 }
 
 export function checkSessionOverlap(s1: any, s2: any): boolean {
-  if (s1.dia.trim().toLowerCase() !== s2.dia.trim().toLowerCase()) return false;
+  // Normalize days
+  const d1 = s1.dia.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const d2 = s2.dia.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  
+  // They might be written differently so normalize for comparison
+  if (d1 !== d2 && s1.dia !== s2.dia) return false;
+
   const start1 = parseTimeStr(s1.hora_inicio);
   const end1 = parseTimeStr(s1.hora_fin);
   const start2 = parseTimeStr(s2.hora_inicio);
