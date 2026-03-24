@@ -180,6 +180,46 @@ export default function App() {
 
   const activeCombo = processedCombinations[currentComboIdx];
 
+  const activeComboSessions = useMemo(() => {
+    if (!activeCombo) return [];
+    const all: any[] = [];
+    Object.entries(activeCombo.selection).forEach(([curso, sel]) => {
+      const cIdx = courses.findIndex((c) => c.curso === curso);
+      const bgColor = COLORS[cIdx % COLORS.length] || "bg-gray-800";
+      if (sel.teoria) {
+        sel.teoria.sesiones.forEach((sesion: any, idx: number) => {
+          all.push({
+            id: `${curso}-teo-${sel.teoria!.seccion}-${sesion.dia}-${idx}`,
+            curso,
+            seccion: sel.teoria!.seccion,
+            tipoSec: "Teoría",
+            tipo: sesion.tipo,
+            dia: sesion.dia,
+            hora_inicio: sesion.hora_inicio,
+            hora_fin: sesion.hora_fin,
+            bgColor,
+          });
+        });
+      }
+      if (sel.laboratorio) {
+        sel.laboratorio.sesiones.forEach((sesion: any, idx: number) => {
+          all.push({
+            id: `${curso}-lab-${sel.laboratorio!.seccion}-${sesion.dia}-${idx}`,
+            curso,
+            seccion: sel.laboratorio!.seccion,
+            tipoSec: "Laboratorio",
+            tipo: sesion.tipo,
+            dia: sesion.dia,
+            hora_inicio: sesion.hora_inicio,
+            hora_fin: sesion.hora_fin,
+            bgColor,
+          });
+        });
+      }
+    });
+    return all;
+  }, [activeCombo, courses]);
+
   const toggleCourse = (curso: string) => {
     setExcludedCourses((prev) => {
       const next = new Set(prev);
@@ -217,7 +257,7 @@ export default function App() {
         </div>
 
         {courses.length > 0 && (
-          <div className="flex flex-wrap gap-2 font-mono font-bold text-sm shrink-0">
+          <div className="flex flex-wrap gap-2 font-mono font-bold text-sm shrink-0 items-center justify-end flex-1">
             <button
               onClick={() => setViewMode("generator")}
               className={cn(
@@ -452,7 +492,7 @@ export default function App() {
 
           <section className="lg:col-span-3 flex flex-col min-h-0 space-y-4">
             {processedCombinations.length === 0 ? (
-              <div className="bg-white neo-brutalist p-12 text-center">
+              <div className="bg-white neo-brutalist p-12 text-center border-4 border-black shadow-[8px_8px_0px_#111]">
                 <h2 className="text-4xl text-gray-300 font-bold uppercase mb-4">
                   Cruces o Sin Opciones
                 </h2>
@@ -461,34 +501,38 @@ export default function App() {
                 </p>
               </div>
             ) : (
-              <>
-                <div className="flex flex-col sm:flex-row items-center justify-between bg-white border-4 border-black p-2 md:p-4 gap-4 shrink-0 shadow-[4px_4px_0px_#111]">
-                  <button
-                    disabled={currentComboIdx === 0}
-                    onClick={() => setCurrentComboIdx((i) => i - 1)}
-                    className="p-2 border-2 border-black disabled:opacity-50 hover:bg-[#FFEA00]"
-                  >
-                    <ArrowLeft strokeWidth={3} />
-                  </button>
-                  <span className="font-mono font-bold text-lg md:text-xl uppercase text-center bg-[#2979FF] text-white px-4 py-1 border-2 border-black rotate-[-1deg] shadow-[2px_2px_0px_#111]">
-                    Opción {currentComboIdx + 1} de{" "}
-                    {processedCombinations.length} horarios válidos
-                  </span>
-                  <button
-                    disabled={
-                      currentComboIdx === processedCombinations.length - 1
-                    }
-                    onClick={() => setCurrentComboIdx((i) => i + 1)}
-                    className="p-2 border-2 border-black disabled:opacity-50 hover:bg-[#FFEA00]"
-                  >
-                    <ArrowRight strokeWidth={3} />
-                  </button>
+              <div className="bg-white border-4 border-black p-4 md:p-8 relative shadow-[8px_8px_0px_#111] flex flex-col flex-1 min-h-0">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-8 gap-4 shrink-0">
+                  <h3 className="text-xl md:text-3xl font-black uppercase bg-black text-white inline-block px-4 py-2 rotate-[-1deg]">
+                    HORARIO GENERADO
+                  </h3>
+                  <div className="flex items-center gap-2 font-mono text-sm sm:text-base font-bold bg-[#2979FF] text-white px-3 py-1 border-2 border-black neo-brutalist shadow-[2px_2px_0px_#111]">
+                    <button
+                      disabled={currentComboIdx === 0}
+                      onClick={() => setCurrentComboIdx((i) => i - 1)}
+                      className="hover:text-[#FFEA00] disabled:opacity-50 transition-colors bg-transparent border-none p-1"
+                    >
+                      <ArrowLeft className="w-5 h-5" strokeWidth={3} />
+                    </button>
+                    <span className="uppercase whitespace-nowrap">
+                      Opción {currentComboIdx + 1} de {processedCombinations.length}
+                    </span>
+                    <button
+                      disabled={currentComboIdx === processedCombinations.length - 1}
+                      onClick={() => setCurrentComboIdx((i) => i + 1)}
+                      className="hover:text-[#FFEA00] disabled:opacity-50 transition-colors bg-transparent border-none p-1"
+                    >
+                      <ArrowRight className="w-5 h-5" strokeWidth={3} />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="bg-white border-4 border-black p-2 md:p-6 overflow-y-auto overflow-x-auto relative flex-1 min-h-0 shadow-[4px_4px_0px_#111] custom-scrollbar">
-                  <CalendarGrid combo={activeCombo} coursesMap={courses} />
+                <div className="overflow-x-auto border-4 border-black box-border shadow-[4px_4px_0px_#111] flex-1">
+                  <div className="min-w-[800px] h-full relative">
+                    <ScheduleGrid sessions={activeComboSessions} />
+                  </div>
                 </div>
-              </>
+              </div>
             )}
           </section>
         </main>
@@ -602,9 +646,6 @@ function AllSchedulesView({
   excludedSections: Set<string>;
   toggleSection: (curso: string, seccion: string) => void;
 }) {
-  const startHour = 7;
-  const endHour = 20;
-
   const { theoryGrids, labGrids } = useMemo(() => {
     const theories: any[] = [];
     const labs: any[] = [];
@@ -763,105 +804,14 @@ function AllSchedulesView({
             </div>
 
             <div className="overflow-x-auto border-4 border-black box-border shadow-[4px_4px_0px_#111]">
-              <div className="min-w-[800px] border-black font-mono relative bg-white">
-                <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] bg-gray-100 font-bold text-center">
-                  <div className="border-r-2 border-b-2 border-black p-2 bg-black text-[#FFEA00]">
-                    HORA
-                  </div>
-                  {DAYS.map((d) => (
-                    <div
-                      key={d}
-                      className="border-r-2 border-b-2 border-black p-2 uppercase"
-                    >
-                      {d}
-                    </div>
-                  ))}
-                </div>
-
-                <div
-                  className="relative border-b-2 border-black bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)] bg-[length:100%_60px]"
-                  style={{ height: `${(endHour - startHour + 1) * 60}px` }}
-                >
-                  <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
-                    {Array.from({ length: endHour - startHour + 1 }).map(
-                      (_, i) => (
-                        <div
-                          key={i}
-                          className="h-[60px] border-b-2 border-gray-200 text-xs font-bold text-center pt-2"
-                        >
-                          {String(startHour + i).padStart(2, "0")}:00
-                        </div>
-                      ),
-                    )}
-                  </div>
-
-                  <div className="absolute left-[80px] right-0 top-0 bottom-0">
-                    {gridToRender.sessions.map((s) => {
-                      const dayIdx = DAYS.findIndex(
-                        (d) => d.toLowerCase() === s.dia.toLowerCase(),
-                      );
-                      if (dayIdx === -1) return null;
-
-                      const startT = parseTimeStr(s.hora_inicio);
-                      const endT = parseTimeStr(s.hora_fin);
-                      const duration = endT - startT;
-                      const offsetFromStartDay = startT - startHour * 60;
-
-                      const styleTop = offsetFromStartDay;
-                      const styleHeight = duration;
-                      const styleWidth = 100 / DAYS.length;
-                      const styleLeft = styleWidth * dayIdx;
-
-                      const isTheory = s.tipoSec === "Teoría";
-                      const secKey = `${s.curso}-${isTheory ? "teoria" : "lab"}-${s.seccion}`;
-                      const isExcluded =
-                        excludedCourses.has(s.curso) ||
-                        excludedSections.has(secKey);
-
-                      return (
-                        <div
-                          key={s.id}
-                          onClick={() =>
-                            toggleSection(
-                              s.curso,
-                              isTheory
-                                ? `teoria-${s.seccion}`
-                                : `lab-${s.seccion}`,
-                            )
-                          }
-                          className={cn(
-                            "absolute p-2 border-2 border-black overflow-hidden hover:z-50 cursor-pointer transition-all shadow-[2px_2px_0px_#111] text-black flex flex-col justify-start",
-                            s.bgColor,
-                            isExcluded
-                              ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100"
-                              : "opacity-90 hover:scale-[1.02]",
-                          )}
-                          style={{
-                            top: `${styleTop}px`,
-                            height: `${styleHeight}px`,
-                            width: `calc(${styleWidth}% - 10px)`,
-                            left: `calc(${styleLeft}% + 5px)`,
-                          }}
-                          title={`${s.curso} | ${s.tipoSec} ${s.seccion} (${s.tipo}) | ${s.hora_inicio} - ${s.hora_fin}`}
-                        >
-                          <p className="font-bold text-[10px] sm:text-xs uppercase truncate w-full pb-1 mb-1 border-b border-black/20 leading-tight">
-                            {s.curso}
-                          </p>
-                          <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5">
-                            {s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"} {s.seccion}
-                          </p>
-                          <p className="text-[10px] mt-0.5 font-bold truncate">
-                            {s.tipo || "Presencial"}
-                          </p>{" "}
-                          <p className="text-[10px] mt-0.5 font-bold">
-                            {s.hora_inicio} - {s.hora_fin}
-                          </p>{" "}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
+              <ScheduleGrid 
+                sessions={gridToRender.sessions}
+                startHour={7}
+                endHour={20}
+                excludedCourses={excludedCourses}
+                excludedSections={excludedSections}
+                toggleSection={toggleSection}
+              />
             </div>
           </div>
         ) : (
@@ -878,50 +828,27 @@ function AllSchedulesView({
 
 // Reduced height to look like Google Calendar
 
-function CalendarGrid({
-  combo,
+function ScheduleGrid({
+  sessions,
+  startHour = 7,
+  endHour = 20,
+  excludedCourses = new Set(),
+  excludedSections = new Set(),
+  toggleSection,
 }: {
-  combo: ScheduleCombination;
-  coursesMap?: Course[];
+  sessions: any[];
+  startHour?: number;
+  endHour?: number;
+  excludedCourses?: Set<string>;
+  excludedSections?: Set<string>;
+  toggleSection?: (curso: string, seccion: string) => void;
 }) {
-  const courseColors = useMemo(() => {
-    const map: Record<string, string> = {};
-    Object.keys(combo.selection).forEach((cName, idx) => {
-      map[cName] = COLORS[idx % COLORS.length];
-    });
-    return map;
-  }, [combo]);
-
-  const sessions = useMemo(() => {
-    const all = [];
-    for (const [curso, sel] of Object.entries(combo.selection)) {
-      if (sel.teoria) {
-        for (const sesion of sel.teoria.sesiones) {
-          all.push({ curso, seccion: `Teo ${sel.teoria.seccion}`, ...sesion });
-        }
-      }
-      if (sel.laboratorio) {
-        for (const sesion of sel.laboratorio.sesiones) {
-          all.push({
-            curso,
-            seccion: `Lab ${sel.laboratorio.seccion}`,
-            ...sesion,
-          });
-        }
-      }
-    }
-    return all;
-  }, [combo]);
-
-  const { startHour, endHour } = useMemo(() => {
+  const dynamicHours = useMemo(() => {
     let minT = 24 * 60;
     let maxT = 0;
-    const times = new Set<string>();
 
-    if (sessions.length === 0) return { startHour: 7, endHour: 20, uniqueTimes: [] };
+    if (sessions.length === 0) return { sH: startHour, eH: endHour };
     for (const s of sessions) {
-      times.add(s.hora_inicio);
-      times.add(s.hora_fin);
       const st = parseTimeStr(s.hora_inicio);
       const et = parseTimeStr(s.hora_fin);
       if (st < minT) minT = st;
@@ -933,13 +860,14 @@ function CalendarGrid({
     if (eH > 22) eH = 22;
     if (eH <= sH) eH = sH + 1;
 
-    const sortedTimes = Array.from(times).sort((a,b) => parseTimeStr(a) - parseTimeStr(b));
+    return { sH: Math.min(sH, startHour), eH: Math.max(eH, endHour) };
+  }, [sessions, startHour, endHour]);
 
-    return { startHour: sH, endHour: eH, uniqueTimes: sortedTimes };
-  }, [sessions]);
+  const finalStart = dynamicHours.sH;
+  const finalEnd = dynamicHours.eH;
 
   return (
-    <div className="min-w-[800px] border-l-2 border-t-2 border-black font-mono relative">
+    <div className="min-w-[800px] border-black font-mono relative bg-white">
       <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] bg-gray-100 font-bold text-center">
         <div className="border-r-2 border-b-2 border-black p-2 bg-black text-[#FFEA00]">
           HORA
@@ -956,15 +884,15 @@ function CalendarGrid({
 
       <div
         className="relative border-b-2 border-black bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)] bg-[length:100%_60px]"
-        style={{ height: `${(endHour - startHour + 1) * 60}px` }}
+        style={{ height: `${(finalEnd - finalStart + 1) * 60}px` }}
       >
         <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
-          {Array.from({ length: endHour - startHour + 1 }).map((_, i) => (
+          {Array.from({ length: finalEnd - finalStart + 1 }).map((_, i) => (
             <div
               key={i}
               className="h-[60px] border-b-2 border-gray-200 text-xs font-bold text-center pt-2 text-gray-800"
             >
-              {String(startHour + i).padStart(2, "0")}:00
+              {String(finalStart + i).padStart(2, "0")}:00
             </div>
           ))}
         </div>
@@ -981,29 +909,39 @@ function CalendarGrid({
               const endT = parseTimeStr(s.hora_fin);
 
               const duration = endT - startT;
-              const offsetFromStartDay = startT - startHour * 60;
+              const offsetFromStartDay = startT - finalStart * 60;
 
               const styleTop = offsetFromStartDay;
               const styleHeight = duration;
               const styleWidth = 100 / DAYS.length;
               const styleLeft = styleWidth * dayIdx;
-              
-              const bgColor = courseColors[s.curso] || "bg-gray-800";
 
-              let prefix = s.seccion.includes("Teo") ? "TEORÍA" : "LABORATORIO";
-              let secClean = s.seccion.replace(/Teo |Lab /, "");
+              const isTheory = s.tipoSec === "Teoría";
+              const secKey = `${s.curso}-${isTheory ? "teoria" : "lab"}-${s.seccion}`;
+              const isExcluded =
+                excludedCourses.has(s.curso) || excludedSections.has(secKey);
 
               return (
                 <motion.div
-                  key={`${s.curso}-${s.dia}-${s.hora_inicio}-${i}`}
+                  key={s.id || `${s.curso}-${s.dia}-${s.hora_inicio}-${i}`}
                   initial={{ opacity: 0, scale: 0.9, y: 10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ delay: i * 0.05, duration: 0.2 }}
+                  onClick={() =>
+                    toggleSection &&
+                    toggleSection(
+                      s.curso,
+                      isTheory ? `teoria-${s.seccion}` : `lab-${s.seccion}`
+                    )
+                  }
                   className={cn(
-                    "absolute p-2 border-2 border-black overflow-hidden hover:z-50 cursor-pointer transition-all shadow-[2px_2px_0px_#111] text-black flex flex-col justify-start",
-                    bgColor,
-                    "opacity-90 hover:scale-[1.02]"
+                    "absolute p-2 border-2 border-black overflow-hidden hover:z-50 transition-all shadow-[2px_2px_0px_#111] text-black flex flex-col justify-start",
+                    s.bgColor || "bg-gray-800",
+                    toggleSection ? "cursor-pointer" : "cursor-default",
+                    isExcluded
+                      ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100"
+                      : "opacity-90 hover:scale-[1.02]"
                   )}
                   style={{
                     top: `${styleTop}px`,
@@ -1011,13 +949,13 @@ function CalendarGrid({
                     width: `calc(${styleWidth}% - 10px)`,
                     left: `calc(${styleLeft}% + 5px)`,
                   }}
-                  title={`${s.curso} | ${prefix} ${secClean} (${s.tipo}) | ${s.hora_inicio} - ${s.hora_fin}`}
+                  title={`${s.curso} | ${s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"} ${s.seccion} (${s.tipo}) | ${s.hora_inicio} - ${s.hora_fin}`}
                 >
                   <p className="font-bold text-[10px] sm:text-xs uppercase truncate w-full pb-1 mb-1 border-b border-black/20 leading-tight">
                     {s.curso}
                   </p>
                   <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5 self-start">
-                    {prefix} {secClean}
+                    {s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"} {s.seccion}
                   </p>
                   <p className="text-[10px] mt-0.5 font-bold truncate">
                     {s.tipo || "Presencial"}
