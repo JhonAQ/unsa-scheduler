@@ -5,7 +5,7 @@ import terceroData from "../../data/tercero.json";
 import cuartoData from "../../data/cuarto.json";
 import quintoData from "../../data/quinto.json";
 
-export const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+export const DAYS = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
 
 export const COLORS = [
   "bg-[#FF3366]",
@@ -97,7 +97,7 @@ export function getScheduleMetrics(combo: ScheduleCombination) {
   const fallbackDaysMap: Record<string, { start: number; end: number }[]> = {
     "Lunes": [],
     "Martes": [],
-    "Miércoles": [],
+    "Miercoles": [],
     "MiÃ©rcoles": [], // dirty map for bad data
     "Miercoles": [],
     "Jueves": [],
@@ -129,7 +129,7 @@ export function getScheduleMetrics(combo: ScheduleCombination) {
   const mergedDays = {
     Lunes: fallbackDaysMap["Lunes"],
     Martes: fallbackDaysMap["Martes"],
-    Miércoles: [...fallbackDaysMap["Miércoles"], ...fallbackDaysMap["MiÃ©rcoles"], ...fallbackDaysMap["Miercoles"]],
+    Miercoles: [...fallbackDaysMap["Miercoles"], ...fallbackDaysMap["MiÃ©rcoles"], ...fallbackDaysMap["Miercoles"]],
     Jueves: fallbackDaysMap["Jueves"],
     Viernes: fallbackDaysMap["Viernes"],
   };

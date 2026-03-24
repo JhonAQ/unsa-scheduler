@@ -262,7 +262,7 @@ export default function App() {
           )}
 
         {courses.length > 0 && viewMode === "my_schedules" && (
-          <main className="flex-1 min-h-0 overflow-hidden">
+          <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
             <AllSchedulesView
               courses={courses}
               excludedCourses={excludedCourses}
@@ -273,7 +273,7 @@ export default function App() {
         )}
 
         {viewMode === "global_schedules" && (
-          <main className="flex-1 min-h-0 overflow-hidden">
+          <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
             <GlobalSchedulesView />
           </main>
         )}

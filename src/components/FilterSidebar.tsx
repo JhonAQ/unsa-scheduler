@@ -63,7 +63,7 @@ export function FilterSidebar({
                 Día Libre
               </label>
               <div className="flex gap-1.5 justify-start">
-                {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(
+                {["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"].map(
                   (d) => (
                     <button
                       key={d}

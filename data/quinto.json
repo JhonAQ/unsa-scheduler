@@ -7,14 +7,14 @@
           "seccion": "A",
           "total_sesiones_semanales": 1,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "09:40" }
           ]
         },
         {
           "seccion": "B",
           "total_sesiones_semanales": 1,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" }
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "16:40" }
           ]
         }
       ]

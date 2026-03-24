@@ -106,7 +106,7 @@ export function AllSchedulesView({
   const gridToRender = currentGrid || theoryGrids[0] || labGrids[0];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 font-mono flex-1 min-h-0 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
+    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 font-mono h-full overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
       <AllSchedulesTour />
       <aside className="w-full lg:w-72 shrink-0 flex flex-col min-h-0 gap-4 md:gap-6 pb-2">
         <div className="bg-[#FFEA00] border-4 border-black p-4 neo-brutalist shadow-[4px_4px_0px_#111] shrink-0">
