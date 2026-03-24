@@ -385,7 +385,12 @@ export default function App() {
       )}
 
       {courses.length > 0 && viewMode === "all_schedules" && (
-        <AllSchedulesView courses={courses} />
+        <AllSchedulesView 
+          courses={courses} 
+          excludedCourses={excludedCourses}
+          excludedSections={excludedSections}
+          toggleSection={toggleSection}
+        />
       )}
     </div>
   );
@@ -412,7 +417,17 @@ function checkSectionOverlapWithinGrid(
   return false;
 }
 
-function AllSchedulesView({ courses }: { courses: Course[] }) {
+function AllSchedulesView({
+  courses,
+  excludedCourses,
+  excludedSections,
+  toggleSection
+}: {
+  courses: Course[];
+  excludedCourses: Set<string>;
+  excludedSections: Set<string>;
+  toggleSection: (curso: string, seccion: string) => void;
+}) {
   const startHour = 7;
   const endHour = 20;
 
@@ -623,12 +638,20 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                       const styleWidth = 100 / DAYS.length;
                       const styleLeft = styleWidth * dayIdx;
 
+                      const isTheory = s.tipoSec === 'Teoría';
+                      const secKey = `${s.curso}-${isTheory ? 'teoria' : 'lab'}-${s.seccion}`;
+                      const isExcluded = excludedCourses.has(s.curso) || excludedSections.has(secKey);
+
                       return (
                         <div
                           key={s.id}
+                          onClick={() => toggleSection(s.curso, isTheory ? `teoria-${s.seccion}` : `lab-${s.seccion}`)}
                           className={cn(
-                            "absolute p-2 border-2 border-black overflow-hidden hover:z-50 hover:scale-[1.02] cursor-pointer transition-transform shadow-[2px_2px_0px_#111] opacity-90 text-black flex flex-col justify-start",
+                            "absolute p-2 border-2 border-black overflow-hidden hover:z-50 cursor-pointer transition-all shadow-[2px_2px_0px_#111] text-black flex flex-col justify-start",
                             s.bgColor,
+                            isExcluded 
+                              ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100" 
+                              : "opacity-90 hover:scale-[1.02]"
                           )}
                           style={{
                             top: `${styleTop}px`,
@@ -646,8 +669,9 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                           </p>
                           <p className="text-[10px] mt-0.5 font-bold truncate">
                             {s.tipo || "Presencial"}
-                          </p>
-                        </div>
+                          </p>                            <p className="text-[10px] mt-0.5 font-bold">
+                              {s.hora_inicio} - {s.hora_fin}
+                            </p>                        </div>
                       );
                     })}
                   </div>
