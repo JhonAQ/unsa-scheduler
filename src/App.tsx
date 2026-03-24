@@ -848,7 +848,7 @@ function AllSchedulesView({
                             {s.curso}
                           </p>
                           <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5">
-                            {s.tipoSec === "Teoría" ? "TEO" : "LAB"} {s.seccion}
+                            {s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"} {s.seccion}
                           </p>
                           <p className="text-[10px] mt-0.5 font-bold truncate">
                             {s.tipo || "Presencial"}
@@ -990,7 +990,7 @@ function CalendarGrid({
               
               const bgColor = courseColors[s.curso] || "bg-gray-800";
 
-              let prefix = s.seccion.includes("Teo") ? "TEO" : "LAB";
+              let prefix = s.seccion.includes("Teo") ? "TEORÍA" : "LABORATORIO";
               let secClean = s.seccion.replace(/Teo |Lab /, "");
 
               return (
