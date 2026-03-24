@@ -414,7 +414,7 @@ function CalendarGrid({
       <div
         className="relative border-b-2 border-black opacity-90 bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)] bg-[length:100%_60px]"
         style={{
-          height: `${(endHour - startHour + 1) * 60}px`
+          height: `${(endHour - startHour + 1) * 60}px`,
         }}
       >
         <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
