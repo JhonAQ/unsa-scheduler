@@ -97,7 +97,7 @@
           "seccion": "A",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "09:40" },
             { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" }
           ]
         },
@@ -106,7 +106,7 @@
           "total_sesiones_semanales": 2,
           "sesiones": [
             { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "15:50", "hora_fin": "17:30" },
-            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "17:30" }
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "18:30" }
           ]
         }
       ]
@@ -155,14 +155,14 @@
           "seccion": "A",
           "total_sesiones_semanales": 1,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "08:50", "hora_fin": "11:30" }
           ]
         },
         {
           "seccion": "B",
           "total_sesiones_semanales": 1,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "19:20" }
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "20:10" }
           ]
         }
       ]
