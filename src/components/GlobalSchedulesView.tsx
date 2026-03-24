@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { cn } from "../utils/tw";
-import { COLORS, checkSectionOverlapWithinGrid, getAllYearsData } from "../utils/scheduler";
+import {
+  COLORS,
+  checkSectionOverlapWithinGrid,
+  getAllYearsData,
+} from "../utils/scheduler";
 import { ScheduleGrid } from "./ScheduleGrid";
 
 export function GlobalSchedulesView() {
@@ -87,7 +91,10 @@ export function GlobalSchedulesView() {
   }, [currentYearData]);
 
   // When year changes, reset tab to the first available category
-  const [activeSubTab, setActiveSubTab] = useState<{ type: "theory" | "lab"; id: number }>({
+  const [activeSubTab, setActiveSubTab] = useState<{
+    type: "theory" | "lab";
+    id: number;
+  }>({
     type: "theory",
     id: 1,
   });
@@ -113,7 +120,7 @@ export function GlobalSchedulesView() {
               "px-4 py-2 border-2 border-black font-bold uppercase transition-transform",
               activeYear === year.year
                 ? "bg-[#D500F9] text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
-                : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
             )}
           >
             {year.year}
@@ -132,18 +139,21 @@ export function GlobalSchedulesView() {
                 {theoryGrids.map((g) => (
                   <button
                     key={`teo-${g.id}`}
-                    onClick={() => setActiveSubTab({ type: "theory", id: g.id })}
+                    onClick={() =>
+                      setActiveSubTab({ type: "theory", id: g.id })
+                    }
                     className={cn(
                       "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
                       activeSubTab.type === "theory" && activeSubTab.id === g.id
                         ? "bg-[#D500F9] text-white shadow-[2px_2px_0px_#111] translate-x-1"
-                        : "bg-gray-100 text-black hover:bg-gray-200"
+                        : "bg-gray-100 text-black hover:bg-gray-200",
                     )}
                   >
                     <span>Hoja {g.id}</span>
-                    {activeSubTab.type === "theory" && activeSubTab.id === g.id && (
-                      <ArrowRight className="w-5 h-5" />
-                    )}
+                    {activeSubTab.type === "theory" &&
+                      activeSubTab.id === g.id && (
+                        <ArrowRight className="w-5 h-5" />
+                      )}
                   </button>
                 ))}
               </div>
@@ -162,13 +172,14 @@ export function GlobalSchedulesView() {
                       "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
                       activeSubTab.type === "lab" && activeSubTab.id === g.id
                         ? "bg-[#D500F9] text-white shadow-[2px_2px_0px_#111] translate-x-1"
-                        : "bg-gray-100 text-black hover:bg-gray-200"
+                        : "bg-gray-100 text-black hover:bg-gray-200",
                     )}
                   >
                     <span>Hoja {g.id}</span>
-                    {activeSubTab.type === "lab" && activeSubTab.id === g.id && (
-                      <ArrowRight className="w-5 h-5" />
-                    )}
+                    {activeSubTab.type === "lab" &&
+                      activeSubTab.id === g.id && (
+                        <ArrowRight className="w-5 h-5" />
+                      )}
                   </button>
                 ))}
               </div>
@@ -181,8 +192,8 @@ export function GlobalSchedulesView() {
             <div className="bg-white border-4 border-black p-4 md:p-8 relative shadow-[8px_8px_0px_#111] flex flex-col flex-1 min-h-0">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-8 gap-4 shrink-0">
                 <h3 className="text-xl md:text-3xl font-black uppercase bg-black text-white inline-block px-4 py-2 rotate-[-1deg]">
-                  {activeSubTab.type === "theory" ? "TEORÍA" : "LABORATORIO"} - HOJA{" "}
-                  {gridToRender.id}
+                  {activeSubTab.type === "theory" ? "TEORÍA" : "LABORATORIO"} -
+                  HOJA {gridToRender.id}
                 </h3>
                 <div className="bg-[#2979FF] text-white px-3 py-1 font-bold border-2 border-black neo-brutalist shadow-[2px_2px_0px_#111]">
                   {gridToRender.sessions.length} CLASES
@@ -191,7 +202,11 @@ export function GlobalSchedulesView() {
 
               <div className="overflow-auto border-4 border-black box-border shadow-[4px_4px_0px_#111] flex-1">
                 <div className="min-w-[800px] h-full relative">
-                  <ScheduleGrid sessions={gridToRender.sessions} startHour={7} endHour={20} />
+                  <ScheduleGrid
+                    sessions={gridToRender.sessions}
+                    startHour={7}
+                    endHour={20}
+                  />
                 </div>
               </div>
             </div>

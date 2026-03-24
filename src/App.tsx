@@ -14,24 +14,29 @@ import { getAllCoursesFlat } from "./utils/scheduler";
 
 export default function App() {
   const [errorError] = useState<string | null>(null);
-  
+
   // Tabs: "generator", "my_schedules", "global_schedules", "social"
   const [viewMode, setViewMode] = useState<
     "generator" | "my_schedules" | "global_schedules" | "social"
   >("generator");
 
   // LocalStorage state for selected courses
-  const [mySelectedCourseNames, setMySelectedCourseNames] = useState<string[]>(() => {
-    const stored = localStorage.getItem("unsa_selected_courses");
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [mySelectedCourseNames, setMySelectedCourseNames] = useState<string[]>(
+    () => {
+      const stored = localStorage.getItem("unsa_selected_courses");
+      return stored ? JSON.parse(stored) : [];
+    },
+  );
 
   const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
     return !localStorage.getItem("unsa_selected_courses");
   });
 
   const handleOnboardingComplete = (selectedNames: string[]) => {
-    localStorage.setItem("unsa_selected_courses", JSON.stringify(selectedNames));
+    localStorage.setItem(
+      "unsa_selected_courses",
+      JSON.stringify(selectedNames),
+    );
     setMySelectedCourseNames(selectedNames);
     setShowOnboarding(false);
   };
@@ -113,7 +118,7 @@ export default function App() {
                     "px-4 py-2 border-2 border-black transition-transform uppercase",
                     viewMode === "generator"
                       ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
-                      : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                      : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
                   )}
                 >
                   Generador
@@ -124,7 +129,7 @@ export default function App() {
                     "px-4 py-2 border-2 border-black transition-transform uppercase",
                     viewMode === "my_schedules"
                       ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
-                      : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                      : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
                   )}
                 >
                   Tus Horarios
@@ -138,7 +143,7 @@ export default function App() {
                 "px-4 py-2 border-2 border-black transition-transform uppercase",
                 viewMode === "global_schedules"
                   ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
-                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
               )}
             >
               Todos los horarios
@@ -149,7 +154,7 @@ export default function App() {
                 "px-4 py-2 border-2 border-black transition-transform uppercase",
                 viewMode === "social"
                   ? "bg-[#FF3366] text-white shadow-[2px_2px_0px_#111]"
-                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
               )}
             >
               Social
@@ -208,7 +213,8 @@ export default function App() {
                         <ArrowLeft className="w-5 h-5" strokeWidth={3} />
                       </button>
                       <span className="uppercase whitespace-nowrap">
-                        Opción {currentComboIdx + 1} de {processedCombinations.length}
+                        Opción {currentComboIdx + 1} de{" "}
+                        {processedCombinations.length}
                       </span>
                       <button
                         disabled={
@@ -233,24 +239,27 @@ export default function App() {
           </main>
         )}
 
-        {courses.length === 0 && viewMode === "generator" && !showOnboarding && (
-          <div className="flex-1 flex flex-col items-center justify-center mb-8">
-            <div className="bg-[#D500F9] border-4 border-black p-12 md:p-24 text-center shadow-[16px_16px_0px_#111] rotate-[-1deg]">
-              <h2 className="text-4xl md:text-6xl font-black text-white uppercase mb-6 leading-tight">
-                No hay <br /> <span className="text-[#FFEA00]">cursos</span>
-              </h2>
-              <p className="font-mono text-white text-lg md:text-xl font-bold max-w-md mx-auto mb-10">
-                Abre la configuración para elegir los cursos que llevarás en este semestre.
-              </p>
-              <button
-                onClick={() => setShowOnboarding(true)}
-                className="bg-[#FFEA00] text-black border-4 border-black px-8 py-4 text-2xl font-black uppercase shadow-[8px_8px_0px_#111] hover:translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all"
-              >
-                Configurar Ahora
-              </button>
+        {courses.length === 0 &&
+          viewMode === "generator" &&
+          !showOnboarding && (
+            <div className="flex-1 flex flex-col items-center justify-center mb-8">
+              <div className="bg-[#D500F9] border-4 border-black p-12 md:p-24 text-center shadow-[16px_16px_0px_#111] rotate-[-1deg]">
+                <h2 className="text-4xl md:text-6xl font-black text-white uppercase mb-6 leading-tight">
+                  No hay <br /> <span className="text-[#FFEA00]">cursos</span>
+                </h2>
+                <p className="font-mono text-white text-lg md:text-xl font-bold max-w-md mx-auto mb-10">
+                  Abre la configuración para elegir los cursos que llevarás en
+                  este semestre.
+                </p>
+                <button
+                  onClick={() => setShowOnboarding(true)}
+                  className="bg-[#FFEA00] text-black border-4 border-black px-8 py-4 text-2xl font-black uppercase shadow-[8px_8px_0px_#111] hover:translate-y-1 hover:shadow-[4px_4px_0px_#111] transition-all"
+                >
+                  Configurar Ahora
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {courses.length > 0 && viewMode === "my_schedules" && (
           <main className="flex-1 min-h-0 overflow-hidden">
@@ -281,4 +290,3 @@ export default function App() {
     </>
   );
 }
-

@@ -2,13 +2,19 @@ import { useState } from "react";
 import { cn } from "../utils/tw";
 import { getAllYearsData } from "../utils/scheduler";
 
-interface OnboardingModalProps {  initialSelected: string[];
+interface OnboardingModalProps {
+  initialSelected: string[];
 
   onComplete: (selectedCourseNames: string[]) => void;
 }
 
-export function OnboardingModal({ onComplete, initialSelected = [] }: OnboardingModalProps) {
-  const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set(initialSelected));
+export function OnboardingModal({
+  onComplete,
+  initialSelected = [],
+}: OnboardingModalProps) {
+  const [selectedCourses, setSelectedCourses] = useState<Set<string>>(
+    new Set(initialSelected),
+  );
   const allYears = getAllYearsData();
 
   const toggleCourse = (courseName: string) => {
@@ -49,22 +55,28 @@ export function OnboardingModal({ onComplete, initialSelected = [] }: Onboarding
             ¡Arma tu Semestre!
           </h2>
           <p className="font-bold font-mono text-black mt-2">
-            Selecciona los cursos que estás llevando. Puedes combinar años para armar tu horario ideal.
+            Selecciona los cursos que estás llevando. Puedes combinar años para
+            armar tu horario ideal.
           </p>
         </div>
 
         <div className="p-6 md:p-8 overflow-y-auto flex-1 bg-gray-50 flex flex-col gap-8 custom-scrollbar">
           {allYears.map((yearData) => {
             if (yearData.courses.length === 0) return null;
-            
+
             const allSelected = yearData.courses.every((c) =>
-              selectedCourses.has(c.curso)
+              selectedCourses.has(c.curso),
             );
 
             return (
-              <div key={yearData.year} className="bg-white border-4 border-black shadow-[4px_4px_0px_#111] p-4">
+              <div
+                key={yearData.year}
+                className="bg-white border-4 border-black shadow-[4px_4px_0px_#111] p-4"
+              >
                 <div className="flex justify-between items-center mb-4 border-b-2 border-black pb-2">
-                  <h3 className="text-2xl font-black uppercase">{yearData.year}</h3>
+                  <h3 className="text-2xl font-black uppercase">
+                    {yearData.year}
+                  </h3>
                   <button
                     onClick={() => selectAllYear(yearData.courses)}
                     className="text-xs font-bold font-mono border-2 border-black px-2 py-1 bg-[#FFEA00] shadow-[2px_2px_0px_#111] hover:translate-y-0.5 hover:shadow-none transition-all"
@@ -72,7 +84,7 @@ export function OnboardingModal({ onComplete, initialSelected = [] }: Onboarding
                     {allSelected ? "DESELECCIONAR AÑO" : "SELECCIONAR AÑO"}
                   </button>
                 </div>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                   {yearData.courses.map((course) => (
                     <label
@@ -81,7 +93,7 @@ export function OnboardingModal({ onComplete, initialSelected = [] }: Onboarding
                         "flex items-start gap-3 p-3 border-2 border-black cursor-pointer transition-all font-mono text-sm font-bold",
                         selectedCourses.has(course.curso)
                           ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
-                          : "bg-white hover:bg-gray-100"
+                          : "bg-white hover:bg-gray-100",
                       )}
                     >
                       <input
