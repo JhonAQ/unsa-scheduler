@@ -1,10 +1,11 @@
-import React, { useState, useMemo, useRef } from "react";
-import { Upload, AlertTriangle, ArrowRight, ArrowLeft } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { AlertTriangle, ArrowRight, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { generateSchedules } from "./lib/scheduler";
 import type { Course, ScheduleCombination } from "./lib/types";
+import initialData from "../data/schedule.json";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,6 +16,7 @@ function parseTimeStr(time: string) {
   return h * 60 + m;
 }
 
+const CELL_HEIGHT = 44;
 const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
 const COLORS = [
@@ -27,9 +29,55 @@ const COLORS = [
   "bg-[#1DE9B6]",
 ];
 
+
+function getInitialCourses(): Course[] {
+  if (!initialData || !initialData.horario_academico) return [];
+  return initialData.horario_academico.map((c: any) => {
+    const teoriasMap: Record<string, any> = {};
+    const laboratoriosMap: Record<string, any> = {};
+
+    c.secciones.forEach((sec: any) => {
+      sec.sesiones.forEach((ses: any) => {
+        const tipoLower = ses.tipo.toLowerCase();
+        if (tipoLower.includes("teoría") || tipoLower.includes("teoria") || tipoLower.includes("teor\u00c3\u00ada")) {
+          if (!teoriasMap[sec.seccion]) {
+            teoriasMap[sec.seccion] = {
+              seccion: sec.seccion,
+              total_sesiones_semanales: 0,
+              sesiones: [],
+            };
+          }
+          teoriasMap[sec.seccion].sesiones.push(ses);
+        } else if (
+          tipoLower.includes("laboratorio") ||
+          tipoLower.includes("práctica") ||
+          tipoLower.includes("practica") ||
+          tipoLower.includes("pr\u00c3\u00a1ctica")
+        ) {
+          if (!laboratoriosMap[sec.seccion]) {
+            laboratoriosMap[sec.seccion] = {
+              seccion: sec.seccion,
+              total_sesiones_semanales: 0,
+              sesiones: [],
+            };
+          }
+          laboratoriosMap[sec.seccion].sesiones.push(ses);
+        }
+      });
+    });
+
+    return {
+      curso: c.curso,
+      secciones: c.secciones,
+      teorias: Object.values(teoriasMap),
+      laboratorios: Object.values(laboratoriosMap),
+    };
+  });
+}
+
 export default function App() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [errorError, setError] = useState<string | null>(null);
+  const [courses] = useState<Course[]>(getInitialCourses);
+  const [errorError] = useState<string | null>(null);
 
   const [excludedCourses, setExcludedCourses] = useState<Set<string>>(
     new Set(),
@@ -60,78 +108,6 @@ export default function App() {
     setWantedFreeDays((prev) =>
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
     );
-  };
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const json = JSON.parse(event.target?.result as string);
-        if (json.horario_academico) {
-          const normalizedCourses: Course[] = json.horario_academico.map(
-            (c: any) => {
-              const teoriasMap: Record<string, any> = {};
-              const laboratoriosMap: Record<string, any> = {};
-
-              c.secciones.forEach((sec: any) => {
-                sec.sesiones.forEach((ses: any) => {
-                  const tipoLower = ses.tipo.toLowerCase();
-                  if (
-                    tipoLower.includes("teoría") ||
-                    tipoLower.includes("teoria")
-                  ) {
-                    if (!teoriasMap[sec.seccion]) {
-                      teoriasMap[sec.seccion] = {
-                        seccion: sec.seccion,
-                        total_sesiones_semanales: 0,
-                        sesiones: [],
-                      };
-                    }
-                    teoriasMap[sec.seccion].sesiones.push(ses);
-                  } else if (
-                    tipoLower.includes("laboratorio") ||
-                    tipoLower.includes("práctica") ||
-                    tipoLower.includes("practica")
-                  ) {
-                    if (!laboratoriosMap[sec.seccion]) {
-                      laboratoriosMap[sec.seccion] = {
-                        seccion: sec.seccion,
-                        total_sesiones_semanales: 0,
-                        sesiones: [],
-                      };
-                    }
-                    laboratoriosMap[sec.seccion].sesiones.push(ses);
-                  }
-                });
-              });
-
-              return {
-                curso: c.curso,
-                secciones: c.secciones,
-                teorias: Object.values(teoriasMap),
-                laboratorios: Object.values(laboratoriosMap),
-              };
-            },
-          );
-
-          setCourses(normalizedCourses);
-          setError(null);
-          setCurrentComboIdx(0);
-        } else {
-          setError(
-            "El formato JSON es incorrecto. Debe contener 'horario_academico'.",
-          );
-        }
-      } catch (err) {
-        setError("Error al leer el archivo JSON.");
-      }
-    };
-    reader.readAsText(file);
   };
 
   const activeCourses = useMemo(() => {
@@ -223,88 +199,191 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto space-y-8">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-6 gap-6">
-        <div>
-          <h1 className="text-5xl tracking-tighter text-[#111] mb-2 leading-none uppercase">
-            Schedule{" "}
-            <span className="bg-[#FFEA00] px-2 py-1 select-none border-2 border-[#111] rotate-[-2deg] inline-block shadow-[4px_4px_0px_#111]">
-              Generator
-            </span>
-          </h1>
-          <p className="text-xl font-bold font-mono text-gray-700">
-            EXPLORADOR UNIVERSITARIO SIN CRUCES V1.0
-          </p>
-        </div>
+    <div className="h-screen overflow-hidden flex flex-col p-2 md:p-4 max-w-7xl mx-auto space-y-4">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-2 gap-4 shrink-0">
+          <div>
+            <h1 className="text-3xl tracking-tighter text-[#111] mb-1 leading-none uppercase">
+              Schedule{" "}
+              <span className="bg-[#FFEA00] px-2 py-0.5 select-none border-2 border-[#111] rotate-[-2deg] inline-block shadow-[2px_2px_0px_#111]">
+                Generator
+              </span>
+            </h1>
+            <p className="text-sm font-bold font-mono text-gray-700">
+              EXPLORADOR UNIVERSITARIO V1.0
+            </p>
+          </div>
 
-        <div className="flex items-center gap-4">
-          <input
-            type="file"
-            accept=".json"
-            ref={fileInputRef}
-            onChange={handleFileUpload}
-            className="hidden"
-          />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="neo-brutalist bg-white px-6 py-3 font-mono font-bold text-lg flex items-center gap-2 hover:bg-[#FF3366] hover:text-white group"
-          >
-            <Upload
-              className="w-6 h-6 group-hover:-translate-y-1 transition-transform"
-              strokeWidth={3}
-            />{" "}
-            Cargar JSON
-          </button>
-        </div>
-      </header>
+          {courses.length > 0 && (
+            <div className="flex flex-wrap gap-2 font-mono font-bold text-sm shrink-0">
+              <button
+                onClick={() => setViewMode("generator")}
+                className={cn(
+                  "px-4 py-2 border-2 border-black transition-transform uppercase",
+                  viewMode === "generator"
+                    ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
+                    : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",     
+                )}
+              >
+                Generador
+              </button>
+              <button
+                onClick={() => setViewMode("all_schedules")}
+                className={cn(
+                  "px-4 py-2 border-2 border-black transition-transform uppercase",
+                  viewMode === "all_schedules"
+                    ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
+                    : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",     
+                )}
+              >
+                Todos los horarios
+              </button>
+            </div>
+          )}
+        </header>
 
-      {errorError && (
-        <div className="bg-[#FF3366] text-white p-4 neo-brutalist flex items-center gap-4 font-mono font-bold">
-          <AlertTriangle strokeWidth={3} /> {errorError}
-        </div>
-      )}
+        {errorError && (
+          <div className="bg-[#FF3366] text-white p-2 neo-brutalist flex items-center gap-2 font-mono font-bold text-sm shrink-0">
+            <AlertTriangle strokeWidth={3} className="w-4 h-4"/> {errorError}
+          </div>
+        )}
 
-      {courses.length > 0 && (
-        <div className="flex flex-wrap gap-4 font-mono font-bold text-lg mb-4">
-          <button
-            onClick={() => setViewMode("generator")}
-            className={cn(
-              "px-6 py-3 border-2 border-black transition-transform uppercase",
-              viewMode === "generator"
-                ? "bg-[#FFEA00] shadow-[4px_4px_0px_#111]"
-                : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
-            )}
-          >
-            Generador
-          </button>
-          <button
-            onClick={() => setViewMode("all_schedules")}
-            className={cn(
-              "px-6 py-3 border-2 border-black transition-transform uppercase",
-              viewMode === "all_schedules"
-                ? "bg-[#FFEA00] shadow-[4px_4px_0px_#111]"
-                : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
-            )}
-          >
-            Todos los horarios
-          </button>
-        </div>
-      )}
+        {courses.length > 0 && viewMode === "generator" && (
+          <main className="grid grid-cols-1 lg:grid-cols-4 gap-4 flex-1 min-h-0 overflow-hidden">
+          <aside className="lg:col-span-1 flex flex-col min-h-0 gap-3">
+            <div className="bg-[#FF9100] border-4 border-black p-3 md:p-4 neo-brutalist shadow-[4px_4px_0px_#111] font-mono shrink-0">
+              <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+                <div className="space-y-1 shrink-0 w-full lg:w-48">
+                  <label className="block text-black font-black uppercase text-[10px] leading-tight">
+                    Ordenar
+                  </label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="w-full p-1.5 text-[10px] border-2 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[2px_2px_0px_#111] cursor-pointer"
+                  >
+                    <option value="default">Por defecto</option>
+                    <option value="compact">Compacto</option>
+                    <option value="free_days">Dias Libres</option>
+                    <option value="start_late">Tardes</option>
+                    <option value="end_early">Mañanas</option>
+                  </select>
+                </div>
 
-      {courses.length > 0 && viewMode === "generator" && (
-        <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <aside className="lg:col-span-1 space-y-6">
-            <div className="bg-white neo-brutalist p-6">
-              <h2 className="text-2xl mb-4 bg-black text-white px-2 py-1 inline-block uppercase">
+                <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <label className="block text-black font-black uppercase text-[10px] leading-tight">
+                      Día Libre
+                    </label>
+                    <div className="flex gap-1.5">
+                      {[
+                        "Lunes",
+                        "Martes",
+                        "Miércoles",
+                        "Jueves",
+                        "Viernes",
+                      ].map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => toggleWantedFreeDay(d)}
+                          className={cn(
+                            "p-1 border-2 border-black font-bold uppercase transition-transform w-8 text-xs text-center",
+                            wantedFreeDays.includes(d)
+                              ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
+                              : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
+                          )}
+                          title={"Exigir " + d + " libre"}
+                        >
+                          {d.charAt(0)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-black font-black uppercase text-[10px] leading-tight">
+                      Rango Horario
+                    </label>
+                    <div className="flex items-center gap-2">
+                        <input
+                          type="time"
+                          min="07:00"
+                          max="21:00"
+                          step="1800"
+                          value={
+                            String(Math.floor(minTime / 60)).padStart(2, "0") +
+                            ":" +
+                            String(minTime % 60).padStart(2, "0")
+                          }
+                          onChange={(e) => {
+                            const [h, m] = e.target.value
+                              .split(":")
+                              .map(Number);
+                            setMinTime(h * 60 + m);
+                          }}
+                          className="border-2 border-black px-1 py-0.5 w-full bg-white font-bold outline-none font-mono text-xs"
+                        />
+                        <span className="font-black text-xs">-</span>
+                        <input
+                          type="time"
+                          min="07:00"
+                          max="21:00"
+                          step="1800"
+                          value={
+                            String(Math.floor(maxTime / 60)).padStart(2, "0") +
+                            ":" +
+                            String(maxTime % 60).padStart(2, "0")
+                          }
+                          onChange={(e) => {
+                            const [h, m] = e.target.value
+                              .split(":")
+                              .map(Number);
+                            setMaxTime(h * 60 + m);
+                          }}
+                          className="border-2 border-black px-1 py-0.5 w-full bg-white font-bold outline-none font-mono text-xs"
+                        />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-black font-black uppercase text-[10px] leading-tight">
+                      Max Huecos (
+                      <span className="text-black font-extrabold">
+                        {maxTotalGaps >= 720
+                          ? "Libre"
+                          : (maxTotalGaps / 60).toFixed(0) + "h"}
+                      </span>
+                      )
+                    </label>
+                    <div className="flex items-center gap-2 h-full pb-1">
+                      <input
+                        type="range"
+                        min="0"
+                        max="720"
+                        step="60"
+                        value={maxTotalGaps}
+                        onChange={(e) =>
+                          setMaxTotalGaps(Number(e.target.value))
+                        }
+                        className="w-full accent-black cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+            <div className="bg-white border-4 border-black p-3 md:p-4 flex flex-col flex-1 min-h-0 shadow-[4px_4px_0px_#111]">
+              <h2 className="text-xl mb-3 bg-black text-white px-2 py-1 inline-block uppercase shrink-0">
                 Cursos
               </h2>
 
-              <div className="space-y-4 font-mono">
+              <div className="space-y-2 font-mono overflow-y-auto flex-1 pr-2 custom-scrollbar">
                 {courses.map((course) => {
                   const isExcluded = excludedCourses.has(course.curso);
                   return (
-                    <div key={course.curso} className="space-y-2">
-                      <label className="flex items-center gap-2 font-bold cursor-pointer text-lg">
+                    <details key={course.curso} className="space-y-2 group group-open:bg-gray-50 pb-2 border-b-2 border-dashed border-gray-200 last:border-b-0">
+                      <summary className="flex items-center gap-2 font-bold cursor-pointer text-sm sm:text-base outline-none select-none py-1">
                         <input
                           type="checkbox"
                           checked={!isExcluded}
@@ -318,9 +397,8 @@ export default function App() {
                         >
                           {course.curso}
                         </span>
-                      </label>
-
-                      <div className="pl-7 space-y-3 mt-1">
+                      </summary>
+<div className="pl-6 space-y-3 mt-2 pb-2">
                         {course.teorias.length > 0 && (
                           <div>
                             <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">
@@ -393,150 +471,14 @@ export default function App() {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </details>
                   );
                 })}
               </div>
             </div>
-
-            <div className="bg-[#2979FF] text-white neo-brutalist p-6 flex flex-col gap-2">
-              <h2 className="text-2xl font-bold uppercase">Estado</h2>
-              <div className="font-mono text-xl">
-                Opciones validas:{" "}
-                <span className="bg-black px-2">
-                  {processedCombinations.length}
-                </span>
-              </div>
-            </div>
           </aside>
 
-          <section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">
-            <div className="bg-[#FF9100] border-4 border-black p-4 md:p-6 neo-brutalist shadow-[4px_4px_0px_#111] font-mono">
-              <div className="flex flex-col xl:flex-row gap-6 justify-between items-start xl:items-center">
-                <div className="space-y-2 flex-shrink-0">
-                  <label className="block text-black font-black uppercase text-sm">
-                    Ordenar Resultados
-                  </label>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
-                    className="w-full xl:w-64 p-2 border-4 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[4px_4px_0px_#111] cursor-pointer"
-                  >
-                    <option value="default">Por defecto</option>
-                    <option value="compact">Menos hrs hueco (Compacto)</option>
-                    <option value="free_days">Más días libres</option>
-                    <option value="start_late">Empezar más tarde</option>
-                    <option value="end_early">Terminar más temprano</option>
-                  </select>
-                </div>
-
-                <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <label className="block text-black font-black uppercase text-sm">
-                      Exigir Día Libre
-                    </label>
-                    <div className="flex gap-2">
-                      {[
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                      ].map((d) => (
-                        <button
-                          key={d}
-                          onClick={() => toggleWantedFreeDay(d)}
-                          className={cn(
-                            "p-2 border-2 border-black font-bold uppercase transition-transform w-[40px] text-center",
-                            wantedFreeDays.includes(d)
-                              ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
-                              : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
-                          )}
-                          title={"Exigir " + d + " libre"}
-                        >
-                          {d.charAt(0)}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-black font-black uppercase text-sm">
-                      Rango Horario Permitido
-                    </label>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold w-12">Desde</span>
-                        <input
-                          type="time"
-                          min="07:00"
-                          max="21:00"
-                          step="1800"
-                          value={
-                            String(Math.floor(minTime / 60)).padStart(2, "0") +
-                            ":" +
-                            String(minTime % 60).padStart(2, "0")
-                          }
-                          onChange={(e) => {
-                            const [h, m] = e.target.value
-                              .split(":")
-                              .map(Number);
-                            setMinTime(h * 60 + m);
-                          }}
-                          className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold w-12">Hasta</span>
-                        <input
-                          type="time"
-                          min="07:00"
-                          max="21:00"
-                          step="1800"
-                          value={
-                            String(Math.floor(maxTime / 60)).padStart(2, "0") +
-                            ":" +
-                            String(maxTime % 60).padStart(2, "0")
-                          }
-                          onChange={(e) => {
-                            const [h, m] = e.target.value
-                              .split(":")
-                              .map(Number);
-                            setMaxTime(h * 60 + m);
-                          }}
-                          className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-black font-black uppercase text-sm">
-                      Max Horas (Huecos/Semana)
-                    </label>
-                    <div className="flex items-center gap-4 h-full pb-3">
-                      <input
-                        type="range"
-                        min="0"
-                        max="720"
-                        step="60"
-                        value={maxTotalGaps}
-                        onChange={(e) =>
-                          setMaxTotalGaps(Number(e.target.value))
-                        }
-                        className="w-full accent-black cursor-pointer"
-                      />
-                      <span className="font-extrabold text-black w-14 text-right">
-                        {maxTotalGaps >= 720
-                          ? "Libre"
-                          : (maxTotalGaps / 60).toFixed(0) + "h"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <section className="lg:col-span-3 flex flex-col min-h-0 space-y-4">
             {processedCombinations.length === 0 ? (
               <div className="bg-white neo-brutalist p-12 text-center">
                 <h2 className="text-4xl text-gray-300 font-bold uppercase mb-4">
@@ -548,7 +490,7 @@ export default function App() {
               </div>
             ) : (
               <>
-                <div className="flex flex-col sm:flex-row items-center justify-between bg-white neo-brutalist p-4 gap-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between bg-white border-4 border-black p-2 md:p-4 gap-4 shrink-0 shadow-[4px_4px_0px_#111]">
                   <button
                     disabled={currentComboIdx === 0}
                     onClick={() => setCurrentComboIdx((i) => i - 1)}
@@ -556,9 +498,8 @@ export default function App() {
                   >
                     <ArrowLeft strokeWidth={3} />
                   </button>
-                  <span className="font-mono font-bold text-xl md:text-2xl uppercase text-center">
-                    Opción {currentComboIdx + 1} /{" "}
-                    {processedCombinations.length}
+                  <span className="font-mono font-bold text-lg md:text-xl uppercase text-center bg-[#2979FF] text-white px-4 py-1 border-2 border-black rotate-[-1deg] shadow-[2px_2px_0px_#111]">
+                    Opción {currentComboIdx + 1} de {processedCombinations.length} horarios válidos
                   </span>
                   <button
                     disabled={
@@ -571,7 +512,7 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="bg-white neo-brutalist p-2 md:p-6 overflow-x-auto relative">
+                <div className="bg-white border-4 border-black p-2 md:p-6 overflow-y-auto overflow-x-auto relative flex-1 min-h-0 shadow-[4px_4px_0px_#111] custom-scrollbar">
                   <CalendarGrid combo={activeCombo} coursesMap={courses} />
                 </div>
               </>
@@ -962,15 +903,16 @@ function AllSchedulesView({
   );
 }
 
+ // Reduced height to look like Google Calendar
+
+ 
+
 function CalendarGrid({
   combo,
 }: {
   combo: ScheduleCombination;
   coursesMap?: Course[];
 }) {
-  const startHour = 7;
-  const endHour = 20; // Hasta las 8:00 PM (las 20:00, cubriendo hasta 20:10 o similar)
-
   const courseColors = useMemo(() => {
     const map: Record<string, string> = {};
     Object.keys(combo.selection).forEach((cName, idx) => {
@@ -989,16 +931,30 @@ function CalendarGrid({
       }
       if (sel.laboratorio) {
         for (const sesion of sel.laboratorio.sesiones) {
-          all.push({
-            curso,
-            seccion: `Lab ${sel.laboratorio.seccion}`,
-            ...sesion,
-          });
+          all.push({ curso, seccion: `Lab ${sel.laboratorio.seccion}`, ...sesion });
         }
       }
     }
     return all;
   }, [combo]);
+
+  const { startHour, endHour } = useMemo(() => {
+    let minT = 24 * 60;
+    let maxT = 0;
+    if (sessions.length === 0) return { startHour: 7, endHour: 20 };
+    for (const s of sessions) {
+      const st = parseTimeStr(s.hora_inicio);
+      const et = parseTimeStr(s.hora_fin);
+      if (st < minT) minT = st;
+      if (et > maxT) maxT = et;
+    }
+    let sH = Math.floor(minT / 60) - 1; 
+    let eH = Math.ceil(maxT / 60); 
+    if (sH < 7) sH = 7;
+    if (eH > 22) eH = 22;
+    if (eH <= sH) eH = sH + 1;
+    return { startHour: sH, endHour: eH };
+  }, [sessions]);
 
   return (
     <div className="min-w-[800px] border-l-2 border-t-2 border-black font-mono relative">
@@ -1007,26 +963,25 @@ function CalendarGrid({
           HORA
         </div>
         {DAYS.map((d) => (
-          <div
-            key={d}
-            className="border-r-2 border-b-2 border-black p-2 uppercase"
-          >
+          <div key={d} className="border-r-2 border-b-2 border-black p-2 uppercase">
             {d}
           </div>
         ))}
       </div>
 
       <div
-        className="relative border-b-2 border-black opacity-90 bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)] bg-[length:100%_60px]"
+        className="relative border-b-2 border-black opacity-90 bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)]"
         style={{
-          height: `${(endHour - startHour + 1) * 60}px`,
+          height: `${(endHour - startHour + 1) * CELL_HEIGHT}px`,
+          backgroundSize: `100% ${CELL_HEIGHT}px`
         }}
       >
         <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
           {Array.from({ length: endHour - startHour + 1 }).map((_, i) => (
             <div
               key={i}
-              className="h-[60px] border-b-2 border-gray-200 text-xs font-bold text-center pt-2"
+              style={{ height: `${CELL_HEIGHT}px` }}
+              className="border-b-2 border-gray-200 text-xs font-bold text-center pt-1 text-gray-500"
             >
               {String(startHour + i).padStart(2, "0")}:00
             </div>
@@ -1036,22 +991,18 @@ function CalendarGrid({
         <div className="absolute left-[80px] right-0 top-0 bottom-0">
           <AnimatePresence>
             {sessions.map((s, i) => {
-              const dayIdx = DAYS.findIndex(
-                (d) => d.toLowerCase() === s.dia.toLowerCase(),
-              );
+              const dayIdx = DAYS.findIndex((d) => d.toLowerCase() === s.dia.toLowerCase());
               if (dayIdx === -1) return null;
 
               const startT = parseTimeStr(s.hora_inicio);
               const endT = parseTimeStr(s.hora_fin);
 
-              const duration = endT - startT;
-              const offsetFromStartDay = startT - startHour * 60;
-
-              const top = offsetFromStartDay;
-              const height = duration;
+              const durationHours = (endT - startT) / 60;
+              const offsetHours = (startT - startHour * 60) / 60;
+              const top = offsetHours * CELL_HEIGHT;
+              const height = durationHours * CELL_HEIGHT;
               const width = 100 / DAYS.length;
               const left = width * dayIdx;
-
               const bgColor = courseColors[s.curso] || "bg-gray-800";
 
               return (
@@ -1062,7 +1013,7 @@ function CalendarGrid({
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ delay: i * 0.05, duration: 0.2 }}
                   className={cn(
-                    "absolute p-2 border-2 border-black overflow-hidden hover:z-20 transition-transform hover:-translate-y-1 shadow-[2px_2px_0px_#111]",
+                    "absolute p-1 md:p-1.5 border-2 border-black overflow-hidden hover:z-20 transition-transform hover:-translate-y-1 shadow-[2px_2px_0px_#111]",
                     bgColor,
                     "text-black",
                   )}
