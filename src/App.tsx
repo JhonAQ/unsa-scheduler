@@ -39,9 +39,17 @@ export default function App() {
   );
 
   const [currentComboIdx, setCurrentComboIdx] = useState(0);
-  const [viewMode, setViewMode] = useState<"generator" | "all_schedules">(
-    "generator",
-  );
+    const [viewMode, setViewMode] = useState<"generator" | "all_schedules">("generator");
+
+  const [sortBy, setSortBy] = useState<"default" | "compact" | "free_days">("default");
+  const [filterFreeDays, setFilterFreeDays] = useState(false);
+  const [filterNoEarly, setFilterNoEarly] = useState(false);
+  const [filterNoLate, setFilterNoLate] = useState(false);
+
+  // Restart combo idx when filters change
+  React.useEffect(() => {
+    setCurrentComboIdx(0);
+  }, [sortBy, filterFreeDays, filterNoEarly, filterNoLate]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -134,7 +142,32 @@ export default function App() {
     return generateSchedules(activeCourses);
   }, [activeCourses]);
 
-  const activeCombo = combinations[currentComboIdx];
+  const processedCombinations = useMemo(() => {
+    let processed = combinations.map(combo => ({
+       combo,
+       metrics: getScheduleMetrics(combo)
+    }));
+
+    if (filterFreeDays) {
+       processed = processed.filter(p => p.metrics.freeDaysCount > 0);
+    }
+    if (filterNoEarly) {
+       processed = processed.filter(p => !p.metrics.hasEarlyClasses);
+    }
+    if (filterNoLate) {
+       processed = processed.filter(p => !p.metrics.hasLateClasses);
+    }
+
+    if (sortBy === "compact") {
+       processed.sort((a, b) => a.metrics.totalGapsMinutes - b.metrics.totalGapsMinutes);
+    } else if (sortBy === "free_days") {
+       processed.sort((a, b) => b.metrics.freeDaysCount - a.metrics.freeDaysCount);
+    }
+
+    return processed.map(p => p.combo);
+  }, [combinations, sortBy, filterFreeDays, filterNoEarly, filterNoLate]);
+
+  const activeCombo = processedCombinations[currentComboIdx];
 
   const toggleCourse = (curso: string) => {
     setExcludedCourses((prev) => {
@@ -334,17 +367,68 @@ export default function App() {
               </div>
             </div>
 
+            
+            <div className="bg-[#FF9100] border-4 border-black p-6 neo-brutalist shadow-[4px_4px_0px_#111]">
+              <h2 className="text-2xl font-black uppercase mb-4 text-black bg-white inline-block px-2 border-2 border-black -rotate-2">Ajustes</h2>
+              
+              <div className="space-y-4 font-mono font-bold text-sm">
+                <div>
+                  <label className="block text-black uppercase mb-1">Ordenar por:</label>
+                  <select 
+                    value={sortBy} 
+                    onChange={e => setSortBy(e.target.value as any)}
+                    className="w-full p-2 border-2 border-black bg-white appearance-none outline-none focus:ring-0 shadow-[2px_2px_0px_#111] cursor-pointer"
+                  >
+                    <option value="default">Por defecto</option>
+                    <option value="compact">Menos horas hueco</option>
+                    <option value="free_days">Más días libres</option>
+                  </select>
+                </div>
+
+                <div className="space-y-3 pt-4 border-t-4 border-black border-dotted">
+                  <span className="block text-black uppercase mb-2">Filtros:</span>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      checked={filterFreeDays}
+                      onChange={e => setFilterFreeDays(e.target.checked)}
+                      className="w-5 h-5 border-2 border-black appearance-none checked:bg-black checked:before:content-['✓'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center transition-transform hover:-translate-y-0.5" 
+                    />
+                    <span className="text-sm">Exigir día libre</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      checked={filterNoEarly}
+                      onChange={e => setFilterNoEarly(e.target.checked)}
+                      className="w-5 h-5 border-2 border-black appearance-none checked:bg-black checked:before:content-['✓'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center transition-transform hover:-translate-y-0.5" 
+                    />
+                    <span className="text-sm">Sin clases a las 7 AM</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      checked={filterNoLate}
+                      onChange={e => setFilterNoLate(e.target.checked)}
+                      className="w-5 h-5 border-2 border-black appearance-none checked:bg-black checked:before:content-['✓'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center transition-transform hover:-translate-y-0.5" 
+                    />
+                    <span className="text-sm">Sin clases de noche</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-[#2979FF] text-white neo-brutalist p-6 flex flex-col gap-2">
               <h2 className="text-2xl font-bold uppercase">Estado</h2>
               <div className="font-mono text-xl">
                 Opciones validas:{" "}
-                <span className="bg-black px-2">{combinations.length}</span>
+                <span className="bg-black px-2">{processedCombinations.length}</span>
               </div>
             </div>
           </aside>
 
           <section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">
-            {combinations.length === 0 ? (
+            {processedCombinations.length === 0 ? (
               <div className="bg-white neo-brutalist p-12 text-center">
                 <h2 className="text-4xl text-gray-300 font-bold uppercase mb-4">
                   Cruces o Sin Opciones
@@ -364,10 +448,10 @@ export default function App() {
                     <ArrowLeft strokeWidth={3} />
                   </button>
                   <span className="font-mono font-bold text-xl md:text-2xl uppercase text-center">
-                    Opción {currentComboIdx + 1} / {combinations.length}
+                    Opción {currentComboIdx + 1} / {processedCombinations.length}
                   </span>
                   <button
-                    disabled={currentComboIdx === combinations.length - 1}
+                    disabled={currentComboIdx === processedCombinations.length - 1}
                     onClick={() => setCurrentComboIdx((i) => i + 1)}
                     className="p-2 border-2 border-black disabled:opacity-50 hover:bg-[#FFEA00]"
                   >
@@ -385,8 +469,8 @@ export default function App() {
       )}
 
       {courses.length > 0 && viewMode === "all_schedules" && (
-        <AllSchedulesView 
-          courses={courses} 
+        <AllSchedulesView
+          courses={courses}
           excludedCourses={excludedCourses}
           excludedSections={excludedSections}
           toggleSection={toggleSection}
@@ -394,6 +478,57 @@ export default function App() {
       )}
     </div>
   );
+}
+
+
+function getScheduleMetrics(combo: ScheduleCombination) {
+  const daysMap: Record<string, {start: number, end: number}[]> = {
+    "Lunes": [], "Martes": [], "Miércoles": [], "Jueves": [], "Viernes": []
+  };
+
+  for (const course of Object.values(combo.selection)) {
+    if (course.teoria) {
+      for (const s of course.teoria.sesiones) {
+         if (daysMap[s.dia]) daysMap[s.dia].push({start: parseTimeStr(s.hora_inicio), end: parseTimeStr(s.hora_fin)});
+      }
+    }
+    if (course.laboratorio) {
+      for (const s of course.laboratorio.sesiones) {
+         if (daysMap[s.dia]) daysMap[s.dia].push({start: parseTimeStr(s.hora_inicio), end: parseTimeStr(s.hora_fin)});
+      }
+    }
+  }
+
+  let freeDaysCount = 0;
+  let totalGapsMinutes = 0;
+  let hasEarlyClasses = false;
+  let hasLateClasses = false;
+
+  for (const [, sessions] of Object.entries(daysMap)) {
+    if (sessions.length === 0) {
+      freeDaysCount++;
+      continue;
+    }
+
+    sessions.sort((a, b) => a.start - b.start);
+
+    if (sessions[0].start < 8 * 60) {
+      hasEarlyClasses = true;
+    }
+
+    if (sessions[sessions.length - 1].end > 19 * 60) {
+      hasLateClasses = true;
+    }
+
+    for (let i = 1; i < sessions.length; i++) {
+      const gap = sessions[i].start - sessions[i-1].end;
+      if (gap > 0) {
+        totalGapsMinutes += gap;
+      }
+    }
+  }
+
+  return { freeDaysCount, totalGapsMinutes, hasEarlyClasses, hasLateClasses };
 }
 
 function checkSessionOverlap(s1: any, s2: any): boolean {
@@ -421,7 +556,7 @@ function AllSchedulesView({
   courses,
   excludedCourses,
   excludedSections,
-  toggleSection
+  toggleSection,
 }: {
   courses: Course[];
   excludedCourses: Set<string>;
@@ -638,20 +773,29 @@ function AllSchedulesView({
                       const styleWidth = 100 / DAYS.length;
                       const styleLeft = styleWidth * dayIdx;
 
-                      const isTheory = s.tipoSec === 'Teoría';
-                      const secKey = `${s.curso}-${isTheory ? 'teoria' : 'lab'}-${s.seccion}`;
-                      const isExcluded = excludedCourses.has(s.curso) || excludedSections.has(secKey);
+                      const isTheory = s.tipoSec === "Teoría";
+                      const secKey = `${s.curso}-${isTheory ? "teoria" : "lab"}-${s.seccion}`;
+                      const isExcluded =
+                        excludedCourses.has(s.curso) ||
+                        excludedSections.has(secKey);
 
                       return (
                         <div
                           key={s.id}
-                          onClick={() => toggleSection(s.curso, isTheory ? `teoria-${s.seccion}` : `lab-${s.seccion}`)}
+                          onClick={() =>
+                            toggleSection(
+                              s.curso,
+                              isTheory
+                                ? `teoria-${s.seccion}`
+                                : `lab-${s.seccion}`,
+                            )
+                          }
                           className={cn(
                             "absolute p-2 border-2 border-black overflow-hidden hover:z-50 cursor-pointer transition-all shadow-[2px_2px_0px_#111] text-black flex flex-col justify-start",
                             s.bgColor,
-                            isExcluded 
-                              ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100" 
-                              : "opacity-90 hover:scale-[1.02]"
+                            isExcluded
+                              ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100"
+                              : "opacity-90 hover:scale-[1.02]",
                           )}
                           style={{
                             top: `${styleTop}px`,
@@ -669,9 +813,11 @@ function AllSchedulesView({
                           </p>
                           <p className="text-[10px] mt-0.5 font-bold truncate">
                             {s.tipo || "Presencial"}
-                          </p>                            <p className="text-[10px] mt-0.5 font-bold">
-                              {s.hora_inicio} - {s.hora_fin}
-                            </p>                        </div>
+                          </p>{" "}
+                          <p className="text-[10px] mt-0.5 font-bold">
+                            {s.hora_inicio} - {s.hora_fin}
+                          </p>{" "}
+                        </div>
                       );
                     })}
                   </div>
