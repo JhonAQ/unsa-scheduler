@@ -5,6 +5,7 @@ import { ScheduleGrid } from "./components/ScheduleGrid";
 import { AllSchedulesView } from "./components/AllSchedulesView";
 import { SocialView } from "./components/SocialView";
 import { FilterSidebar } from "./components/FilterSidebar";
+import { AppTour } from "./components/AppTour";
 import { useCourseSelection } from "./hooks/useCourseSelection";
 import { useScheduleGenerator } from "./hooks/useScheduleGenerator";
 
@@ -49,7 +50,8 @@ export default function App() {
 
   return (
     <div className="h-screen overflow-hidden flex flex-col p-2 md:p-4 max-w-7xl mx-auto space-y-4">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-2 gap-4 shrink-0">
+      <AppTour />
+      <header className="tour-header flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-2 gap-4 shrink-0">
         <div>
           <h1 className="text-3xl tracking-tighter text-[#111] mb-1 leading-none uppercase">
             Schedule{" "}
@@ -63,7 +65,7 @@ export default function App() {
         </div>
 
         {courses.length > 0 && (
-          <div className="flex flex-wrap gap-2 font-mono font-bold text-sm shrink-0 items-center justify-end flex-1">
+          <div className="tour-tabs flex flex-wrap gap-2 font-mono font-bold text-sm shrink-0 items-center justify-end flex-1">
             <button
               onClick={() => setViewMode("generator")}
               className={cn(
@@ -108,7 +110,7 @@ export default function App() {
       )}
 
       {courses.length > 0 && viewMode === "generator" && (
-        <main className="grid grid-cols-1 lg:grid-cols-4 gap-4 flex-1 min-h-0 overflow-hidden">
+        <main className="tour-generator-results grid grid-cols-1 lg:grid-cols-4 gap-4 flex-1 min-h-0 overflow-hidden">
           <FilterSidebar
             sortBy={sortBy}
             setSortBy={setSortBy}

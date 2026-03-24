@@ -34,7 +34,7 @@ export function FilterSidebar({
 }: FilterSidebarProps) {
   return (
     <aside className="lg:col-span-1 flex flex-col min-h-0 gap-3">
-      <div className="bg-[#FF9100] border-4 border-black p-3 md:p-4 neo-brutalist shadow-[4px_4px_0px_#111] font-mono shrink-0">
+      <div className="tour-filters bg-[#FF9100] border-4 border-black p-3 md:p-4 neo-brutalist shadow-[4px_4px_0px_#111] font-mono shrink-0">
         <div className="flex flex-col gap-4">
           {/* Select Ordenar */}
           <div className="space-y-2 w-full">
@@ -126,7 +126,7 @@ export function FilterSidebar({
         </div>
       </div>
 
-      <div className="bg-white border-4 border-black p-3 md:p-4 flex flex-col flex-1 min-h-0 shadow-[4px_4px_0px_#111]">
+      <div className="tour-course-list bg-white border-4 border-black p-3 md:p-4 flex flex-col flex-1 min-h-0 shadow-[4px_4px_0px_#111]">
         <h2 className="text-xl mb-3 bg-black text-white px-2 py-1 inline-block uppercase shrink-0">
           Cursos
         </h2>
