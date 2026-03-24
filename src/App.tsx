@@ -16,7 +16,6 @@ function parseTimeStr(time: string) {
   return h * 60 + m;
 }
 
-
 const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
 const COLORS = [
@@ -294,95 +293,101 @@ export default function App() {
         <main className="grid grid-cols-1 lg:grid-cols-4 gap-4 flex-1 min-h-0 overflow-hidden">
           <aside className="lg:col-span-1 flex flex-col min-h-0 gap-3">
             <div className="bg-[#FF9100] border-4 border-black p-3 md:p-4 neo-brutalist shadow-[4px_4px_0px_#111] font-mono shrink-0">
-                <div className="flex flex-col gap-4">
-                  {/* Select Ordenar */}
-                  <div className="space-y-2 w-full">
+              <div className="flex flex-col gap-4">
+                {/* Select Ordenar */}
+                <div className="space-y-2 w-full">
+                  <label className="block text-black font-black uppercase text-xs leading-tight">
+                    Ordenar
+                  </label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="w-full p-2 text-xs border-2 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[2px_2px_0px_#111] cursor-pointer"
+                  >
+                    <option value="default">Por defecto</option>
+                    <option value="compact">Compacto</option>
+                    <option value="free_days">Días Libres</option>
+                    <option value="start_late">Tardes</option>
+                    <option value="end_early">Mañanas</option>
+                  </select>
+                </div>
+
+                <div className="w-full grid grid-cols-2 gap-4">
+                  {/* Días Libres */}
+                  <div className="space-y-2 col-span-2 2xl:col-span-1">
                     <label className="block text-black font-black uppercase text-xs leading-tight">
-                      Ordenar
+                      Día Libre
                     </label>
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value as any)}
-                      className="w-full p-2 text-xs border-2 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[2px_2px_0px_#111] cursor-pointer"
-                    >
-                      <option value="default">Por defecto</option>
-                      <option value="compact">Compacto</option>
-                      <option value="free_days">Días Libres</option>
-                      <option value="start_late">Tardes</option>
-                      <option value="end_early">Mañanas</option>
-                    </select>
+                    <div className="flex gap-1.5 justify-start">
+                      {[
+                        "Lunes",
+                        "Martes",
+                        "Miércoles",
+                        "Jueves",
+                        "Viernes",
+                      ].map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => toggleWantedFreeDay(d)}
+                          className={cn(
+                            "p-1 border-2 border-black font-bold uppercase transition-transform flex-1 text-xs text-center max-w-[32px]",
+                            wantedFreeDays.includes(d)
+                              ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
+                              : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
+                          )}
+                          title={"Exigir " + d + " libre"}
+                        >
+                          {d.charAt(0)}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="w-full grid grid-cols-2 gap-4">
-                    {/* Días Libres */}
-                    <div className="space-y-2 col-span-2 2xl:col-span-1">
-                      <label className="block text-black font-black uppercase text-xs leading-tight">
-                        Día Libre
-                      </label>
-                      <div className="flex gap-1.5 justify-start">
-                        {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((d) => (
-                          <button
-                            key={d}
-                            onClick={() => toggleWantedFreeDay(d)}
-                            className={cn(
-                              "p-1 border-2 border-black font-bold uppercase transition-transform flex-1 text-xs text-center max-w-[32px]",
-                              wantedFreeDays.includes(d)
-                                ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
-                                : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
-                            )}
-                            title={"Exigir " + d + " libre"}
-                          >
-                            {d.charAt(0)}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Rango Horario */}
-                    <div className="space-y-2 col-span-2 2xl:col-span-1">
-                      <label className="block text-black font-black uppercase text-xs leading-tight">
-                        Rango Horario
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="time"
-                          min="07:00"
-                          max="21:00"
-                          step="1800"
-                          value={
-                            String(Math.floor(minTime / 60)).padStart(2, "0") +
-                            ":" +
-                            String(minTime % 60).padStart(2, "0")
-                          }
-                          onChange={(e) => {
-                            const [h, m] = e.target.value.split(":").map(Number);
-                            setMinTime(h * 60 + m);
-                          }}
-                          className="border-2 border-black px-1.5 py-1 flex-1 bg-white font-bold outline-none font-mono text-xs"
-                        />
-                        <span className="font-black text-xs">-</span>
-                        <input
-                          type="time"
-                          min="07:00"
-                          max="21:00"
-                          step="1800"
-                          value={
-                            String(Math.floor(maxTime / 60)).padStart(2, "0") +
-                            ":" +
-                            String(maxTime % 60).padStart(2, "0")
-                          }
-                          onChange={(e) => {
-                            const [h, m] = e.target.value.split(":").map(Number);
-                            setMaxTime(h * 60 + m);
-                          }}
-                          className="border-2 border-black px-1.5 py-1 flex-1 bg-white font-bold outline-none font-mono text-xs"
-                        />
-                      </div>
+                  {/* Rango Horario */}
+                  <div className="space-y-2 col-span-2 2xl:col-span-1">
+                    <label className="block text-black font-black uppercase text-xs leading-tight">
+                      Rango Horario
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="time"
+                        min="07:00"
+                        max="21:00"
+                        step="1800"
+                        value={
+                          String(Math.floor(minTime / 60)).padStart(2, "0") +
+                          ":" +
+                          String(minTime % 60).padStart(2, "0")
+                        }
+                        onChange={(e) => {
+                          const [h, m] = e.target.value.split(":").map(Number);
+                          setMinTime(h * 60 + m);
+                        }}
+                        className="border-2 border-black px-1.5 py-1 flex-1 bg-white font-bold outline-none font-mono text-xs"
+                      />
+                      <span className="font-black text-xs">-</span>
+                      <input
+                        type="time"
+                        min="07:00"
+                        max="21:00"
+                        step="1800"
+                        value={
+                          String(Math.floor(maxTime / 60)).padStart(2, "0") +
+                          ":" +
+                          String(maxTime % 60).padStart(2, "0")
+                        }
+                        onChange={(e) => {
+                          const [h, m] = e.target.value.split(":").map(Number);
+                          setMaxTime(h * 60 + m);
+                        }}
+                        className="border-2 border-black px-1.5 py-1 flex-1 bg-white font-bold outline-none font-mono text-xs"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="bg-white border-4 border-black p-3 md:p-4 flex flex-col flex-1 min-h-0 shadow-[4px_4px_0px_#111]">
+            </div>
+            <div className="bg-white border-4 border-black p-3 md:p-4 flex flex-col flex-1 min-h-0 shadow-[4px_4px_0px_#111]">
               <h2 className="text-xl mb-3 bg-black text-white px-2 py-1 inline-block uppercase shrink-0">
                 Cursos
               </h2>
@@ -393,6 +398,7 @@ export default function App() {
                   return (
                     <details
                       key={course.curso}
+                      open
                       className="space-y-2 group group-open:bg-gray-50 pb-2 border-b-2 border-dashed border-gray-200 last:border-b-0"
                     >
                       <summary className="flex items-center gap-2 font-bold cursor-pointer text-sm sm:text-base outline-none select-none py-1">
@@ -515,10 +521,13 @@ export default function App() {
                       <ArrowLeft className="w-5 h-5" strokeWidth={3} />
                     </button>
                     <span className="uppercase whitespace-nowrap">
-                      Opción {currentComboIdx + 1} de {processedCombinations.length}
+                      Opción {currentComboIdx + 1} de{" "}
+                      {processedCombinations.length}
                     </span>
                     <button
-                      disabled={currentComboIdx === processedCombinations.length - 1}
+                      disabled={
+                        currentComboIdx === processedCombinations.length - 1
+                      }
                       onClick={() => setCurrentComboIdx((i) => i + 1)}
                       className="hover:text-[#FFEA00] disabled:opacity-50 transition-colors bg-transparent border-none p-1"
                     >
@@ -733,67 +742,69 @@ function AllSchedulesView({
   const gridToRender = currentGrid || theoryGrids[0] || labGrids[0];
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 font-mono pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <aside className="w-full lg:w-72 shrink-0 space-y-6">
-        <div className="bg-[#FFEA00] border-4 border-black p-4 neo-brutalist shadow-[4px_4px_0px_#111]">
+    <div className="flex flex-col lg:flex-row gap-4 md:gap-8 font-mono flex-1 min-h-0 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <aside className="w-full lg:w-72 shrink-0 flex flex-col min-h-0 gap-4 md:gap-6 pb-2">
+        <div className="bg-[#FFEA00] border-4 border-black p-4 neo-brutalist shadow-[4px_4px_0px_#111] shrink-0">
           <h2 className="text-xl font-black uppercase">Vistas Disponibles</h2>
         </div>
 
-        {theoryGrids.length > 0 && (
-          <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_#111] space-y-2">
-            <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">
-              Teoría
-            </h3>
-            {theoryGrids.map((g) => (
-              <button
-                key={`teo-${g.id}`}
-                onClick={() => setActiveTab({ type: "theory", id: g.id })}
-                className={cn(
-                  "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
-                  activeTab.type === "theory" && activeTab.id === g.id
-                    ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
-                    : "bg-gray-100 hover:bg-gray-200",
-                )}
-              >
-                <span>Hoja {g.id}</span>
-                {activeTab.type === "theory" && activeTab.id === g.id && (
-                  <ArrowRight className="w-5 h-5" />
-                )}
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="overflow-y-auto custom-scrollbar pr-2 space-y-6 flex-1">
+          {theoryGrids.length > 0 && (
+            <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_#111] space-y-2">
+              <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">
+                Teoría
+              </h3>
+              {theoryGrids.map((g) => (
+                <button
+                  key={`teo-${g.id}`}
+                  onClick={() => setActiveTab({ type: "theory", id: g.id })}
+                  className={cn(
+                    "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
+                    activeTab.type === "theory" && activeTab.id === g.id
+                      ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
+                      : "bg-gray-100 hover:bg-gray-200",
+                  )}
+                >
+                  <span>Hoja {g.id}</span>
+                  {activeTab.type === "theory" && activeTab.id === g.id && (
+                    <ArrowRight className="w-5 h-5" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
 
-        {labGrids.length > 0 && (
-          <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_#111] space-y-2">
-            <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">
-              Laboratorio
-            </h3>
-            {labGrids.map((g) => (
-              <button
-                key={`lab-${g.id}`}
-                onClick={() => setActiveTab({ type: "lab", id: g.id })}
-                className={cn(
-                  "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
-                  activeTab.type === "lab" && activeTab.id === g.id
-                    ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
-                    : "bg-gray-100 hover:bg-gray-200",
-                )}
-              >
-                <span>Hoja {g.id}</span>
-                {activeTab.type === "lab" && activeTab.id === g.id && (
-                  <ArrowRight className="w-5 h-5" />
-                )}
-              </button>
-            ))}
-          </div>
-        )}
+          {labGrids.length > 0 && (
+            <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_#111] space-y-2">
+              <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">
+                Laboratorio
+              </h3>
+              {labGrids.map((g) => (
+                <button
+                  key={`lab-${g.id}`}
+                  onClick={() => setActiveTab({ type: "lab", id: g.id })}
+                  className={cn(
+                    "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
+                    activeTab.type === "lab" && activeTab.id === g.id
+                      ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
+                      : "bg-gray-100 hover:bg-gray-200",
+                  )}
+                >
+                  <span>Hoja {g.id}</span>
+                  {activeTab.type === "lab" && activeTab.id === g.id && (
+                    <ArrowRight className="w-5 h-5" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </aside>
 
-      <main className="flex-1 min-w-0">
+      <main className="flex-1 min-w-0 flex flex-col min-h-0">
         {gridToRender ? (
-          <div className="bg-white border-4 border-black p-4 md:p-8 relative shadow-[8px_8px_0px_#111]">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <div className="bg-white border-4 border-black p-4 md:p-8 relative shadow-[8px_8px_0px_#111] flex flex-col flex-1 min-h-0">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-8 gap-4 shrink-0">
               <h3 className="text-xl md:text-3xl font-black uppercase bg-black text-white inline-block px-4 py-2 rotate-[-1deg]">
                 {activeTab.type === "theory" ? "TEORÍA" : "LABORATORIO"} - HOJA{" "}
                 {gridToRender.id}
@@ -803,15 +814,17 @@ function AllSchedulesView({
               </div>
             </div>
 
-            <div className="overflow-x-auto border-4 border-black box-border shadow-[4px_4px_0px_#111]">
-              <ScheduleGrid 
-                sessions={gridToRender.sessions}
-                startHour={7}
-                endHour={20}
-                excludedCourses={excludedCourses}
-                excludedSections={excludedSections}
-                toggleSection={toggleSection}
-              />
+            <div className="overflow-auto border-4 border-black box-border shadow-[4px_4px_0px_#111] flex-1">
+              <div className="min-w-[800px] h-full relative">
+                <ScheduleGrid
+                  sessions={gridToRender.sessions}
+                  startHour={7}
+                  endHour={20}
+                  excludedCourses={excludedCourses}
+                  excludedSections={excludedSections}
+                  toggleSection={toggleSection}
+                />
+              </div>
             </div>
           </div>
         ) : (
@@ -854,8 +867,8 @@ function ScheduleGrid({
       if (st < minT) minT = st;
       if (et > maxT) maxT = et;
     }
-    let sH = Math.floor(minT / 60) - 1; 
-    let eH = Math.ceil(maxT / 60); 
+    let sH = Math.floor(minT / 60) - 1;
+    let eH = Math.ceil(maxT / 60);
     if (sH < 7) sH = 7;
     if (eH > 22) eH = 22;
     if (eH <= sH) eH = sH + 1;
@@ -932,7 +945,7 @@ function ScheduleGrid({
                     toggleSection &&
                     toggleSection(
                       s.curso,
-                      isTheory ? `teoria-${s.seccion}` : `lab-${s.seccion}`
+                      isTheory ? `teoria-${s.seccion}` : `lab-${s.seccion}`,
                     )
                   }
                   className={cn(
@@ -941,7 +954,7 @@ function ScheduleGrid({
                     toggleSection ? "cursor-pointer" : "cursor-default",
                     isExcluded
                       ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100"
-                      : "opacity-90 hover:scale-[1.02]"
+                      : "opacity-90 hover:scale-[1.02]",
                   )}
                   style={{
                     top: `${styleTop}px`,
@@ -955,7 +968,8 @@ function ScheduleGrid({
                     {s.curso}
                   </p>
                   <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5 self-start">
-                    {s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"} {s.seccion}
+                    {s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"}{" "}
+                    {s.seccion}
                   </p>
                   <p className="text-[10px] mt-0.5 font-bold truncate">
                     {s.tipo || "Presencial"}
