@@ -1,10 +1,13 @@
-const fs = require('fs');
+const fs = require("fs");
 
-const appFile = 'src/App.tsx';
-const content = fs.readFileSync(appFile, 'utf-8');
+const appFile = "src/App.tsx";
+const content = fs.readFileSync(appFile, "utf-8");
 
-const prefix = content.substring(0, content.indexOf('function AllSchedulesView'));
-const suffix = content.substring(content.indexOf('function CalendarGrid'));
+const prefix = content.substring(
+  0,
+  content.indexOf("function AllSchedulesView"),
+);
+const suffix = content.substring(content.indexOf("function CalendarGrid"));
 
 const replacement = `function AllSchedulesView({ courses }: { courses: Course[] }) {
   const startHour = 7;
@@ -240,4 +243,4 @@ const replacement = `function AllSchedulesView({ courses }: { courses: Course[] 
 `;
 
 fs.writeFileSync(appFile, prefix + replacement + suffix);
-console.log('App.tsx updated effectively!');
+console.log("App.tsx updated effectively!");

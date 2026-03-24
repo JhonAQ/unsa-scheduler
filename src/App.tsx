@@ -39,7 +39,9 @@ export default function App() {
   );
 
   const [currentComboIdx, setCurrentComboIdx] = useState(0);
-  const [viewMode, setViewMode] = useState<"generator" | "all_schedules">("generator");
+  const [viewMode, setViewMode] = useState<"generator" | "all_schedules">(
+    "generator",
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -398,7 +400,10 @@ function checkSessionOverlap(s1: any, s2: any): boolean {
   return start1 < end2 && start2 < end1;
 }
 
-function checkSectionOverlapWithinGrid(newSec: any, gridSessions: any[]): boolean {
+function checkSectionOverlapWithinGrid(
+  newSec: any,
+  gridSessions: any[],
+): boolean {
   for (const s of newSec.sesiones) {
     for (const gs of gridSessions) {
       if (checkSessionOverlap(s, gs)) return true;
@@ -414,30 +419,30 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
   const { theoryGrids, labGrids } = useMemo(() => {
     const theories: any[] = [];
     const labs: any[] = [];
-    
+
     courses.forEach((c, cIdx) => {
       const color = COLORS[cIdx % COLORS.length];
-      
-      c.teorias.forEach(t => {
+
+      c.teorias.forEach((t) => {
         theories.push({
           ...t,
           curso: c.curso,
-          tipoSec: 'Teoría',
-          bgColor: color
+          tipoSec: "Teoría",
+          bgColor: color,
         });
       });
-      c.laboratorios.forEach(l => {
+      c.laboratorios.forEach((l) => {
         labs.push({
           ...l,
           curso: c.curso,
-          tipoSec: 'Laboratorio',
-          bgColor: color
+          tipoSec: "Laboratorio",
+          bgColor: color,
         });
       });
     });
 
     const packIntoGrids = (sections: any[]) => {
-      const resultGrids: { id: number, sessions: any[] }[] = [];
+      const resultGrids: { id: number; sessions: any[] }[] = [];
       for (const sec of sections) {
         let placed = false;
         for (const grid of resultGrids) {
@@ -449,14 +454,14 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                 curso: sec.curso,
                 seccion: sec.seccion,
                 tipoSec: sec.tipoSec,
-                bgColor: sec.bgColor
-              }))
+                bgColor: sec.bgColor,
+              })),
             );
             placed = true;
             break;
           }
         }
-        
+
         if (!placed) {
           resultGrids.push({
             id: resultGrids.length + 1,
@@ -467,9 +472,9 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                 curso: sec.curso,
                 seccion: sec.seccion,
                 tipoSec: sec.tipoSec,
-                bgColor: sec.bgColor
-              }))
-            ]
+                bgColor: sec.bgColor,
+              })),
+            ],
           });
         }
       }
@@ -478,20 +483,24 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
 
     return {
       theoryGrids: packIntoGrids(theories),
-      labGrids: packIntoGrids(labs)
+      labGrids: packIntoGrids(labs),
     };
   }, [courses]);
 
-  const [activeTab, setActiveTab] = useState<{ type: 'theory' | 'lab', id: number }>({ 
-    type: theoryGrids.length > 0 ? 'theory' : 'lab', 
-    id: 1 
+  const [activeTab, setActiveTab] = useState<{
+    type: "theory" | "lab";
+    id: number;
+  }>({
+    type: theoryGrids.length > 0 ? "theory" : "lab",
+    id: 1,
   });
 
-  const currentGrid = activeTab.type === 'theory' 
-    ? theoryGrids.find(g => g.id === activeTab.id) || theoryGrids[0]
-    : labGrids.find(g => g.id === activeTab.id) || labGrids[0];
+  const currentGrid =
+    activeTab.type === "theory"
+      ? theoryGrids.find((g) => g.id === activeTab.id) || theoryGrids[0]
+      : labGrids.find((g) => g.id === activeTab.id) || labGrids[0];
 
-  const gridToRender = currentGrid || (theoryGrids[0] || labGrids[0]);
+  const gridToRender = currentGrid || theoryGrids[0] || labGrids[0];
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 font-mono pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -502,20 +511,24 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
 
         {theoryGrids.length > 0 && (
           <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_#111] space-y-2">
-            <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">Teoría</h3>
+            <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">
+              Teoría
+            </h3>
             {theoryGrids.map((g) => (
               <button
                 key={`teo-${g.id}`}
-                onClick={() => setActiveTab({ type: 'theory', id: g.id })}
+                onClick={() => setActiveTab({ type: "theory", id: g.id })}
                 className={cn(
                   "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
-                  activeTab.type === 'theory' && activeTab.id === g.id
+                  activeTab.type === "theory" && activeTab.id === g.id
                     ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
-                    : "bg-gray-100 hover:bg-gray-200"
+                    : "bg-gray-100 hover:bg-gray-200",
                 )}
               >
                 <span>Hoja {g.id}</span>
-                {activeTab.type === 'theory' && activeTab.id === g.id && <ArrowRight className="w-5 h-5" />}
+                {activeTab.type === "theory" && activeTab.id === g.id && (
+                  <ArrowRight className="w-5 h-5" />
+                )}
               </button>
             ))}
           </div>
@@ -523,20 +536,24 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
 
         {labGrids.length > 0 && (
           <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_#111] space-y-2">
-            <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">Laboratorio</h3>
+            <h3 className="font-bold uppercase mb-4 border-b-2 border-black pb-2 text-xl">
+              Laboratorio
+            </h3>
             {labGrids.map((g) => (
               <button
                 key={`lab-${g.id}`}
-                onClick={() => setActiveTab({ type: 'lab', id: g.id })}
+                onClick={() => setActiveTab({ type: "lab", id: g.id })}
                 className={cn(
                   "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
-                  activeTab.type === 'lab' && activeTab.id === g.id
+                  activeTab.type === "lab" && activeTab.id === g.id
                     ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
-                    : "bg-gray-100 hover:bg-gray-200"
+                    : "bg-gray-100 hover:bg-gray-200",
                 )}
               >
                 <span>Hoja {g.id}</span>
-                {activeTab.type === 'lab' && activeTab.id === g.id && <ArrowRight className="w-5 h-5" />}
+                {activeTab.type === "lab" && activeTab.id === g.id && (
+                  <ArrowRight className="w-5 h-5" />
+                )}
               </button>
             ))}
           </div>
@@ -548,7 +565,8 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
           <div className="bg-white border-4 border-black p-4 md:p-8 relative shadow-[8px_8px_0px_#111]">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
               <h3 className="text-xl md:text-3xl font-black uppercase bg-black text-white inline-block px-4 py-2 rotate-[-1deg]">
-                {activeTab.type === 'theory' ? 'TEORÍA' : 'LABORATORIO'} - HOJA {gridToRender.id}
+                {activeTab.type === "theory" ? "TEORÍA" : "LABORATORIO"} - HOJA{" "}
+                {gridToRender.id}
               </h3>
               <div className="bg-[#2979FF] text-white px-3 py-1 font-bold border-2 border-black neo-brutalist shadow-[2px_2px_0px_#111]">
                 {gridToRender.sessions.length} CLASES
@@ -562,7 +580,10 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                     HORA
                   </div>
                   {DAYS.map((d) => (
-                    <div key={d} className="border-r-2 border-b-2 border-black p-2 uppercase">
+                    <div
+                      key={d}
+                      className="border-r-2 border-b-2 border-black p-2 uppercase"
+                    >
                       {d}
                     </div>
                   ))}
@@ -573,19 +594,23 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                   style={{ height: `${(endHour - startHour + 1) * 60}px` }}
                 >
                   <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
-                    {Array.from({ length: endHour - startHour + 1 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-[60px] border-b-2 border-gray-200 text-xs font-bold text-center pt-2"
-                      >
-                        {String(startHour + i).padStart(2, "0")}:00
-                      </div>
-                    ))}
+                    {Array.from({ length: endHour - startHour + 1 }).map(
+                      (_, i) => (
+                        <div
+                          key={i}
+                          className="h-[60px] border-b-2 border-gray-200 text-xs font-bold text-center pt-2"
+                        >
+                          {String(startHour + i).padStart(2, "0")}:00
+                        </div>
+                      ),
+                    )}
                   </div>
 
                   <div className="absolute left-[80px] right-0 top-0 bottom-0">
                     {gridToRender.sessions.map((s) => {
-                      const dayIdx = DAYS.findIndex((d) => d.toLowerCase() === s.dia.toLowerCase());
+                      const dayIdx = DAYS.findIndex(
+                        (d) => d.toLowerCase() === s.dia.toLowerCase(),
+                      );
                       if (dayIdx === -1) return null;
 
                       const startT = parseTimeStr(s.hora_inicio);
@@ -603,7 +628,7 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                           key={s.id}
                           className={cn(
                             "absolute p-2 border-2 border-black overflow-hidden hover:z-50 hover:scale-[1.02] cursor-pointer transition-transform shadow-[2px_2px_0px_#111] opacity-90 text-black flex flex-col justify-start",
-                            s.bgColor
+                            s.bgColor,
                           )}
                           style={{
                             top: `${styleTop}px`,
@@ -617,9 +642,11 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
                             {s.curso}
                           </p>
                           <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5">
-                            {s.tipoSec === 'Teoría' ? 'TEO' : 'LAB'} {s.seccion}
+                            {s.tipoSec === "Teoría" ? "TEO" : "LAB"} {s.seccion}
                           </p>
-                          <p className="text-[10px] mt-0.5 font-bold truncate">{s.tipo || "Presencial"}</p>
+                          <p className="text-[10px] mt-0.5 font-bold truncate">
+                            {s.tipo || "Presencial"}
+                          </p>
                         </div>
                       );
                     })}
@@ -630,7 +657,9 @@ function AllSchedulesView({ courses }: { courses: Course[] }) {
           </div>
         ) : (
           <div className="bg-white border-4 border-black p-12 shadow-[8px_8px_0px_#111] text-center border-dashed">
-            <p className="font-bold text-2xl uppercase text-gray-400">No hay grupos disponibles para mostrar en esta categoría.</p>
+            <p className="font-bold text-2xl uppercase text-gray-400">
+              No hay grupos disponibles para mostrar en esta categoría.
+            </p>
           </div>
         )}
       </main>
