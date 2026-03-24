@@ -1,38 +1,8 @@
 import { useState } from "react";
+import messagesData from "../../data/messages.json";
 
 export function SocialView() {
-  const [messages] = useState([
-    {
-      id: 1,
-      name: "Cachimbo Ansioso",
-      msg: "¡Gracias mano! Me salvaste de cruzar Progra con Conta.",
-      color: "bg-[#00E676]",
-    },
-    {
-      id: 2,
-      name: "Estudiante a Punto de Egreso",
-      msg: "Toma para tu café, excelente app.",
-      color: "bg-[#00E5FF]",
-    },
-    {
-      id: 3,
-      name: "Delegada",
-      msg: "Lo compartí con toda mi base, te pasaste 👍",
-      color: "bg-[#FFEA00]",
-    },
-    {
-      id: 4,
-      name: "Anónimo",
-      msg: "Si paso este semestre gracias a tu horario, te invito unas chelas. 🙏",
-      color: "bg-[#D500F9]",
-    },
-    {
-      id: 5,
-      name: "Ing. de Sistemas",
-      msg: "Buen manejo de algoritmos, mis respetos rey. 🤖",
-      color: "bg-[#FF3366]",
-    },
-  ]);
+  const [messages] = useState(messagesData);
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 md:gap-8 font-mono flex-1 min-h-0 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -106,9 +76,16 @@ export function SocialView() {
                 key={m.id}
                 className={`p-4 border-4 border-black shadow-[4px_4px_0px_#111] ${m.color}`}
               >
-                <h4 className="font-black text-lg bg-white px-2 mb-2 inline-block border-2 border-black">
-                  {m.name}
-                </h4>
+                <div className="flex items-center gap-3 mb-2 flex-wrap">
+                  <h4 className="font-black text-lg bg-white px-2 inline-block border-2 border-black">
+                    {m.name}
+                  </h4>
+                  {m.amount && (
+                    <span className="font-bold text-sm bg-black text-[#00E676] px-2 py-0.5 border-2 border-black shadow-[2px_2px_0px_white]">
+                      {m.amount}
+                    </span>
+                  )}
+                </div>
                 <p className="font-bold text-black text-base leading-snug">
                   "{m.msg}"
                 </p>

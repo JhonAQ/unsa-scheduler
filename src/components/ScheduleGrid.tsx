@@ -78,7 +78,7 @@ export function ScheduleGrid({
           <AnimatePresence>
             {sessions.map((s, i) => {
               const dayIdx = DAYS.findIndex(
-                (d) => d.toLowerCase() === s.dia.toLowerCase()
+                (d) => d.toLowerCase() === s.dia.toLowerCase(),
               );
               if (dayIdx === -1) return null;
 
@@ -111,7 +111,7 @@ export function ScheduleGrid({
                     toggleSection &&
                     toggleSection(
                       s.curso,
-                      isTheory ? `teoria-${s.seccion}` : `lab-${s.seccion}`
+                      isTheory ? `teoria-${s.seccion}` : `lab-${s.seccion}`,
                     )
                   }
                   className={cn(
@@ -120,7 +120,7 @@ export function ScheduleGrid({
                     toggleSection ? "cursor-pointer" : "cursor-default",
                     isExcluded
                       ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100"
-                      : "opacity-90 hover:scale-[1.02]"
+                      : "opacity-90 hover:scale-[1.02]",
                   )}
                   style={{
                     top: `${styleTop}px`,
@@ -136,7 +136,8 @@ export function ScheduleGrid({
                     {s.curso}
                   </p>
                   <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5 self-start">
-                    {s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"} {s.seccion}
+                    {s.tipoSec === "Teoría" ? "TEORÍA" : "LABORATORIO"}{" "}
+                    {s.seccion}
                   </p>
                   <p className="text-[10px] mt-0.5 font-bold truncate">
                     {s.tipo || "Presencial"}

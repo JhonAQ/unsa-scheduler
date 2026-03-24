@@ -57,7 +57,7 @@ export function AllSchedulesView({
                 seccion: sec.seccion,
                 tipoSec: sec.tipoSec,
                 bgColor: sec.bgColor,
-              }))
+              })),
             );
             placed = true;
             break;
@@ -125,7 +125,7 @@ export function AllSchedulesView({
                     "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
                     activeTab.type === "theory" && activeTab.id === g.id
                       ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
-                      : "bg-gray-100 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200",
                   )}
                 >
                   <span>Hoja {g.id}</span>
@@ -150,7 +150,7 @@ export function AllSchedulesView({
                     "w-full text-left px-4 py-3 border-2 border-black font-bold uppercase transition-transform flex justify-between items-center",
                     activeTab.type === "lab" && activeTab.id === g.id
                       ? "bg-[#00E676] shadow-[2px_2px_0px_#111] translate-x-1"
-                      : "bg-gray-100 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200",
                   )}
                 >
                   <span>Hoja {g.id}</span>

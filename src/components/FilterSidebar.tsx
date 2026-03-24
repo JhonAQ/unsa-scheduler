@@ -70,13 +70,13 @@ export function FilterSidebar({
                         "p-1 border-2 border-black font-bold uppercase transition-transform flex-1 text-xs text-center max-w-[32px]",
                         wantedFreeDays.includes(d)
                           ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
-                          : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                          : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
                       )}
                       title={"Exigir " + d + " libre"}
                     >
                       {d.charAt(0)}
                     </button>
-                  )
+                  ),
                 )}
               </div>
             </div>
@@ -169,7 +169,7 @@ export function FilterSidebar({
                               onClick={() =>
                                 toggleSection(
                                   course.curso,
-                                  `teoria-${sec.seccion}`
+                                  `teoria-${sec.seccion}`,
                                 )
                               }
                               disabled={isExcluded}
@@ -178,7 +178,7 @@ export function FilterSidebar({
                                 !secExcluded && !isExcluded
                                   ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
                                   : "bg-gray-200 text-gray-400",
-                                isExcluded && "opacity-50 cursor-not-allowed"
+                                isExcluded && "opacity-50 cursor-not-allowed",
                               )}
                             >
                               Sec {sec.seccion}
@@ -202,7 +202,10 @@ export function FilterSidebar({
                             <button
                               key={key}
                               onClick={() =>
-                                toggleSection(course.curso, `lab-${sec.seccion}`)
+                                toggleSection(
+                                  course.curso,
+                                  `lab-${sec.seccion}`,
+                                )
                               }
                               disabled={isExcluded}
                               className={cn(
@@ -210,7 +213,7 @@ export function FilterSidebar({
                                 !secExcluded && !isExcluded
                                   ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
                                   : "bg-gray-200 text-gray-400",
-                                isExcluded && "opacity-50 cursor-not-allowed"
+                                isExcluded && "opacity-50 cursor-not-allowed",
                               )}
                             >
                               Sec {sec.seccion}

@@ -10,7 +10,9 @@ import { useScheduleGenerator } from "./hooks/useScheduleGenerator";
 
 export default function App() {
   const [errorError] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"generator" | "all_schedules" | "social">("generator");
+  const [viewMode, setViewMode] = useState<
+    "generator" | "all_schedules" | "social"
+  >("generator");
 
   const {
     courses,
@@ -68,7 +70,7 @@ export default function App() {
                 "px-4 py-2 border-2 border-black transition-transform uppercase",
                 viewMode === "generator"
                   ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
-                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
               )}
             >
               Generador
@@ -79,7 +81,7 @@ export default function App() {
                 "px-4 py-2 border-2 border-black transition-transform uppercase",
                 viewMode === "all_schedules"
                   ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
-                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
               )}
             >
               Todos los horarios
@@ -90,7 +92,7 @@ export default function App() {
                 "px-4 py-2 border-2 border-black transition-transform uppercase",
                 viewMode === "social"
                   ? "bg-[#FF3366] text-white shadow-[2px_2px_0px_#111]"
-                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
               )}
             >
               Social
@@ -148,10 +150,13 @@ export default function App() {
                       <ArrowLeft className="w-5 h-5" strokeWidth={3} />
                     </button>
                     <span className="uppercase whitespace-nowrap">
-                      Opci�n {currentComboIdx + 1} de {processedCombinations.length}
+                      Opci�n {currentComboIdx + 1} de{" "}
+                      {processedCombinations.length}
                     </span>
                     <button
-                      disabled={currentComboIdx === processedCombinations.length - 1}
+                      disabled={
+                        currentComboIdx === processedCombinations.length - 1
+                      }
                       onClick={() => setCurrentComboIdx((i: number) => i + 1)}
                       className="hover:text-[#FFEA00] disabled:opacity-50 transition-colors bg-transparent border-none p-1"
                     >
