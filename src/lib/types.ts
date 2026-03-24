@@ -14,7 +14,14 @@ export type Seccion = {
 
 export type Course = {
   curso: string;
-  secciones: Seccion[];
+  secciones: Seccion[]; // Still kept for raw import from JSON if needed
+  teorias: Seccion[];
+  laboratorios: Seccion[];
+};
+
+export type CourseSelection = {
+  teoria?: Seccion;
+  laboratorio?: Seccion;
 };
 
 export type TimetableFile = {
@@ -24,5 +31,5 @@ export type TimetableFile = {
 // Represents a generated schedule without conflicts
 export type ScheduleCombination = {
   id: string; // unique ID
-  selection: Record<string, Seccion>; // courseName -> Seccion
+  selection: Record<string, CourseSelection>; // courseName -> Selection (Theory + Lab)
 };

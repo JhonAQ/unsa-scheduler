@@ -1,12 +1,7 @@
 import React, { useState, useMemo, useRef } from "react";
 import {
   Upload,
-  Download,
-  Calendar,
-  Sun,
-  Moon,
   AlertTriangle,
-  SkipForward,
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
@@ -61,7 +56,36 @@ export default function App() {
       try {
         const json = JSON.parse(event.target?.result as string);
         if (json.horario_academico) {
-          setCourses(json.horario_academico);
+          const normalizedCourses: Course[] = json.horario_academico.map((c: any) => {
+            const teoriasMap: Record<string, any> = {};
+            const laboratoriosMap: Record<string, any> = {};
+
+            c.secciones.forEach((sec: any) => {
+              sec.sesiones.forEach((ses: any) => {
+                const tipoLower = ses.tipo.toLowerCase();
+                if (tipoLower.includes("teoría") || tipoLower.includes("teoria")) {
+                  if (!teoriasMap[sec.seccion]) {
+                    teoriasMap[sec.seccion] = { seccion: sec.seccion, total_sesiones_semanales: 0, sesiones: [] };
+                  }
+                  teoriasMap[sec.seccion].sesiones.push(ses);
+                } else if (tipoLower.includes("laboratorio") || tipoLower.includes("práctica") || tipoLower.includes("practica")) {
+                  if (!laboratoriosMap[sec.seccion]) {
+                    laboratoriosMap[sec.seccion] = { seccion: sec.seccion, total_sesiones_semanales: 0, sesiones: [] };
+                  }
+                  laboratoriosMap[sec.seccion].sesiones.push(ses);
+                }
+              });
+            });
+
+            return {
+              curso: c.curso,
+              secciones: c.secciones,
+              teorias: Object.values(teoriasMap),
+              laboratorios: Object.values(laboratoriosMap),
+            };
+          });
+
+          setCourses(normalizedCourses);
           setError(null);
           setCurrentComboIdx(0);
         } else {
@@ -81,11 +105,14 @@ export default function App() {
       .filter((c) => !excludedCourses.has(c.curso))
       .map((c) => ({
         ...c,
-        secciones: c.secciones.filter(
-          (s) => !excludedSections.has(`${c.curso}-${s.seccion}`),
+        teorias: c.teorias.filter(
+          (s) => !excludedSections.has(`${c.curso}-teoria-${s.seccion}`),
+        ),
+        laboratorios: c.laboratorios.filter(
+          (s) => !excludedSections.has(`${c.curso}-lab-${s.seccion}`),
         ),
       }))
-      .filter((c) => c.secciones.length > 0);
+      .filter((c) => c.teorias.length > 0 || c.laboratorios.length > 0);
   }, [courses, excludedCourses, excludedSections]);
 
   const combinations = useMemo(() => {
@@ -186,29 +213,66 @@ export default function App() {
                         </span>
                       </label>
 
-                      <div className="pl-7 flex flex-wrap gap-2">
-                        {course.secciones.map((sec) => {
-                          const key = `${course.curso}-${sec.seccion}`;
-                          const secExcluded = excludedSections.has(key);
-                          return (
-                            <button
-                              key={key}
-                              onClick={() =>
-                                toggleSection(course.curso, sec.seccion)
-                              }
-                              disabled={isExcluded}
-                              className={cn(
-                                "px-2 py-1 border-2 border-black font-bold text-sm transition-transform",
-                                !secExcluded && !isExcluded
-                                  ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
-                                  : "bg-gray-200 text-gray-400",
-                                isExcluded && "opacity-50 cursor-not-allowed",
-                              )}
-                            >
-                              Sec {sec.seccion}
-                            </button>
-                          );
-                        })}
+                      <div className="pl-7 space-y-3 mt-1">
+                        {course.teorias.length > 0 && (
+                          <div>
+                            <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">Teoría</span>
+                            <div className="flex flex-wrap gap-2">
+                              {course.teorias.map((sec) => {
+                                const key = `${course.curso}-teoria-${sec.seccion}`;
+                                const secExcluded = excludedSections.has(key);
+                                return (
+                                  <button
+                                    key={key}
+                                    onClick={() =>
+                                      toggleSection(course.curso, `teoria-${sec.seccion}`)
+                                    }
+                                    disabled={isExcluded}
+                                    className={cn(
+                                      "px-2 py-1 border-2 border-black font-bold text-sm transition-transform",
+                                      !secExcluded && !isExcluded
+                                        ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
+                                        : "bg-gray-200 text-gray-400",
+                                      isExcluded && "opacity-50 cursor-not-allowed",
+                                    )}
+                                  >
+                                    Sec {sec.seccion}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {course.laboratorios.length > 0 && (
+                          <div>
+                            <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">Laboratorio</span>
+                            <div className="flex flex-wrap gap-2">
+                              {course.laboratorios.map((sec) => {
+                                const key = `${course.curso}-lab-${sec.seccion}`;
+                                const secExcluded = excludedSections.has(key);
+                                return (
+                                  <button
+                                    key={key}
+                                    onClick={() =>
+                                      toggleSection(course.curso, `lab-${sec.seccion}`)
+                                    }
+                                    disabled={isExcluded}
+                                    className={cn(
+                                      "px-2 py-1 border-2 border-black font-bold text-sm transition-transform",
+                                      !secExcluded && !isExcluded
+                                        ? "bg-[#00E676] shadow-[2px_2px_0px_#111]"
+                                        : "bg-gray-200 text-gray-400",
+                                      isExcluded && "opacity-50 cursor-not-allowed",
+                                    )}
+                                  >
+                                    Sec {sec.seccion}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -288,9 +352,16 @@ function CalendarGrid({
 
   const sessions = useMemo(() => {
     const all = [];
-    for (const [curso, seccion] of Object.entries(combo.selection)) {
-      for (const sesion of seccion.sesiones) {
-        all.push({ curso, seccion: seccion.seccion, ...sesion });
+    for (const [curso, sel] of Object.entries(combo.selection)) {
+      if (sel.teoria) {
+        for (const sesion of sel.teoria.sesiones) {
+          all.push({ curso, seccion: `Teo ${sel.teoria.seccion}`, ...sesion });
+        }
+      }
+      if (sel.laboratorio) {
+        for (const sesion of sel.laboratorio.sesiones) {
+          all.push({ curso, seccion: `Lab ${sel.laboratorio.seccion}`, ...sesion });
+        }
       }
     }
     return all;

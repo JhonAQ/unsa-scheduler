@@ -1,4 +1,4 @@
-import { type Course, type ScheduleCombination, type Seccion, type Session } from "./types";
+import { type Course, type ScheduleCombination, type Seccion, type Session, type CourseSelection } from "./types";
 
 function timeToMinutes(timeStr: string): number {
   const [h, m] = timeStr.trim().split(":").map(Number);
@@ -19,9 +19,14 @@ function sessionsConflict(s1: Session, s2: Session): boolean {
 
 function doesSectionConflict(
   section: Seccion,
-  currentSelection: Record<string, Seccion>
+  currentSelection: Record<string, CourseSelection>
 ): boolean {
-  const allCurrentSessions = Object.values(currentSelection).flatMap(sec => sec.sesiones);
+  const allCurrentSessions = Object.values(currentSelection).flatMap(sel => {
+    const sessions = [];
+    if (sel.teoria) sessions.push(...sel.teoria.sesiones);
+    if (sel.laboratorio) sessions.push(...sel.laboratorio.sesiones);
+    return sessions;
+  });
   
   for (const newSession of section.sesiones) {
     for (const existingSession of allCurrentSessions) {
@@ -38,11 +43,17 @@ export function generateSchedules(courses: Course[]): ScheduleCombination[] {
   
   const results: ScheduleCombination[] = [];
 
-  function backtrack(index: number, currentSelection: Record<string, Seccion>) {
+  function backtrack(index: number, currentSelection: Record<string, CourseSelection>) {
     if (index === courses.length) {
-      const id = Object.values(currentSelection)
-        .map(sec => sec.seccion)
-        .join("-");
+      const idStrParts = [];
+      for (const courseName in currentSelection) {
+        const sel = currentSelection[courseName];
+        let p = "";
+        if (sel.teoria) p += `T:${sel.teoria.seccion}`;
+        if (sel.laboratorio) p += `L:${sel.laboratorio.seccion}`;
+        idStrParts.push(p);
+      }
+      const id = idStrParts.join("-");
       results.push({
         id,
         selection: { ...currentSelection }, // clone
@@ -51,13 +62,40 @@ export function generateSchedules(courses: Course[]): ScheduleCombination[] {
     }
 
     const currentCourse = courses[index];
+    
+    const teoriaOptions = currentCourse.teorias.length > 0 ? currentCourse.teorias : [undefined];
+    const labOptions = currentCourse.laboratorios.length > 0 ? currentCourse.laboratorios : [undefined];
 
-    for (const section of currentCourse.secciones) {
-      if (!doesSectionConflict(section, currentSelection)) {
-        currentSelection[currentCourse.curso] = section;
-        backtrack(index + 1, currentSelection);
-        delete currentSelection[currentCourse.curso]; // Backtrack
+    for (const teoria of teoriaOptions) {
+      if (teoria && doesSectionConflict(teoria, currentSelection)) continue;
+      
+      // Temporarily add theory
+      if (teoria) {
+        currentSelection[currentCourse.curso] = { teoria };
       }
+
+      for (const lab of labOptions) {
+        if (lab && doesSectionConflict(lab, currentSelection)) continue;
+        
+        if (teoria || lab) {
+          currentSelection[currentCourse.curso] = {
+            ...(teoria ? { teoria } : {}),
+            ...(lab ? { laboratorio: lab } : {})
+          };
+        }
+
+        backtrack(index + 1, currentSelection);
+        
+        // Backtrack
+        if (teoria) {
+          currentSelection[currentCourse.curso] = { teoria };
+        } else {
+          delete currentSelection[currentCourse.curso];
+        }
+      }
+      
+      // Backtrack theory
+      delete currentSelection[currentCourse.curso];
     }
   }
 
