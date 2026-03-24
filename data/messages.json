@@ -5,5 +5,12 @@
     "amount": "S/ 2.00",
     "msg": "prueba de mensaje",
     "color": "bg-[#00E5FF]"
+  },
+    {
+    "id": 2,
+    "name": "Gustavo Car",
+    "amount": "S/ 15.00",
+    "msg": "muy bueno",
+    "color": "bg-[#00E5FF]"
   }
 ]
