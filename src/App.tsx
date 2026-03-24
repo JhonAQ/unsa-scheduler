@@ -29,7 +29,6 @@ const COLORS = [
   "bg-[#1DE9B6]",
 ];
 
-
 function getInitialCourses(): Course[] {
   if (!initialData || !initialData.horario_academico) return [];
   return initialData.horario_academico.map((c: any) => {
@@ -39,7 +38,11 @@ function getInitialCourses(): Course[] {
     c.secciones.forEach((sec: any) => {
       sec.sesiones.forEach((ses: any) => {
         const tipoLower = ses.tipo.toLowerCase();
-        if (tipoLower.includes("teoría") || tipoLower.includes("teoria") || tipoLower.includes("teor\u00c3\u00ada")) {
+        if (
+          tipoLower.includes("teoría") ||
+          tipoLower.includes("teoria") ||
+          tipoLower.includes("teor\u00c3\u00ada")
+        ) {
           if (!teoriasMap[sec.seccion]) {
             teoriasMap[sec.seccion] = {
               seccion: sec.seccion,
@@ -200,110 +203,131 @@ export default function App() {
 
   return (
     <div className="h-screen overflow-hidden flex flex-col p-2 md:p-4 max-w-7xl mx-auto space-y-4">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-2 gap-4 shrink-0">
-          <div>
-            <h1 className="text-3xl tracking-tighter text-[#111] mb-1 leading-none uppercase">
-              Schedule{" "}
-              <span className="bg-[#FFEA00] px-2 py-0.5 select-none border-2 border-[#111] rotate-[-2deg] inline-block shadow-[2px_2px_0px_#111]">
-                Generator
-              </span>
-            </h1>
-            <p className="text-sm font-bold font-mono text-gray-700">
-              EXPLORADOR UNIVERSITARIO V1.0
-            </p>
-          </div>
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-2 gap-4 shrink-0">
+        <div>
+          <h1 className="text-3xl tracking-tighter text-[#111] mb-1 leading-none uppercase">
+            Schedule{" "}
+            <span className="bg-[#FFEA00] px-2 py-0.5 select-none border-2 border-[#111] rotate-[-2deg] inline-block shadow-[2px_2px_0px_#111]">
+              Generator
+            </span>
+          </h1>
+          <p className="text-sm font-bold font-mono text-gray-700">
+            EXPLORADOR UNIVERSITARIO V1.0
+          </p>
+        </div>
 
-          {courses.length > 0 && (
-            <div className="flex flex-wrap gap-2 font-mono font-bold text-sm shrink-0">
-              <button
-                onClick={() => setViewMode("generator")}
-                className={cn(
-                  "px-4 py-2 border-2 border-black transition-transform uppercase",
-                  viewMode === "generator"
-                    ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
-                    : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",     
-                )}
-              >
-                Generador
-              </button>
-              <button
-                onClick={() => setViewMode("all_schedules")}
-                className={cn(
-                  "px-4 py-2 border-2 border-black transition-transform uppercase",
-                  viewMode === "all_schedules"
-                    ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
-                    : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",     
-                )}
-              >
-                Todos los horarios
-              </button>
-            </div>
-          )}
-        </header>
-
-        {errorError && (
-          <div className="bg-[#FF3366] text-white p-2 neo-brutalist flex items-center gap-2 font-mono font-bold text-sm shrink-0">
-            <AlertTriangle strokeWidth={3} className="w-4 h-4"/> {errorError}
+        {courses.length > 0 && (
+          <div className="flex flex-wrap gap-2 font-mono font-bold text-sm shrink-0">
+            <button
+              onClick={() => setViewMode("generator")}
+              className={cn(
+                "px-4 py-2 border-2 border-black transition-transform uppercase",
+                viewMode === "generator"
+                  ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
+              )}
+            >
+              Generador
+            </button>
+            <button
+              onClick={() => setViewMode("all_schedules")}
+              className={cn(
+                "px-4 py-2 border-2 border-black transition-transform uppercase",
+                viewMode === "all_schedules"
+                  ? "bg-[#FFEA00] shadow-[2px_2px_0px_#111]"
+                  : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
+              )}
+            >
+              Todos los horarios
+            </button>
           </div>
         )}
+      </header>
 
-        {courses.length > 0 && viewMode === "generator" && (
-          <main className="grid grid-cols-1 lg:grid-cols-4 gap-4 flex-1 min-h-0 overflow-hidden">
+      {errorError && (
+        <div className="bg-[#FF3366] text-white p-2 neo-brutalist flex items-center gap-2 font-mono font-bold text-sm shrink-0">
+          <AlertTriangle strokeWidth={3} className="w-4 h-4" /> {errorError}
+        </div>
+      )}
+
+      {courses.length > 0 && viewMode === "generator" && (
+        <main className="grid grid-cols-1 lg:grid-cols-4 gap-4 flex-1 min-h-0 overflow-hidden">
           <aside className="lg:col-span-1 flex flex-col min-h-0 gap-3">
             <div className="bg-[#FF9100] border-4 border-black p-3 md:p-4 neo-brutalist shadow-[4px_4px_0px_#111] font-mono shrink-0">
-              <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
-                <div className="space-y-1 shrink-0 w-full lg:w-48">
-                  <label className="block text-black font-black uppercase text-[10px] leading-tight">
-                    Ordenar
-                  </label>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
-                    className="w-full p-1.5 text-[10px] border-2 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[2px_2px_0px_#111] cursor-pointer"
-                  >
-                    <option value="default">Por defecto</option>
-                    <option value="compact">Compacto</option>
-                    <option value="free_days">Dias Libres</option>
-                    <option value="start_late">Tardes</option>
-                    <option value="end_early">Mañanas</option>
-                  </select>
-                </div>
-
-                <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="space-y-1">
-                    <label className="block text-black font-black uppercase text-[10px] leading-tight">
-                      Día Libre
+                <div className="flex flex-col gap-4">
+                  {/* Select Ordenar */}
+                  <div className="space-y-2 w-full">
+                    <label className="block text-black font-black uppercase text-xs leading-tight">
+                      Ordenar
                     </label>
-                    <div className="flex gap-1.5">
-                      {[
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                      ].map((d) => (
-                        <button
-                          key={d}
-                          onClick={() => toggleWantedFreeDay(d)}
-                          className={cn(
-                            "p-1 border-2 border-black font-bold uppercase transition-transform w-8 text-xs text-center",
-                            wantedFreeDays.includes(d)
-                              ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
-                              : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]",
-                          )}
-                          title={"Exigir " + d + " libre"}
-                        >
-                          {d.charAt(0)}
-                        </button>
-                      ))}
-                    </div>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="w-full p-2 text-xs border-2 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[2px_2px_0px_#111] cursor-pointer"
+                    >
+                      <option value="default">Por defecto</option>
+                      <option value="compact">Compacto</option>
+                      <option value="free_days">Días Libres</option>
+                      <option value="start_late">Tardes</option>
+                      <option value="end_early">Mañanas</option>
+                    </select>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="block text-black font-black uppercase text-[10px] leading-tight">
-                      Rango Horario
-                    </label>
-                    <div className="flex items-center gap-2">
+                  <div className="w-full grid grid-cols-2 gap-4">
+                    {/* Días Libres */}
+                    <div className="space-y-2 col-span-2 2xl:col-span-1">
+                      <label className="block text-black font-black uppercase text-xs leading-tight">
+                        Día Libre
+                      </label>
+                      <div className="flex gap-1.5 justify-start">
+                        {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map((d) => (
+                          <button
+                            key={d}
+                            onClick={() => toggleWantedFreeDay(d)}
+                            className={cn(
+                              "p-1 border-2 border-black font-bold uppercase transition-transform flex-1 text-xs text-center max-w-[32px]",
+                              wantedFreeDays.includes(d)
+                                ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5"
+                                : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                            )}
+                            title={"Exigir " + d + " libre"}
+                          >
+                            {d.charAt(0)}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Max Huecos */}
+                    <div className="space-y-2 col-span-2 2xl:col-span-1">
+                      <label className="block text-black font-black uppercase text-xs leading-tight whitespace-nowrap">
+                        Max Huecos (
+                        <span className="text-black font-extrabold">
+                          {maxTotalGaps >= 720
+                            ? "Libre"
+                            : (maxTotalGaps / 60).toFixed(0) + "h"}
+                        </span>
+                        )
+                      </label>
+                      <div className="flex items-center gap-2 h-[28px]">
+                        <input
+                          type="range"
+                          min="0"
+                          max="720"
+                          step="60"
+                          value={maxTotalGaps}
+                          onChange={(e) => setMaxTotalGaps(Number(e.target.value))}
+                          className="w-full accent-black cursor-pointer"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Rango Horario */}
+                    <div className="space-y-2 col-span-2">
+                      <label className="block text-black font-black uppercase text-xs leading-tight">
+                        Rango Horario
+                      </label>
+                      <div className="flex items-center gap-2">
                         <input
                           type="time"
                           min="07:00"
@@ -315,12 +339,10 @@ export default function App() {
                             String(minTime % 60).padStart(2, "0")
                           }
                           onChange={(e) => {
-                            const [h, m] = e.target.value
-                              .split(":")
-                              .map(Number);
+                            const [h, m] = e.target.value.split(":").map(Number);
                             setMinTime(h * 60 + m);
                           }}
-                          className="border-2 border-black px-1 py-0.5 w-full bg-white font-bold outline-none font-mono text-xs"
+                          className="border-2 border-black px-1.5 py-1 flex-1 bg-white font-bold outline-none font-mono text-xs"
                         />
                         <span className="font-black text-xs">-</span>
                         <input
@@ -334,46 +356,17 @@ export default function App() {
                             String(maxTime % 60).padStart(2, "0")
                           }
                           onChange={(e) => {
-                            const [h, m] = e.target.value
-                              .split(":")
-                              .map(Number);
+                            const [h, m] = e.target.value.split(":").map(Number);
                             setMaxTime(h * 60 + m);
                           }}
-                          className="border-2 border-black px-1 py-0.5 w-full bg-white font-bold outline-none font-mono text-xs"
+                          className="border-2 border-black px-1.5 py-1 flex-1 bg-white font-bold outline-none font-mono text-xs"
                         />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="block text-black font-black uppercase text-[10px] leading-tight">
-                      Max Huecos (
-                      <span className="text-black font-extrabold">
-                        {maxTotalGaps >= 720
-                          ? "Libre"
-                          : (maxTotalGaps / 60).toFixed(0) + "h"}
-                      </span>
-                      )
-                    </label>
-                    <div className="flex items-center gap-2 h-full pb-1">
-                      <input
-                        type="range"
-                        min="0"
-                        max="720"
-                        step="60"
-                        value={maxTotalGaps}
-                        onChange={(e) =>
-                          setMaxTotalGaps(Number(e.target.value))
-                        }
-                        className="w-full accent-black cursor-pointer"
-                      />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            
-            <div className="bg-white border-4 border-black p-3 md:p-4 flex flex-col flex-1 min-h-0 shadow-[4px_4px_0px_#111]">
+              <div className="bg-white border-4 border-black p-3 md:p-4 flex flex-col flex-1 min-h-0 shadow-[4px_4px_0px_#111]">
               <h2 className="text-xl mb-3 bg-black text-white px-2 py-1 inline-block uppercase shrink-0">
                 Cursos
               </h2>
@@ -382,7 +375,10 @@ export default function App() {
                 {courses.map((course) => {
                   const isExcluded = excludedCourses.has(course.curso);
                   return (
-                    <details key={course.curso} className="space-y-2 group group-open:bg-gray-50 pb-2 border-b-2 border-dashed border-gray-200 last:border-b-0">
+                    <details
+                      key={course.curso}
+                      className="space-y-2 group group-open:bg-gray-50 pb-2 border-b-2 border-dashed border-gray-200 last:border-b-0"
+                    >
                       <summary className="flex items-center gap-2 font-bold cursor-pointer text-sm sm:text-base outline-none select-none py-1">
                         <input
                           type="checkbox"
@@ -398,7 +394,7 @@ export default function App() {
                           {course.curso}
                         </span>
                       </summary>
-<div className="pl-6 space-y-3 mt-2 pb-2">
+                      <div className="pl-6 space-y-3 mt-2 pb-2">
                         {course.teorias.length > 0 && (
                           <div>
                             <span className="text-xs text-gray-500 font-bold uppercase mb-1 block">
@@ -499,7 +495,8 @@ export default function App() {
                     <ArrowLeft strokeWidth={3} />
                   </button>
                   <span className="font-mono font-bold text-lg md:text-xl uppercase text-center bg-[#2979FF] text-white px-4 py-1 border-2 border-black rotate-[-1deg] shadow-[2px_2px_0px_#111]">
-                    Opción {currentComboIdx + 1} de {processedCombinations.length} horarios válidos
+                    Opción {currentComboIdx + 1} de{" "}
+                    {processedCombinations.length} horarios válidos
                   </span>
                   <button
                     disabled={
@@ -903,9 +900,7 @@ function AllSchedulesView({
   );
 }
 
- // Reduced height to look like Google Calendar
-
- 
+// Reduced height to look like Google Calendar
 
 function CalendarGrid({
   combo,
@@ -931,7 +926,11 @@ function CalendarGrid({
       }
       if (sel.laboratorio) {
         for (const sesion of sel.laboratorio.sesiones) {
-          all.push({ curso, seccion: `Lab ${sel.laboratorio.seccion}`, ...sesion });
+          all.push({
+            curso,
+            seccion: `Lab ${sel.laboratorio.seccion}`,
+            ...sesion,
+          });
         }
       }
     }
@@ -948,8 +947,8 @@ function CalendarGrid({
       if (st < minT) minT = st;
       if (et > maxT) maxT = et;
     }
-    let sH = Math.floor(minT / 60) - 1; 
-    let eH = Math.ceil(maxT / 60); 
+    let sH = Math.floor(minT / 60) - 1;
+    let eH = Math.ceil(maxT / 60);
     if (sH < 7) sH = 7;
     if (eH > 22) eH = 22;
     if (eH <= sH) eH = sH + 1;
@@ -963,7 +962,10 @@ function CalendarGrid({
           HORA
         </div>
         {DAYS.map((d) => (
-          <div key={d} className="border-r-2 border-b-2 border-black p-2 uppercase">
+          <div
+            key={d}
+            className="border-r-2 border-b-2 border-black p-2 uppercase"
+          >
             {d}
           </div>
         ))}
@@ -973,7 +975,7 @@ function CalendarGrid({
         className="relative border-b-2 border-black opacity-90 bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)]"
         style={{
           height: `${(endHour - startHour + 1) * CELL_HEIGHT}px`,
-          backgroundSize: `100% ${CELL_HEIGHT}px`
+          backgroundSize: `100% ${CELL_HEIGHT}px`,
         }}
       >
         <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
@@ -991,7 +993,9 @@ function CalendarGrid({
         <div className="absolute left-[80px] right-0 top-0 bottom-0">
           <AnimatePresence>
             {sessions.map((s, i) => {
-              const dayIdx = DAYS.findIndex((d) => d.toLowerCase() === s.dia.toLowerCase());
+              const dayIdx = DAYS.findIndex(
+                (d) => d.toLowerCase() === s.dia.toLowerCase(),
+              );
               if (dayIdx === -1) return null;
 
               const startT = parseTimeStr(s.hora_inicio);

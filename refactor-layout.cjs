@@ -1,15 +1,15 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
 // 1. Add import
-if (!code.includes('import initialData from')) {
-    code = code.replace(
-        'import type { Course, ScheduleCombination } from "./lib/types";',
-        `import type { Course, ScheduleCombination } from "./lib/types";\nimport initialData from "../data/schedule.json";`
-    );
+if (!code.includes("import initialData from")) {
+  code = code.replace(
+    'import type { Course, ScheduleCombination } from "./lib/types";',
+    `import type { Course, ScheduleCombination } from "./lib/types";\nimport initialData from "../data/schedule.json";`,
+  );
 }
 
-// 2. Add normalization function 
+// 2. Add normalization function
 const normalizationFn = `
 function getInitialCourses(): Course[] {
   if (!initialData || !initialData.horario_academico) return [];
@@ -57,18 +57,18 @@ function getInitialCourses(): Course[] {
 }
 `;
 
-if (!code.includes('function getInitialCourses()')) {
-    code = code.replace(
-        'export default function App() {',
-        normalizationFn + '\nexport default function App() {'
-    );
+if (!code.includes("function getInitialCourses()")) {
+  code = code.replace(
+    "export default function App() {",
+    normalizationFn + "\nexport default function App() {",
+  );
 }
 
 // 3. Initialize state with initialCourses
 code = code.replace(
-    'const [courses, setCourses] = useState<Course[]>([]);',
-    'const [courses, setCourses] = useState<Course[]>(getInitialCourses);'
+  "const [courses, setCourses] = useState<Course[]>([]);",
+  "const [courses, setCourses] = useState<Course[]>(getInitialCourses);",
 );
 
-fs.writeFileSync('src/App.tsx', code);
-console.log('App.tsx step 1 complete');
+fs.writeFileSync("src/App.tsx", code);
+console.log("App.tsx step 1 complete");

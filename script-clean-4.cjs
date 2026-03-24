@@ -1,14 +1,14 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
 // The file was reset. Apply everything securely.
 
 // 1. IMPORT
-if (!code.includes('import initialData from')) {
-    code = code.replace(
-        'import type { Course, ScheduleCombination } from "./lib/types";',
-        `import type { Course, ScheduleCombination } from "./lib/types";\nimport initialData from "../data/schedule.json";`
-    );
+if (!code.includes("import initialData from")) {
+  code = code.replace(
+    'import type { Course, ScheduleCombination } from "./lib/types";',
+    `import type { Course, ScheduleCombination } from "./lib/types";\nimport initialData from "../data/schedule.json";`,
+  );
 }
 
 // 2. NORMALIZATION FUNCTION & STATE
@@ -40,21 +40,29 @@ function getInitialCourses(): Course[] {
   });
 }
 `;
-if (!code.includes('function getInitialCourses()')) {
-    code = code.replace('export default function App() {', normalizationFn + '\nexport default function App() {');
+if (!code.includes("function getInitialCourses()")) {
+  code = code.replace(
+    "export default function App() {",
+    normalizationFn + "\nexport default function App() {",
+  );
 }
-code = code.replace('const [courses, setCourses] = useState<Course[]>([]);', 'const [courses, setCourses] = useState<Course[]>(getInitialCourses);');
-
+code = code.replace(
+  "const [courses, setCourses] = useState<Course[]>([]);",
+  "const [courses, setCourses] = useState<Course[]>(getInitialCourses);",
+);
 
 // 3. REMOVE FILE UPLOAD LOGIC
-code = code.replace(/const fileInputRef = useRef<HTMLInputElement>\(null\);\s*const handleFileUpload =.*?catch \(err\) \{\s*setError\("Error al leer el archivo JSON\."\);\s*\}\s*};\s*reader\.readAsText\(file\);\s*};/s, '');
-
+code = code.replace(
+  /const fileInputRef = useRef<HTMLInputElement>\(null\);\s*const handleFileUpload =.*?catch \(err\) \{\s*setError\("Error al leer el archivo JSON\."\);\s*\}\s*};\s*reader\.readAsText\(file\);\s*};/s,
+  "",
+);
 
 // 4. HEADER AND UI
 // Locate from `<div className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto space-y-8">`
 // Down to `<main className="grid grid-cols-1 lg:grid-cols-4 gap-8">`
 
-const headerUI = /<div className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto space-y-8">.*?<main className="grid grid-cols-1 lg:grid-cols-4 gap-8">/s;
+const headerUI =
+  /<div className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto space-y-8">.*?<main className="grid grid-cols-1 lg:grid-cols-4 gap-8">/s;
 
 const newHeaderUI = `<div className="h-screen overflow-hidden flex flex-col p-2 md:p-4 max-w-7xl mx-auto space-y-4">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-2 gap-4 shrink-0">
@@ -109,27 +117,42 @@ const newHeaderUI = `<div className="h-screen overflow-hidden flex flex-col p-2 
 
 code = code.replace(headerUI, newHeaderUI);
 
-
-// 5. EXTRACT & MOVE FILTERS TO ASIDE, MAKE ASIDE SCROLLABLE 
+// 5. EXTRACT & MOVE FILTERS TO ASIDE, MAKE ASIDE SCROLLABLE
 // Search for Aside
-const asideRegex = /<aside className="lg:col-span-1 space-y-6">.*?<div className="space-y-4 font-mono">/s;
+const asideRegex =
+  /<aside className="lg:col-span-1 space-y-6">.*?<div className="space-y-4 font-mono">/s;
 const startFilters = code.indexOf('<div className="bg-[#FF9100]');
-const endFilters = code.indexOf('{processedCombinations.length === 0 ?', startFilters);
+const endFilters = code.indexOf(
+  "{processedCombinations.length === 0 ?",
+  startFilters,
+);
 
-let filtersBlock = '';
+let filtersBlock = "";
 if (startFilters !== -1 && endFilters !== -1) {
-   filtersBlock = code.substring(startFilters, endFilters);
-   code = code.substring(0, startFilters) + code.substring(endFilters); // remove from original pos
+  filtersBlock = code.substring(startFilters, endFilters);
+  code = code.substring(0, startFilters) + code.substring(endFilters); // remove from original pos
 }
 
 // Compact the filters block
-filtersBlock = filtersBlock.replace(/<div className="flex flex-col xl:flex-row gap-6 justify-between items-start xl:items-center">/, '<div className="flex flex-col gap-3">');
-filtersBlock = filtersBlock.replace(/<div className="space-y-2 flex-shrink-0">/, '<div className="space-y-1">');
-filtersBlock = filtersBlock.replace('w-full xl:w-64 p-2', 'w-full p-1.5 text-xs');
-filtersBlock = filtersBlock.replace(/<div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">/, '<div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2">');
-filtersBlock = filtersBlock.replace(/text-sm/g, 'text-[10px]');
-filtersBlock = filtersBlock.replace(/p-4 md:p-6/g, 'p-3');
-filtersBlock = filtersBlock.replace(/mb-4/g, 'mb-2');
+filtersBlock = filtersBlock.replace(
+  /<div className="flex flex-col xl:flex-row gap-6 justify-between items-start xl:items-center">/,
+  '<div className="flex flex-col gap-3">',
+);
+filtersBlock = filtersBlock.replace(
+  /<div className="space-y-2 flex-shrink-0">/,
+  '<div className="space-y-1">',
+);
+filtersBlock = filtersBlock.replace(
+  "w-full xl:w-64 p-2",
+  "w-full p-1.5 text-xs",
+);
+filtersBlock = filtersBlock.replace(
+  /<div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">/,
+  '<div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2">',
+);
+filtersBlock = filtersBlock.replace(/text-sm/g, "text-[10px]");
+filtersBlock = filtersBlock.replace(/p-4 md:p-6/g, "p-3");
+filtersBlock = filtersBlock.replace(/mb-4/g, "mb-2");
 
 const newAside = `<aside className="lg:col-span-1 flex flex-col min-h-0 gap-3">
             ${filtersBlock}
@@ -142,9 +165,9 @@ const newAside = `<aside className="lg:col-span-1 flex flex-col min-h-0 gap-3">
 
 code = code.replace(asideRegex, newAside);
 
-
 // 6. REPLACE COURSE RENDER WITH ACCORDIONS (<details>)
-const coursesMapRegex = /\{\s*courses\.map\(\(course\) => \{\s*const isExcluded = excludedCourses\.has\(course\.curso\);\s*return \(\s*<div key=\{course\.curso\} className="space-y-2">\s*<label className="flex items-center gap-2 font-bold cursor-pointer text-lg">/s;
+const coursesMapRegex =
+  /\{\s*courses\.map\(\(course\) => \{\s*const isExcluded = excludedCourses\.has\(course\.curso\);\s*return \(\s*<div key=\{course\.curso\} className="space-y-2">\s*<label className="flex items-center gap-2 font-bold cursor-pointer text-lg">/s;
 
 const newCoursesMap = `{courses.map((course) => {
                   const isExcluded = excludedCourses.has(course.curso);
@@ -160,7 +183,8 @@ const newEndCourses = `</summary>\n<div className="pl-6 space-y-3 mt-2 pb-2">`;
 code = code.replace(endCoursesRegex, newEndCourses);
 
 // Convert `</div>` closing course map to `</details>` and remove the blue "Estado" box entirely
-const blueBoxRegex = /<\/div>\s*<\/div>\s*\);\s*\}\)\}\s*<\/div>\s*<\/div>\s*<div className="bg-\[\#2979FF\] text-white neo-brutalist p-6 flex flex-col gap-2">\s*<h2 className="text-2xl font-bold uppercase">Estado<\/h2>\s*<div className="font-mono text-xl">\s*Opciones validas:\{" "\}\s*<span className="bg-black px-2">\s*\{processedCombinations\.length\}\s*<\/span>\s*<\/div>\s*<\/div>\s*<\/aside>/s;
+const blueBoxRegex =
+  /<\/div>\s*<\/div>\s*\);\s*\}\)\}\s*<\/div>\s*<\/div>\s*<div className="bg-\[\#2979FF\] text-white neo-brutalist p-6 flex flex-col gap-2">\s*<h2 className="text-2xl font-bold uppercase">Estado<\/h2>\s*<div className="font-mono text-xl">\s*Opciones validas:\{" "\}\s*<span className="bg-black px-2">\s*\{processedCombinations\.length\}\s*<\/span>\s*<\/div>\s*<\/div>\s*<\/aside>/s;
 const replacementEndAside = `</div>
                     </details>
                   );
@@ -170,36 +194,36 @@ const replacementEndAside = `</div>
           </aside>`;
 code = code.replace(blueBoxRegex, replacementEndAside);
 
-
 // 7. FIX SECTION RIGHT AND PREPARE PAGINATION
-const rightSectionRegex = /<section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">\s*\{processedCombinations\.length === 0 \? \(/s;
+const rightSectionRegex =
+  /<section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">\s*\{processedCombinations\.length === 0 \? \(/s;
 const newRightSection = `<section className="lg:col-span-3 flex flex-col min-h-0 space-y-3">
-            {processedCombinations.length === 0 ? (`
+            {processedCombinations.length === 0 ? (`;
 code = code.replace(rightSectionRegex, newRightSection);
 
-
-const paginationRegex = /<div className="flex flex-col sm:flex-row items-center justify-between bg-white neo-brutalist p-4 gap-4">/s;
+const paginationRegex =
+  /<div className="flex flex-col sm:flex-row items-center justify-between bg-white neo-brutalist p-4 gap-4">/s;
 const newPagination = `<div className="flex flex-col sm:flex-row items-center justify-between bg-white border-4 border-black p-2 md:p-3 gap-2 shrink-0 shadow-[4px_4px_0px_#111]">`;
 code = code.replace(paginationRegex, newPagination);
 
-
-const calendarHostRegex = /<div className="bg-white neo-brutalist p-2 md:p-6 overflow-x-auto relative">/s;
+const calendarHostRegex =
+  /<div className="bg-white neo-brutalist p-2 md:p-6 overflow-x-auto relative">/s;
 const newCalendarHost = `<div className="bg-white border-4 border-black p-2 md:p-4 overflow-y-auto overflow-x-auto relative flex-1 min-h-0 shadow-[4px_4px_0px_#111] custom-scrollbar">`;
 code = code.replace(calendarHostRegex, newCalendarHost);
 
 // Integrate the blue text in pagination
 code = code.replace(
-  /<span className="font-mono font-bold text-xl md:text-2xl uppercase text-center">/g, 
-  '<span className="font-mono font-bold text-sm md:text-base uppercase text-center bg-[#2979FF] text-white px-4 py-1 border-2 border-black rotate-[-1deg] shadow-[2px_2px_0px_#111]">'
+  /<span className="font-mono font-bold text-xl md:text-2xl uppercase text-center">/g,
+  '<span className="font-mono font-bold text-sm md:text-base uppercase text-center bg-[#2979FF] text-white px-4 py-1 border-2 border-black rotate-[-1deg] shadow-[2px_2px_0px_#111]">',
 );
 code = code.replace(
   /Opción \{currentComboIdx \+ 1\} \/\{" "\}\s*\{processedCombinations\.length\}/,
-  'Opción {currentComboIdx + 1} de {processedCombinations.length} horarios válidos'
+  "Opción {currentComboIdx + 1} de {processedCombinations.length} horarios válidos",
 );
 
-
 // 8. UPDATE CALENDAR GRID (Reduce height, dynamic limits)
-const calRegex = /function CalendarGrid\(\{[\s\S]*?className=\{cn\(\s*"absolute p-1\.5 md:p-2 border-2 border-black overflow-hidden[\s\S]*?style=\{\{/s;
+const calRegex =
+  /function CalendarGrid\(\{[\s\S]*?className=\{cn\(\s*"absolute p-1\.5 md:p-2 border-2 border-black overflow-hidden[\s\S]*?style=\{\{/s;
 
 const newCalendarStart = `const CELL_HEIGHT = 44; 
 
@@ -315,19 +339,22 @@ function CalendarGrid({
                   )}
                   style={{`;
 
-if(calRegex.test(code)) {
-    code = code.replace(calRegex, newCalendarStart);
+if (calRegex.test(code)) {
+  code = code.replace(calRegex, newCalendarStart);
 } else {
-    // wait, it might be using old class name from before dashboard
-    const fallbackCalRegex = /function CalendarGrid\(\{[\s\S]*?className=\{cn\(\s*"absolute p-2 border-2 border-black overflow-hidden[\s\S]*?style=\{\{/s;
-    if(fallbackCalRegex.test(code)) {
-       code = code.replace(fallbackCalRegex, newCalendarStart);
-    }
+  // wait, it might be using old class name from before dashboard
+  const fallbackCalRegex =
+    /function CalendarGrid\(\{[\s\S]*?className=\{cn\(\s*"absolute p-2 border-2 border-black overflow-hidden[\s\S]*?style=\{\{/s;
+  if (fallbackCalRegex.test(code)) {
+    code = code.replace(fallbackCalRegex, newCalendarStart);
+  }
 }
 
 // 9. CLEAN UP unused icons
-code = code.replace('import { Upload, AlertTriangle, ArrowRight, ArrowLeft }', 'import { AlertTriangle, ArrowRight, ArrowLeft }');
+code = code.replace(
+  "import { Upload, AlertTriangle, ArrowRight, ArrowLeft }",
+  "import { AlertTriangle, ArrowRight, ArrowLeft }",
+);
 
-
-fs.writeFileSync('src/App.tsx', code);
-console.log('App.tsx step 4 ALL complete');
+fs.writeFileSync("src/App.tsx", code);
+console.log("App.tsx step 4 ALL complete");

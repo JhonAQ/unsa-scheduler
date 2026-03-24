@@ -1,7 +1,8 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
-const regex = /function CalendarGrid\(\{[\s\S]*?className=\{cn\(\s*"absolute p-2 border-2 border-black overflow-hidden[\s\S]*?style=\{\{/s;
+const regex =
+  /function CalendarGrid\(\{[\s\S]*?className=\{cn\(\s*"absolute p-2 border-2 border-black overflow-hidden[\s\S]*?style=\{\{/s;
 
 const newCalendarStart = `const CELL_HEIGHT = 44; // Reduced height to look like Google Calendar
 
@@ -130,5 +131,5 @@ function CalendarGrid({
                   style={{`;
 
 code = code.replace(regex, newCalendarStart);
-fs.writeFileSync('src/App.tsx', code);
-console.log('Finished updating CalendarGrid!');
+fs.writeFileSync("src/App.tsx", code);
+console.log("Finished updating CalendarGrid!");

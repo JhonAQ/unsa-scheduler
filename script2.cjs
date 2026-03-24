@@ -1,5 +1,5 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
 // The tricky part last time was formatting differences.
 // This time I'll just use a reliable approach, replacing specific well-known blocks.
@@ -55,20 +55,21 @@ const courseBlockNew = `              <div className="space-y-4 font-mono overfl
                       <div className="pl-7 space-y-3 mt-2 pb-2">`;
 
 if (code.includes(courseBlockOld)) {
-    code = code.replace(courseBlockOld, courseBlockNew);
-    console.log("Replaced start of courses map");
+  code = code.replace(courseBlockOld, courseBlockNew);
+  console.log("Replaced start of courses map");
 } else {
-    console.log("Could not find start of courses map. Trying fallback:");
-    // Try to replace the whole block dynamically 
-    const mapStart = code.indexOf(`{courses.map((course) => {`);
-    if (mapStart > 0) {
-        console.log("Found map start at", mapStart);
-    }
+  console.log("Could not find start of courses map. Trying fallback:");
+  // Try to replace the whole block dynamically
+  const mapStart = code.indexOf(`{courses.map((course) => {`);
+  if (mapStart > 0) {
+    console.log("Found map start at", mapStart);
+  }
 }
 
 // 2. Change the closing tags of the courses map, AND REMOVE the BLUE STATUS BOX
 // The easiest regex is everything from the closing `</div>` of `.pl-7` to the end of `<aside>`
-const endOfCoursesRegex = /<\/div>\s*<\/div>\s*\);\s*\}\)\}\s*<\/div>\s*<\/div>\s*<div className="bg-\[\#2979FF\] text-white neo-brutalist p-6 flex flex-col gap-2">\s*<h2 className="text-2xl font-bold uppercase">Estado<\/h2>\s*<div className="font-mono text-xl">\s*Opciones validas:\{" "\}\s*<span className="bg-black px-2">\s*\{processedCombinations\.length\}\s*<\/span>\s*<\/div>\s*<\/div>\s*<\/aside>/;
+const endOfCoursesRegex =
+  /<\/div>\s*<\/div>\s*\);\s*\}\)\}\s*<\/div>\s*<\/div>\s*<div className="bg-\[\#2979FF\] text-white neo-brutalist p-6 flex flex-col gap-2">\s*<h2 className="text-2xl font-bold uppercase">Estado<\/h2>\s*<div className="font-mono text-xl">\s*Opciones validas:\{" "\}\s*<span className="bg-black px-2">\s*\{processedCombinations\.length\}\s*<\/span>\s*<\/div>\s*<\/div>\s*<\/aside>/;
 
 const replacementForEndOfCourses = `</div>
                     </details>
@@ -79,14 +80,15 @@ const replacementForEndOfCourses = `</div>
           </aside>`;
 
 if (endOfCoursesRegex.test(code)) {
-    code = code.replace(endOfCoursesRegex, replacementForEndOfCourses);
-    console.log("Replaced end of courses map and removed blue status box!");
+  code = code.replace(endOfCoursesRegex, replacementForEndOfCourses);
+  console.log("Replaced end of courses map and removed blue status box!");
 } else {
-    console.log("Failed to match end of courses regex!");
+  console.log("Failed to match end of courses regex!");
 }
 
 // 3. Fix the right section and Orange filters. Make it absolute text replace.
-const orangeOldRegex = /<section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">\s*<div className="bg-\[\#FF9100\].*?\{processedCombinations\.length === 0 \? \(/s;
+const orangeOldRegex =
+  /<section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">\s*<div className="bg-\[\#FF9100\].*?\{processedCombinations\.length === 0 \? \(/s;
 
 const orangeNew = `<section className="lg:col-span-3 flex flex-col min-h-0 space-y-4">
             <div className="bg-[#FF9100] border-4 border-black p-3 md:p-4 neo-brutalist shadow-[4px_4px_0px_#111] font-mono shrink-0">
@@ -214,14 +216,15 @@ const orangeNew = `<section className="lg:col-span-3 flex flex-col min-h-0 space
             {processedCombinations.length === 0 ? (`;
 
 if (orangeOldRegex.test(code)) {
-    code = code.replace(orangeOldRegex, orangeNew);
-    console.log("Replaced orange filters section!");
+  code = code.replace(orangeOldRegex, orangeNew);
+  console.log("Replaced orange filters section!");
 } else {
-    console.log("Failed to match orange regex.");
+  console.log("Failed to match orange regex.");
 }
 
 // 4. Transform Pagination -> merge Status with it
-const paginationRegex = /<div className="flex flex-col sm:flex-row items-center justify-between bg-white neo-brutalist p-4 gap-4">.*?<\/button>\s*<\/div>\s*<div className="bg-white neo-brutalist p-2 md:p-6 overflow-x-auto relative">/s;
+const paginationRegex =
+  /<div className="flex flex-col sm:flex-row items-center justify-between bg-white neo-brutalist p-4 gap-4">.*?<\/button>\s*<\/div>\s*<div className="bg-white neo-brutalist p-2 md:p-6 overflow-x-auto relative">/s;
 
 const paginationNew = `<div className="flex flex-col sm:flex-row items-center justify-between bg-white border-4 border-black p-2 md:p-4 gap-4 shrink-0 shadow-[4px_4px_0px_#111]">
                   <button
@@ -248,11 +251,11 @@ const paginationNew = `<div className="flex flex-col sm:flex-row items-center ju
                 <div className="bg-white border-4 border-black p-2 md:p-6 overflow-y-auto overflow-x-auto relative flex-1 min-h-0 shadow-[4px_4px_0px_#111] custom-scrollbar">`;
 
 if (paginationRegex.test(code)) {
-    code = code.replace(paginationRegex, paginationNew);
-    console.log("Replaced pagination!");
+  code = code.replace(paginationRegex, paginationNew);
+  console.log("Replaced pagination!");
 } else {
-    console.log("Failed to match pagination regex.");
+  console.log("Failed to match pagination regex.");
 }
 
-fs.writeFileSync('src/App.tsx', code);
+fs.writeFileSync("src/App.tsx", code);
 console.log("Script execution finished.");

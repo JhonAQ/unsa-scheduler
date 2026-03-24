@@ -1,7 +1,7 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
-const sIdx = code.indexOf('<select\\n                    value={sortBy}');
+const sIdx = code.indexOf("<select\\n                    value={sortBy}");
 // It's definitely better to just use standard regex or replace.
 
 const target = `                  <select
@@ -266,5 +266,5 @@ const replacement = `                  <select
                 <div className="flex flex-col sm:flex-row items-center justify-between bg-white border-4 border-black p-2 md:p-3 gap-3 shrink-0 shadow-[4px_4px_0px_#111]">`;
 
 code = code.replace(target, replacement);
-fs.writeFileSync('src/App.tsx', code);
+fs.writeFileSync("src/App.tsx", code);
 console.log("Done script 3");

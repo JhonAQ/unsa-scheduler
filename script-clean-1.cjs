@@ -1,12 +1,12 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
 // 1. Add static Data Initializer
-if (!code.includes('import initialData from')) {
-    code = code.replace(
-        'import type { Course, ScheduleCombination } from "./lib/types";',
-        `import type { Course, ScheduleCombination } from "./lib/types";\nimport initialData from "../data/schedule.json";`
-    );
+if (!code.includes("import initialData from")) {
+  code = code.replace(
+    'import type { Course, ScheduleCombination } from "./lib/types";',
+    `import type { Course, ScheduleCombination } from "./lib/types";\nimport initialData from "../data/schedule.json";`,
+  );
 }
 
 const normalizationFn = `
@@ -55,29 +55,40 @@ function getInitialCourses(): Course[] {
   });
 }
 `;
-if (!code.includes('function getInitialCourses()')) {
-    code = code.replace(
-        'export default function App() {',
-        normalizationFn + '\nexport default function App() {'
-    );
+if (!code.includes("function getInitialCourses()")) {
+  code = code.replace(
+    "export default function App() {",
+    normalizationFn + "\nexport default function App() {",
+  );
 }
 
 // Ensure the state initializer runs
 code = code.replace(
-    'const [courses, setCourses] = useState<Course[]>([]);',
-    'const [courses, setCourses] = useState<Course[]>(getInitialCourses);'
+  "const [courses, setCourses] = useState<Course[]>([]);",
+  "const [courses, setCourses] = useState<Course[]>(getInitialCourses);",
 );
 
-
 // 2. Remove the Upload button usages
-code = code.replace(/const fileInputRef = useRef<HTMLInputElement>\(null\);\s*const handleFileUpload =.*?setError\("Error al leer el archivo JSON\."\);\s*\}\s*};\s*};/s, '');
+code = code.replace(
+  /const fileInputRef = useRef<HTMLInputElement>\(null\);\s*const handleFileUpload =.*?setError\("Error al leer el archivo JSON\."\);\s*\}\s*};\s*};/s,
+  "",
+);
 
 // Clean unused imports
-code = code.replace('import { Upload, AlertTriangle, ArrowRight, ArrowLeft }', 'import { AlertTriangle, ArrowRight, ArrowLeft }');
+code = code.replace(
+  "import { Upload, AlertTriangle, ArrowRight, ArrowLeft }",
+  "import { AlertTriangle, ArrowRight, ArrowLeft }",
+);
 
 // 3. Rewrite header and tabs
-const headerOld = code.substring(code.indexOf('<header className="flex'), code.indexOf('</header>') + 9);
-const midOld = code.substring(code.indexOf('{errorError &&'), code.indexOf('</button>\n          </div>\n        )}'));
+const headerOld = code.substring(
+  code.indexOf('<header className="flex'),
+  code.indexOf("</header>") + 9,
+);
+const midOld = code.substring(
+  code.indexOf("{errorError &&"),
+  code.indexOf("</button>\n          </div>\n        )}"),
+);
 
 const newHeader = `<header className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-4 border-[#111] pb-2 gap-4 flex-shrink-0"> 
           <div>
@@ -127,11 +138,13 @@ const newHeader = `<header className="flex flex-col md:flex-row justify-between 
 // replace the old chunk with newHeader
 let startRemoval = code.indexOf('<header className="flex');
 // Find the end by looking for: `</button>\n          </div>\n        )}`
-let endRemoval = code.indexOf('          </div>\n        )}', startRemoval) + 29; // approximate 
+let endRemoval =
+  code.indexOf("          </div>\n        )}", startRemoval) + 29; // approximate
 
 if (startRemoval !== -1) {
-    code = code.substring(0, startRemoval) + newHeader + code.substring(endRemoval);
+  code =
+    code.substring(0, startRemoval) + newHeader + code.substring(endRemoval);
 }
 
-fs.writeFileSync('src/App.tsx', code);
-console.log('Finished safe rewrite of step 1/2.');
+fs.writeFileSync("src/App.tsx", code);
+console.log("Finished safe rewrite of step 1/2.");
