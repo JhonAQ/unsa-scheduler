@@ -1,14 +1,15 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/App.tsx", "utf-8");
 
 // 1. Remove Max Huecos block from the UI layout
-const maxHuecosRegex = /\{\/\* Max Huecos \*\/\}.*?\{\/\* Rango Horario \*\/\}/s;
-code = code.replace(maxHuecosRegex, '{/* Rango Horario */}');
+const maxHuecosRegex =
+  /\{\/\* Max Huecos \*\/\}.*?\{\/\* Rango Horario \*\/\}/s;
+code = code.replace(maxHuecosRegex, "{/* Rango Horario */}");
 
 // And adjust the grid columns for Rango Horario
 code = code.replace(
   /<div className="space-y-2 col-span-2">\s*<label className="block text-black font-black uppercase text-xs leading-tight">\s*Rango Horario/,
-  '<div className="space-y-2 col-span-2 2xl:col-span-1">\n                      <label className="block text-black font-black uppercase text-xs leading-tight">\n                        Rango Horario'
+  '<div className="space-y-2 col-span-2 2xl:col-span-1">\n                      <label className="block text-black font-black uppercase text-xs leading-tight">\n                        Rango Horario',
 );
 
 // 2. Change the CalendarGrid to use unique times instead of hourly ticks
@@ -38,10 +39,14 @@ const uniqueTimesInjection = `const { startHour, endHour, uniqueTimes } = useMem
   }, [sessions]);`;
 
 // replace up to the return statement
-code = code.replace(/const \{ startHour, endHour \} = useMemo\(\(\) => \{[\s\S]*?\}, \[sessions\]\);/, uniqueTimesInjection);
+code = code.replace(
+  /const \{ startHour, endHour \} = useMemo\(\(\) => \{[\s\S]*?\}, \[sessions\]\);/,
+  uniqueTimesInjection,
+);
 
 // 3. Render the calendar grid lines and custom times
-const bgGridRegex = /<div\s*className="relative border-b-2 border-black opacity-90 bg-white\s*bg-\[linear-gradient\(_transparent_99%,_#eaeaea_100%_\)\]"\s*style=\{\{[\s\S]*?\}\}\s*>\s*<div className="absolute left-0 top-0 bottom-0 w-\[80px\] border-r-2\s*border-black bg-white\/50 backdrop-blur-sm z-10 flex flex-col\s*pointer-events-none">\s*\{Array\.from\(\{ length: endHour - startHour \+ 1 \}\)\.map\(\(_, i\) => \(\s*<div\s*key=\{i\}\s*style=\{\{ height: `\$\{CELL_HEIGHT\}px` \}\}\s*className="border-b-2 border-gray-200 text-xs font-bold\s*text-center pt-1 text-gray-500"\s*>\s*\{String\(startHour \+ i\)\.padStart\(2, "0"\)\}:00\s*<\/div>\s*\)\)\}\s*<\/div>\s*<div className="absolute left-\[80px\] right-0 top-0 bottom-0">/s;
+const bgGridRegex =
+  /<div\s*className="relative border-b-2 border-black opacity-90 bg-white\s*bg-\[linear-gradient\(_transparent_99%,_#eaeaea_100%_\)\]"\s*style=\{\{[\s\S]*?\}\}\s*>\s*<div className="absolute left-0 top-0 bottom-0 w-\[80px\] border-r-2\s*border-black bg-white\/50 backdrop-blur-sm z-10 flex flex-col\s*pointer-events-none">\s*\{Array\.from\(\{ length: endHour - startHour \+ 1 \}\)\.map\(\(_, i\) => \(\s*<div\s*key=\{i\}\s*style=\{\{ height: `\$\{CELL_HEIGHT\}px` \}\}\s*className="border-b-2 border-gray-200 text-xs font-bold\s*text-center pt-1 text-gray-500"\s*>\s*\{String\(startHour \+ i\)\.padStart\(2, "0"\)\}:00\s*<\/div>\s*\)\)\}\s*<\/div>\s*<div className="absolute left-\[80px\] right-0 top-0 bottom-0">/s;
 
 const customGrid = `<div
         className="relative border-b-2 border-black bg-[#fafafa]"
@@ -75,7 +80,8 @@ const customGrid = `<div
 code = code.replace(bgGridRegex, customGrid);
 
 // 4. Update the card content
-const oldCardRegex = /<p className="font-bold text-\[10px\] sm:text-xs uppercase\s*truncate">\s*\{s\.curso\}\s*<\/p>\s*<p className="text-\[10px\] font-sans font-black bg-black\s*text-white px-1 inline-block mt-0\.5">\s*SEC \{s\.seccion\}\s*<\/p>\s*<p className="text-\[10px\] mt-0\.5 truncate">\{s\.tipo\}<\/p>\s*<p className="text-\[10px\] mt-0\.5 font-bold">\s*\{s\.hora_inicio\} - \{s\.hora_fin\}\s*<\/p>/sg;
+const oldCardRegex =
+  /<p className="font-bold text-\[10px\] sm:text-xs uppercase\s*truncate">\s*\{s\.curso\}\s*<\/p>\s*<p className="text-\[10px\] font-sans font-black bg-black\s*text-white px-1 inline-block mt-0\.5">\s*SEC \{s\.seccion\}\s*<\/p>\s*<p className="text-\[10px\] mt-0\.5 truncate">\{s\.tipo\}<\/p>\s*<p className="text-\[10px\] mt-0\.5 font-bold">\s*\{s\.hora_inicio\} - \{s\.hora_fin\}\s*<\/p>/gs;
 
 const newCardContent = `<p className="font-bold text-[10px] leading-tight sm:text-xs uppercase line-clamp-2">
                       {s.curso}
@@ -85,13 +91,15 @@ const newCardContent = `<p className="font-bold text-[10px] leading-tight sm:tex
                     </p>`;
 
 // fallback if formatting changes slightly
-if (code.includes('SEC {s.seccion}')) {
-   code = code.replace(oldCardRegex, newCardContent);
+if (code.includes("SEC {s.seccion}")) {
+  code = code.replace(oldCardRegex, newCardContent);
 }
 
 // 5. One more specific replace if the regex missed due to formatting
-code = code.replace(/<p className="font-bold text-\[10px\] sm:text-xs uppercase truncate">\s*\{s\.curso\}\s*<\/p>[\s\S]*?<p className="text-\[10px\] mt-0\.5 font-bold">\s*\{s\.hora_inicio\} - \{s\.hora_fin\}\s*<\/p>/s, newCardContent);
+code = code.replace(
+  /<p className="font-bold text-\[10px\] sm:text-xs uppercase truncate">\s*\{s\.curso\}\s*<\/p>[\s\S]*?<p className="text-\[10px\] mt-0\.5 font-bold">\s*\{s\.hora_inicio\} - \{s\.hora_fin\}\s*<\/p>/s,
+  newCardContent,
+);
 
-
-fs.writeFileSync('src/App.tsx', code);
-console.log('Modifications applied');
+fs.writeFileSync("src/App.tsx", code);
+console.log("Modifications applied");

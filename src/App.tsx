@@ -16,7 +16,7 @@ function parseTimeStr(time: string) {
   return h * 60 + m;
 }
 
-const CELL_HEIGHT = 44;
+
 const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
 const COLORS = [
@@ -913,7 +913,7 @@ function CalendarGrid({
     return all;
   }, [combo]);
 
-  const { startHour, endHour, uniqueTimes } = useMemo(() => {
+  const { startHour, endHour } = useMemo(() => {
     let minT = 24 * 60;
     let maxT = 0;
     const times = new Set<string>();
@@ -955,30 +955,18 @@ function CalendarGrid({
       </div>
 
       <div
-        className="relative border-b-2 border-black bg-[#fafafa]"
-        style={{
-          height: `${(endHour - startHour + 1) * CELL_HEIGHT}px`
-        }}
+        className="relative border-b-2 border-black bg-white bg-[linear-gradient(_transparent_99%,_#eaeaea_100%_)] bg-[length:100%_60px]"
+        style={{ height: `${(endHour - startHour + 1) * 60}px` }}
       >
-        {/* Custom Exact Time Horizontal Lines */}
-        {uniqueTimes.map(t => {
-          const top = ((parseTimeStr(t) - startHour * 60) / 60) * CELL_HEIGHT;
-          return <div key={"line-"+t} className="absolute left-[80px] right-0 border-b border-gray-300 border-dashed pointer-events-none" style={{ top: `${top}px` }} />;
-        })}
-
-        <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/80 backdrop-blur-sm z-30 pointer-events-none">
-          {uniqueTimes.map((t) => {
-            const top = ((parseTimeStr(t) - startHour * 60) / 60) * CELL_HEIGHT;
-            return (
-              <div
-                key={"label-"+t}
-                style={{ top: `${top}px` }}
-                className="absolute left-0 w-full text-center text-[11px] font-black text-gray-600 -translate-y-1/2 bg-white/60 px-1"
-              >
-                {t}
-              </div>
-            );
-          })}
+        <div className="absolute left-0 top-0 bottom-0 w-[80px] border-r-2 border-black bg-white/50 backdrop-blur-sm z-10 flex flex-col pointer-events-none">
+          {Array.from({ length: endHour - startHour + 1 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[60px] border-b-2 border-gray-200 text-xs font-bold text-center pt-2 text-gray-800"
+            >
+              {String(startHour + i).padStart(2, "0")}:00
+            </div>
+          ))}
         </div>
 
         <div className="absolute left-[80px] right-0 top-0 bottom-0">
@@ -992,13 +980,18 @@ function CalendarGrid({
               const startT = parseTimeStr(s.hora_inicio);
               const endT = parseTimeStr(s.hora_fin);
 
-              const durationHours = (endT - startT) / 60;
-              const offsetHours = (startT - startHour * 60) / 60;
-              const top = offsetHours * CELL_HEIGHT;
-              const height = durationHours * CELL_HEIGHT;
-              const width = 100 / DAYS.length;
-              const left = width * dayIdx;
+              const duration = endT - startT;
+              const offsetFromStartDay = startT - startHour * 60;
+
+              const styleTop = offsetFromStartDay;
+              const styleHeight = duration;
+              const styleWidth = 100 / DAYS.length;
+              const styleLeft = styleWidth * dayIdx;
+              
               const bgColor = courseColors[s.curso] || "bg-gray-800";
+
+              let prefix = s.seccion.includes("Teo") ? "TEO" : "LAB";
+              let secClean = s.seccion.replace(/Teo |Lab /, "");
 
               return (
                 <motion.div
@@ -1008,23 +1001,30 @@ function CalendarGrid({
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ delay: i * 0.05, duration: 0.2 }}
                   className={cn(
-                    "absolute p-1 md:p-1.5 border-2 border-black overflow-hidden hover:z-20 transition-transform hover:-translate-y-1 shadow-[2px_2px_0px_#111]",
+                    "absolute p-2 border-2 border-black overflow-hidden hover:z-50 cursor-pointer transition-all shadow-[2px_2px_0px_#111] text-black flex flex-col justify-start",
                     bgColor,
-                    "text-black",
+                    "opacity-90 hover:scale-[1.02]"
                   )}
                   style={{
-                    top: `${top}px`,
-                    height: `${height}px`,
-                    width: `calc(${width}% - 10px)`,
-                    left: `calc(${left}% + 5px)`,
+                    top: `${styleTop}px`,
+                    height: `${styleHeight}px`,
+                    width: `calc(${styleWidth}% - 10px)`,
+                    left: `calc(${styleLeft}% + 5px)`,
                   }}
+                  title={`${s.curso} | ${prefix} ${secClean} (${s.tipo}) | ${s.hora_inicio} - ${s.hora_fin}`}
                 >
-                  <p className="font-bold text-[10px] leading-tight sm:text-xs uppercase line-clamp-2">
-                      {s.curso}
-                    </p>
-                    <p className="text-[10px] sm:text-[11px] font-sans font-black bg-black text-white px-1.5 inline-block mt-1 shadow-[1px_1px_0px_#fff] border border-black/20">
-                      {s.seccion}
-                    </p>
+                  <p className="font-bold text-[10px] sm:text-xs uppercase truncate w-full pb-1 mb-1 border-b border-black/20 leading-tight">
+                    {s.curso}
+                  </p>
+                  <p className="text-[10px] font-sans font-black bg-black text-white px-1 inline-block mt-0.5 self-start">
+                    {prefix} {secClean}
+                  </p>
+                  <p className="text-[10px] mt-0.5 font-bold truncate">
+                    {s.tipo || "Presencial"}
+                  </p>
+                  <p className="text-[10px] mt-0.5 font-bold">
+                    {s.hora_inicio} - {s.hora_fin}
+                  </p>
                 </motion.div>
               );
             })}
