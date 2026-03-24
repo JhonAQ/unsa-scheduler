@@ -119,8 +119,8 @@ export function ScheduleGrid({
                     s.bgColor || "bg-gray-800",
                     toggleSection ? "cursor-pointer" : "cursor-default",
                     isExcluded
-                      ? "opacity-30 saturate-0 scale-95 hover:opacity-100 hover:scale-[1.02] hover:saturate-100"
-                      : "opacity-90 hover:scale-[1.02]",
+                      ? "opacity-40 saturate-0 scale-95 hover:scale-[1.02]"
+                      : "opacity-90 hover:scale-[1.02] hover:opacity-100",
                   )}
                   style={{
                     top: `${styleTop}px`,

@@ -22,7 +22,7 @@ export function parseTimeStr(time: string) {
   return h * 60 + m;
 }
 
-export function processCoursesData(data: any): Course[] {
+export function processCoursesData(data: any, prefixId?: string): Course[] {
   if (!data || !data.horario_academico) return [];
   return data.horario_academico.map((c: any) => {
     const teoriasMap: Record<string, any> = {};
@@ -63,8 +63,11 @@ export function processCoursesData(data: any): Course[] {
       });
     });
 
+    const isIngles = c.curso.toLowerCase().trim() === "ingles" || c.curso.toLowerCase().trim() === "inglés" || c.curso.toLowerCase().trim() === "inglÃ©s";
+    const courseName = isIngles && prefixId ? `${c.curso} (${prefixId})` : c.curso;
+
     return {
-      curso: c.curso,
+      curso: courseName,
       secciones: c.secciones,
       teorias: Object.values(teoriasMap),
       laboratorios: Object.values(laboratoriosMap),
@@ -74,11 +77,11 @@ export function processCoursesData(data: any): Course[] {
 
 export function getAllYearsData() {
   return [
-    { year: "Primer Año", courses: processCoursesData(primeroData) },
-    { year: "Segundo Año", courses: processCoursesData(segundoData) },
-    { year: "Tercer Año", courses: processCoursesData(terceroData) },
-    { year: "Cuarto Año", courses: processCoursesData(cuartoData) },
-    { year: "Quinto Año", courses: processCoursesData(quintoData) },
+    { year: "Primer Año", courses: processCoursesData(primeroData, "1er Año") },
+    { year: "Segundo Año", courses: processCoursesData(segundoData, "2do Año") },
+    { year: "Tercer Año", courses: processCoursesData(terceroData, "3er Año") },
+    { year: "Cuarto Año", courses: processCoursesData(cuartoData, "4to Año") },
+    { year: "Quinto Año", courses: processCoursesData(quintoData, "5to Año") },
   ];
 }
 
@@ -98,8 +101,8 @@ export function getScheduleMetrics(combo: ScheduleCombination) {
     "Lunes": [],
     "Martes": [],
     "Miercoles": [],
+    "Miércoles": [],
     "MiÃ©rcoles": [], // dirty map for bad data
-    "Miercoles": [],
     "Jueves": [],
     "Viernes": [],
   };
@@ -129,7 +132,7 @@ export function getScheduleMetrics(combo: ScheduleCombination) {
   const mergedDays = {
     Lunes: fallbackDaysMap["Lunes"],
     Martes: fallbackDaysMap["Martes"],
-    Miercoles: [...fallbackDaysMap["Miercoles"], ...fallbackDaysMap["MiÃ©rcoles"], ...fallbackDaysMap["Miercoles"]],
+    Miercoles: [...fallbackDaysMap["Miercoles"], ...(fallbackDaysMap["Miércoles"] || []), ...(fallbackDaysMap["MiÃ©rcoles"] || [])],
     Jueves: fallbackDaysMap["Jueves"],
     Viernes: fallbackDaysMap["Viernes"],
   };
