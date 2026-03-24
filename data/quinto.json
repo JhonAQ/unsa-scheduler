@@ -1,0 +1,228 @@
+{
+  "horario_academico": [
+    {
+      "curso": "Etica General y Profesional",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Gestion de Emprendimiento de Software",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "16:40", "hora_fin": "18:30" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Topicos Avanzados en Base de Datos (E)",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "11:30", "hora_fin": "13:10" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "11:30", "hora_fin": "13:10" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Computacion Grafica, Vision Computacional y Multimedia (E)",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "19:20" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Desarrollo Avanzado en Nuevas Plataformas (E)",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "12:20", "hora_fin": "14:00" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "10:40", "hora_fin": "12:20" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Seminario de Tesis 1",
+      "secciones": [
+        {
+          "seccion": "A-C-E",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "B-D-F",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Seguridad Informatica",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "09:40", "hora_fin": "11:30" },
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "07:50", "hora_fin": "09:40" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Manteniemto, Configuracion y Evolucion de Software",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "12:20", "hora_fin": "14:00" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "16:40", "hora_fin": "18:30" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "10:40", "hora_fin": "12:20" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "12:20", "hora_fin": "14:00" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "10:40", "hora_fin": "12:20" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Proyecto de Ingenieria de Software 1",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "11:30", "hora_fin": "13:10" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "12:20", "hora_fin": "14:00" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "10:40", "hora_fin": "12:20" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        }
+      ]
+    }
+  ]
+}

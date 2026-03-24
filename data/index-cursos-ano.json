@@ -1,0 +1,177 @@
+{
+  "malla_curricular": [
+    {
+      "ano_academico": "Primer Año",
+      "cursos": [
+        {
+          "nombre": "Introduccion al Desarrollo de Software",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Algebra Lineal",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Matematica Basica",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Estructuras Discretas I",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Metodologia de Trabajo Academico",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Introduccion a la Ingenieria",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Relaciones Humanas en Empresas de Desarrollo de Software y Base Tecnologica",
+          "lleva_laboratorio": false
+        }
+      ]
+    },
+    {
+      "ano_academico": "Segundo Año",
+      "cursos": [
+        {
+          "nombre": "Desarrollo de Aplicaciones Web",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Ingles",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Ciudadania e Interculturalidad",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Enfoque Empresarial",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Estructura de Datos y Algoritmos",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Calculo en Varias Variables",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Desarrollo Emocional, Gestion de Conflictos y Liderazgo",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Taller de Internet de las Cosas",
+          "lleva_laboratorio": true
+        }
+      ]
+    },
+    {
+      "ano_academico": "Tercer Año",
+      "cursos": [
+        {
+          "nombre": "Base de datos",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Ingenieria y Procesos de Software",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Investigacion de Operaciones",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Organización y Metodos",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Teoria de la Computacion",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Programacion de Sistemas",
+          "lleva_laboratorio": true
+        }
+      ]
+    },
+    {
+      "ano_academico": "Cuarto Año",
+      "cursos": [
+        {
+          "nombre": "Sistemas Distribuidos",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Tecnologia de Informacion",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Inteligencia Artificial",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Ingenieria de Requerimientos",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Ingles",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Pruebas de Software",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Fisica Computacional",
+          "lleva_laboratorio": true
+        }
+      ]
+    },
+    {
+      "ano_academico": "Quinto Año",
+      "cursos": [
+        {
+          "nombre": "Etica General y Profesional",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Gestion de Emprendimiento de Software",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Topicos Avanzados en Base de Datos (E)",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Computacion Grafica, Vision Computacional y Multimedia (E)",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Desarrollo Avanzado en Nuevas Plataformas (E)",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Seminario de Tesis 1",
+          "lleva_laboratorio": false
+        },
+        {
+          "nombre": "Seguridad Informatica",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Manteniemto, Configuracion y Evolucion de Software",
+          "lleva_laboratorio": true
+        },
+        {
+          "nombre": "Proyecto de Ingenieria de Software 1",
+          "lleva_laboratorio": true
+        }
+      ]
+    }
+  ]
+}

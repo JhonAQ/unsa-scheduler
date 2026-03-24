@@ -1,0 +1,247 @@
+{
+  "horario_academico": [
+    {
+      "curso": "Desarrollo de Aplicaciones Web",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Ingles",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Ciudadania e Interculturalidad",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Enfoque Empresarial",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "17:40", "hora_fin": "19:20" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "11:30", "hora_fin": "13:10" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "11:30", "hora_fin": "13:10" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Estructura de Datos y Algoritmos",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "10:40", "hora_fin": "12:20" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "16:40", "hora_fin": "18:30" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "E",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "F",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Calculo en Varias Variables",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "10:40", "hora_fin": "12:20" },
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "09:40", "hora_fin": "11:30" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "19:20" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "17:40", "hora_fin": "19:20" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "17:40", "hora_fin": "19:20" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Desarrollo Emocional, Gestion de Conflictos y Liderazgo",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "09:40", "hora_fin": "11:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Taller de Internet de las Cosas",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "09:40", "hora_fin": "11:30" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "17:40", "hora_fin": "18:30" },
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "10:40", "hora_fin": "12:20" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "17:40", "hora_fin": "19:20" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "E",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        }
+      ]
+    }
+  ]
+}

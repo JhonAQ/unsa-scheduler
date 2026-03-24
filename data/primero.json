@@ -1,0 +1,224 @@
+{
+  "horario_academico": [
+    {
+      "curso": "Introduccion al Desarrollo de Software",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 3,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "09:40", "hora_fin": "11:30" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 4,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "D",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "E",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "F",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Algebra Lineal",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "18:30", "hora_fin": "20:10" },
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "17:40", "hora_fin": "19:20" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "19:20" },
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "17:40", "hora_fin": "20:10" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Matematica Basica",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "09:40" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "17:40", "hora_fin": "19:20" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Estructuras Discretas I",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "08:50", "hora_fin": "10:30" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "08:50", "hora_fin": "10:30" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Metodologia de Trabajo Academico",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "09:40", "hora_fin": "11:30" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "09:40", "hora_fin": "11:30" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "17:40", "hora_fin": "19:20" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "17:40", "hora_fin": "19:20" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Introduccion a la Ingenieria",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "11:30", "hora_fin": "13:10" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "11:30", "hora_fin": "13:10" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "15:50", "hora_fin": "17:30" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "17:30" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 2,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "11:30", "hora_fin": "13:10" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "11:30", "hora_fin": "13:10" }
+          ]
+        }
+      ]
+    },
+    {
+      "curso": "Relaciones Humanas en Empresas de Desarrollo de Software y Base Tecnologica",
+      "secciones": [
+        {
+          "seccion": "A",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        },
+        {
+          "seccion": "B",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
+          ]
+        },
+        {
+          "seccion": "C",
+          "total_sesiones_semanales": 1,
+          "sesiones": [
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+          ]
+        }
+      ]
+    }
+  ]
+}
