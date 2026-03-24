@@ -41,15 +41,22 @@ export default function App() {
   const [currentComboIdx, setCurrentComboIdx] = useState(0);
     const [viewMode, setViewMode] = useState<"generator" | "all_schedules">("generator");
 
-  const [sortBy, setSortBy] = useState<"default" | "compact" | "free_days">("default");
-  const [filterFreeDays, setFilterFreeDays] = useState(false);
-  const [filterNoEarly, setFilterNoEarly] = useState(false);
-  const [filterNoLate, setFilterNoLate] = useState(false);
+  const [sortBy, setSortBy] = useState<"default" | "compact" | "free_days" | "start_late" | "end_early">("default");
+  const [wantedFreeDays, setWantedFreeDays] = useState<string[]>([]);
+  const [minTime, setMinTime] = useState<number>(7 * 60); // 7:00
+  const [maxTime, setMaxTime] = useState<number>(20 * 60 + 10); // 20:10
+  const [maxTotalGaps, setMaxTotalGaps] = useState<number>(12 * 60); // Max hours empty
 
   // Restart combo idx when filters change
   React.useEffect(() => {
     setCurrentComboIdx(0);
-  }, [sortBy, filterFreeDays, filterNoEarly, filterNoLate]);
+  }, [sortBy, wantedFreeDays, minTime, maxTime, maxTotalGaps]);
+
+  const toggleWantedFreeDay = (day: string) => {
+    setWantedFreeDays(prev => 
+      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+    );
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -148,24 +155,35 @@ export default function App() {
        metrics: getScheduleMetrics(combo)
     }));
 
-    if (filterFreeDays) {
-       processed = processed.filter(p => p.metrics.freeDaysCount > 0);
+    if (wantedFreeDays.length > 0) {
+      processed = processed.filter(p => wantedFreeDays.every(d => p.metrics.freeDays.includes(d)));
     }
-    if (filterNoEarly) {
-       processed = processed.filter(p => !p.metrics.hasEarlyClasses);
+    
+    if (minTime > 7 * 60) {
+      processed = processed.filter(p => p.metrics.earliestStart >= minTime);
     }
-    if (filterNoLate) {
-       processed = processed.filter(p => !p.metrics.hasLateClasses);
+    
+    if (maxTime < 21 * 60) {
+      processed = processed.filter(p => p.metrics.latestEnd <= maxTime);
+    }
+
+    // Default max gap filter ignores if maxTotalGaps is basically "infinite"
+    if (maxTotalGaps < 12 * 60) {
+      processed = processed.filter(p => p.metrics.totalGapsMinutes <= maxTotalGaps);
     }
 
     if (sortBy === "compact") {
        processed.sort((a, b) => a.metrics.totalGapsMinutes - b.metrics.totalGapsMinutes);
     } else if (sortBy === "free_days") {
-       processed.sort((a, b) => b.metrics.freeDaysCount - a.metrics.freeDaysCount);
+       processed.sort((a, b) => b.metrics.freeDays.length - a.metrics.freeDays.length);
+    } else if (sortBy === "start_late") {
+       processed.sort((a, b) => b.metrics.earliestStart - a.metrics.earliestStart);
+    } else if (sortBy === "end_early") {
+       processed.sort((a, b) => a.metrics.latestEnd - b.metrics.latestEnd);
     }
 
     return processed.map(p => p.combo);
-  }, [combinations, sortBy, filterFreeDays, filterNoEarly, filterNoLate]);
+  }, [combinations, sortBy, wantedFreeDays, minTime, maxTime, maxTotalGaps]);
 
   const activeCombo = processedCombinations[currentComboIdx];
 
@@ -368,56 +386,6 @@ export default function App() {
             </div>
 
             
-            <div className="bg-[#FF9100] border-4 border-black p-6 neo-brutalist shadow-[4px_4px_0px_#111]">
-              <h2 className="text-2xl font-black uppercase mb-4 text-black bg-white inline-block px-2 border-2 border-black -rotate-2">Ajustes</h2>
-              
-              <div className="space-y-4 font-mono font-bold text-sm">
-                <div>
-                  <label className="block text-black uppercase mb-1">Ordenar por:</label>
-                  <select 
-                    value={sortBy} 
-                    onChange={e => setSortBy(e.target.value as any)}
-                    className="w-full p-2 border-2 border-black bg-white appearance-none outline-none focus:ring-0 shadow-[2px_2px_0px_#111] cursor-pointer"
-                  >
-                    <option value="default">Por defecto</option>
-                    <option value="compact">Menos horas hueco</option>
-                    <option value="free_days">Más días libres</option>
-                  </select>
-                </div>
-
-                <div className="space-y-3 pt-4 border-t-4 border-black border-dotted">
-                  <span className="block text-black uppercase mb-2">Filtros:</span>
-                  <label className="flex items-center gap-3 cursor-pointer group">
-                    <input 
-                      type="checkbox" 
-                      checked={filterFreeDays}
-                      onChange={e => setFilterFreeDays(e.target.checked)}
-                      className="w-5 h-5 border-2 border-black appearance-none checked:bg-black checked:before:content-['✓'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center transition-transform hover:-translate-y-0.5" 
-                    />
-                    <span className="text-sm">Exigir día libre</span>
-                  </label>
-                  <label className="flex items-center gap-3 cursor-pointer group">
-                    <input 
-                      type="checkbox" 
-                      checked={filterNoEarly}
-                      onChange={e => setFilterNoEarly(e.target.checked)}
-                      className="w-5 h-5 border-2 border-black appearance-none checked:bg-black checked:before:content-['✓'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center transition-transform hover:-translate-y-0.5" 
-                    />
-                    <span className="text-sm">Sin clases a las 7 AM</span>
-                  </label>
-                  <label className="flex items-center gap-3 cursor-pointer group">
-                    <input 
-                      type="checkbox" 
-                      checked={filterNoLate}
-                      onChange={e => setFilterNoLate(e.target.checked)}
-                      className="w-5 h-5 border-2 border-black appearance-none checked:bg-black checked:before:content-['✓'] checked:before:text-white checked:before:flex checked:before:items-center checked:before:justify-center transition-transform hover:-translate-y-0.5" 
-                    />
-                    <span className="text-sm">Sin clases de noche</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
             <div className="bg-[#2979FF] text-white neo-brutalist p-6 flex flex-col gap-2">
               <h2 className="text-2xl font-bold uppercase">Estado</h2>
               <div className="font-mono text-xl">
@@ -428,6 +396,86 @@ export default function App() {
           </aside>
 
           <section className="lg:col-span-3 space-y-6 min-w-0 overflow-hidden">
+            <div className="bg-[#FF9100] border-4 border-black p-4 md:p-6 neo-brutalist shadow-[4px_4px_0px_#111] font-mono">
+              <div className="flex flex-col xl:flex-row gap-6 justify-between items-start xl:items-center">
+                
+                <div className="space-y-2 flex-shrink-0">
+                  <label className="block text-black font-black uppercase text-sm">Ordenar Resultados</label>
+                  <select 
+                    value={sortBy} 
+                    onChange={e => setSortBy(e.target.value as any)}
+                    className="w-full xl:w-64 p-2 border-4 border-black bg-white appearance-none outline-none font-bold focus:ring-0 shadow-[4px_4px_0px_#111] cursor-pointer"
+                  >
+                    <option value="default">Por defecto</option>
+                    <option value="compact">Menos hrs hueco (Compacto)</option>
+                    <option value="free_days">Más días libres</option>
+                    <option value="start_late">Empezar más tarde</option>
+                    <option value="end_early">Terminar más temprano</option>
+                  </select>
+                </div>
+
+                <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <label className="block text-black font-black uppercase text-sm">Exigir Día Libre</label>
+                    <div className="flex gap-2">
+                      {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].map(d => (
+                        <button
+                          key={d}
+                          onClick={() => toggleWantedFreeDay(d)}
+                          className={cn(
+                            "p-2 border-2 border-black font-bold uppercase transition-transform w-[40px] text-center",
+                            wantedFreeDays.includes(d) 
+                              ? "bg-black text-white shadow-[2px_2px_0px_#111] translate-y-0.5" 
+                              : "bg-white hover:bg-gray-100 shadow-[2px_2px_0px_#111]"
+                          )}
+                          title={"Exigir " + d + " libre"}
+                        >
+                          {d.charAt(0)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-black font-black uppercase text-sm">Rango Horario Permitido</label>
+                    <div className="flex flex-col gap-2">
+                       <div className="flex items-center gap-2">
+                         <span className="text-xs font-bold w-12">Desde</span>
+                         <input type="time" min="07:00" max="21:00" step="1800"
+                           value={String(Math.floor(minTime/60)).padStart(2,'0') + ":" + String(minTime%60).padStart(2,'0')}
+                           onChange={(e) => { const [h,m] = e.target.value.split(':').map(Number); setMinTime(h*60+m); }}
+                           className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
+                         />
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <span className="text-xs font-bold w-12">Hasta</span>
+                         <input type="time" min="07:00" max="21:00" step="1800"
+                           value={String(Math.floor(maxTime/60)).padStart(2,'0') + ":" + String(maxTime%60).padStart(2,'0')}
+                           onChange={(e) => { const [h,m] = e.target.value.split(':').map(Number); setMaxTime(h*60+m); }}
+                           className="border-2 border-black px-2 py-1 flex-1 bg-white font-bold outline-none font-mono"
+                         />
+                       </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-black font-black uppercase text-sm">Max Horas (Huecos/Semana)</label>
+                    <div className="flex items-center gap-4 h-full pb-3">
+                      <input 
+                        type="range" min="0" max="720" step="60" 
+                        value={maxTotalGaps} 
+                        onChange={e => setMaxTotalGaps(Number(e.target.value))} 
+                        className="w-full accent-black cursor-pointer" 
+                      />
+                      <span className="font-extrabold text-black w-14 text-right">
+                        {maxTotalGaps >= 720 ? "Libre" : (maxTotalGaps / 60).toFixed(0) + "h"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {processedCombinations.length === 0 ? (
               <div className="bg-white neo-brutalist p-12 text-center">
                 <h2 className="text-4xl text-gray-300 font-bold uppercase mb-4">
@@ -499,25 +547,25 @@ function getScheduleMetrics(combo: ScheduleCombination) {
     }
   }
 
-  let freeDaysCount = 0;
+  let freeDays: string[] = [];
   let totalGapsMinutes = 0;
-  let hasEarlyClasses = false;
-  let hasLateClasses = false;
+  let earliestStart = 24 * 60;
+  let latestEnd = 0;
 
-  for (const [, sessions] of Object.entries(daysMap)) {
+  for (const [day, sessions] of Object.entries(daysMap)) {
     if (sessions.length === 0) {
-      freeDaysCount++;
+      freeDays.push(day);
       continue;
     }
 
     sessions.sort((a, b) => a.start - b.start);
 
-    if (sessions[0].start < 8 * 60) {
-      hasEarlyClasses = true;
+    if (sessions[0].start < earliestStart) {
+      earliestStart = sessions[0].start;
     }
 
-    if (sessions[sessions.length - 1].end > 19 * 60) {
-      hasLateClasses = true;
+    if (sessions[sessions.length - 1].end > latestEnd) {
+      latestEnd = sessions[sessions.length - 1].end;
     }
 
     for (let i = 1; i < sessions.length; i++) {
@@ -528,7 +576,9 @@ function getScheduleMetrics(combo: ScheduleCombination) {
     }
   }
 
-  return { freeDaysCount, totalGapsMinutes, hasEarlyClasses, hasLateClasses };
+  if (earliestStart === 24 * 60) earliestStart = 0;
+
+  return { freeDays, totalGapsMinutes, earliestStart, latestEnd };
 }
 
 function checkSessionOverlap(s1: any, s2: any): boolean {

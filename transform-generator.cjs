@@ -1,5 +1,5 @@
-const fs = require('fs');
-let content = fs.readFileSync('src/App.tsx', 'utf-8');
+const fs = require("fs");
+let content = fs.readFileSync("src/App.tsx", "utf-8");
 
 // 1. Add getScheduleMetrics right above checkSessionOverlap
 const getMetricsFunc = `
@@ -54,7 +54,10 @@ function getScheduleMetrics(combo: ScheduleCombination) {
 }
 `;
 
-content = content.replace('function checkSessionOverlap(', getMetricsFunc + '\nfunction checkSessionOverlap(');
+content = content.replace(
+  "function checkSessionOverlap(",
+  getMetricsFunc + "\nfunction checkSessionOverlap(",
+);
 
 // 2. Add state inside App()
 const stateBlock = `  const [viewMode, setViewMode] = useState<"generator" | "all_schedules">("generator");
@@ -69,7 +72,10 @@ const stateBlock = `  const [viewMode, setViewMode] = useState<"generator" | "al
     setCurrentComboIdx(0);
   }, [sortBy, filterFreeDays, filterNoEarly, filterNoLate]);`;
 
-content = content.replace(/const \[viewMode[\s\S]*?useState<[\s\S]*?>\([\s\S]*?\);/, stateBlock);
+content = content.replace(
+  /const \[viewMode[\s\S]*?useState<[\s\S]*?>\([\s\S]*?\);/,
+  stateBlock,
+);
 
 // 3. Process combinations
 const processBlock = `const combinations = useMemo(() => {
@@ -103,10 +109,16 @@ const processBlock = `const combinations = useMemo(() => {
 
   const activeCombo = processedCombinations[currentComboIdx];`;
 
-content = content.replace(/const combinations = useMemo\(\(\) => \{[\s\S]*?const activeCombo = combinations\[currentComboIdx\];/, processBlock);
+content = content.replace(
+  /const combinations = useMemo\(\(\) => \{[\s\S]*?const activeCombo = combinations\[currentComboIdx\];/,
+  processBlock,
+);
 
 // 4. Update combinations.length -> processedCombinations.length inside the App TSX specific scope.
-content = content.replace(/combinations\.length/g, 'processedCombinations.length');
+content = content.replace(
+  /combinations\.length/g,
+  "processedCombinations.length",
+);
 // Also fix a potential bug if we replaced the map one that shouldn't be touched. There's none.
 
 // 5. Add Filters UI
@@ -164,7 +176,10 @@ const filtersUI = `
             <div className="bg-[#2979FF] text-white neo-brutalist p-6 flex flex-col gap-2">`;
 
 // Targeting the State panel opening
-content = content.replace('<div className="bg-[#2979FF] text-white neo-brutalist p-6 flex flex-col gap-2">', filtersUI);
+content = content.replace(
+  '<div className="bg-[#2979FF] text-white neo-brutalist p-6 flex flex-col gap-2">',
+  filtersUI,
+);
 
-fs.writeFileSync('src/App.tsx', content);
-console.log('App updated with filters!');
+fs.writeFileSync("src/App.tsx", content);
+console.log("App updated with filters!");
