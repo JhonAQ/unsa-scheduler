@@ -56,7 +56,9 @@ export default function App() {
   // Tabs: "generator", "my_schedules", "global_schedules", "social"
   const [viewMode, setViewMode] = useState<
     "generator" | "my_schedules" | "global_schedules" | "social"
-  >("generator");
+  >(() => {
+    return localStorage.getItem("unsa_selected_courses") ? "social" : "generator";
+  });
 
   // LocalStorage state for selected courses
   const [mySelectedCourseNames, setMySelectedCourseNames] = useState<string[]>(
