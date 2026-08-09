@@ -8,7 +8,7 @@
           "total_sesiones_semanales": 2,
           "sesiones": [
             { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "11:30", "hora_fin": "13:10" },
-            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "14:50", "hora_fin": "16:40" }
+            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "15:50", "hora_fin": "17:30" }
           ]
         },
         {
@@ -107,7 +107,7 @@
           "seccion": "A",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "07:50", "hora_fin": "09:40" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "07:00", "hora_fin": "09:40" },
             { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "11:30", "hora_fin": "13:10" }
           ]
         },
@@ -115,7 +115,7 @@
           "seccion": "B",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "16:40" },
             { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "17:40", "hora_fin": "19:20" }
           ]
         },
@@ -124,7 +124,7 @@
           "total_sesiones_semanales": 2,
           "sesiones": [
             { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "18:30", "hora_fin": "20:10" },
-            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "17:40", "hora_fin": "19:20" }
+            { "tipo": "Teoria", "dia": "Martes", "hora_inicio": "17:40", "hora_fin": "20:10" }
           ]
         }
       ]
@@ -177,7 +177,7 @@
           "seccion": "F",
           "total_sesiones_semanales": 1,
           "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "13:10", "hora_fin": "14:50" }
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
           ]
         }
       ]
@@ -189,7 +189,7 @@
           "seccion": "A",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "09:40" },
             { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "14:00", "hora_fin": "15:40" }
           ]
         },
@@ -197,7 +197,7 @@
           "seccion": "B",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" },
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "16:40" },
             { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" }
           ]
         },
@@ -205,8 +205,8 @@
           "seccion": "C",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" },
-            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" }
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "09:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "14:50", "hora_fin": "16:40" }
           ]
         },
         {
@@ -239,16 +239,16 @@
           "seccion": "A",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" },
-            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" }
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "09:40" },
+            { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "09:40", "hora_fin": "11:30" }
           ]
         },
         {
           "seccion": "B",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "15:50", "hora_fin": "17:30" },
-            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "17:40", "hora_fin": "19:20" }
+            { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "15:50", "hora_fin": "18:30" },
+            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "18:30", "hora_fin": "20:10" }
           ]
         },
         {
@@ -288,7 +288,7 @@
           "seccion": "A",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "09:40" },
             { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "10:40", "hora_fin": "12:20" }
           ]
         },
@@ -296,7 +296,7 @@
           "seccion": "B",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "16:40", "hora_fin": "18:30" },
+            { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "16:40", "hora_fin": "19:20" },
             { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "14:00", "hora_fin": "15:40" }
           ]
         },
@@ -346,7 +346,7 @@
           "total_sesiones_semanales": 2,
           "sesiones": [
             { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" },
-            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "08:50", "hora_fin": "10:30" }
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "09:40", "hora_fin": "11:30" }
           ]
         },
         {
@@ -375,7 +375,7 @@
           "seccion": "F",
           "total_sesiones_semanales": 1,
           "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "11:30", "hora_fin": "13:10" }
+            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "12:20", "hora_fin": "14:00" }
           ]
         }
       ]
