@@ -1,12 +1,29 @@
-import { useState, useMemo, useEffect } from "react";
-import type { Course } from "../lib/types";
-import { generateSchedules } from "../lib/scheduler";
+import { useState, useMemo, useEffect, useRef } from "react";
+import type { Course, ScheduleCombination } from "../lib/types";
 import { getScheduleMetrics, COLORS } from "../utils/scheduler";
+import SchedulerWorker from "../workers/scheduler.worker?worker";
+import type {
+  SchedulerWorkerInput,
+  SchedulerWorkerOutput,
+} from "../workers/scheduler.worker";
 
-export type SortOrder = "default" | "compact" | "free_days" | "start_late" | "end_early";
+export type SortOrder =
+  | "default"
+  | "compact"
+  | "free_days"
+  | "start_late"
+  | "end_early";
 
-export function useScheduleGenerator(activeCourses: Course[], allCourses: Course[]) {
+const MAX_COMBINATIONS = 5000;
+
+export function useScheduleGenerator(
+  activeCourses: Course[],
+  allCourses: Course[],
+) {
   const [currentComboIdx, setCurrentComboIdx] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [combinations, setCombinations] = useState<ScheduleCombination[]>([]);
+  const [truncated, setTruncated] = useState(false);
 
   const [sortBy, setSortBy] = useState<SortOrder>("default");
   const [wantedFreeDays, setWantedFreeDays] = useState<string[]>([]);
@@ -14,20 +31,53 @@ export function useScheduleGenerator(activeCourses: Course[], allCourses: Course
   const [maxTime, setMaxTime] = useState<number>(20 * 60 + 10); // 20:10
   const [maxTotalGaps, setMaxTotalGaps] = useState<number>(12 * 60); // Max hours empty
 
+  const workerRef = useRef<Worker | null>(null);
+
   // Restart combo idx when filters change
   useEffect(() => {
     setCurrentComboIdx(0);
   }, [sortBy, wantedFreeDays, minTime, maxTime, maxTotalGaps, activeCourses]);
+
+  // Generate schedules in a Web Worker so the UI thread never freezes,
+  // even when the new JSONs produce tens of thousands of combinations.
+  useEffect(() => {
+    workerRef.current?.terminate();
+
+    setIsGenerating(true);
+    const worker = new SchedulerWorker();
+    workerRef.current = worker;
+
+    worker.postMessage({
+      activeCourses,
+      maxCombinations: MAX_COMBINATIONS,
+    } satisfies SchedulerWorkerInput);
+
+    worker.onmessage = (event: MessageEvent<SchedulerWorkerOutput>) => {
+      setCombinations(event.data.combinations);
+      setTruncated(event.data.truncated);
+      setIsGenerating(false);
+      worker.terminate();
+      workerRef.current = null;
+    };
+
+    worker.onerror = (error) => {
+      console.error("Scheduler worker failed:", error);
+      setIsGenerating(false);
+      worker.terminate();
+      workerRef.current = null;
+    };
+
+    return () => {
+      worker.terminate();
+      workerRef.current = null;
+    };
+  }, [activeCourses]);
 
   const toggleWantedFreeDay = (day: string) => {
     setWantedFreeDays((prev) =>
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     );
   };
-
-  const combinations = useMemo(() => {
-    return generateSchedules(activeCourses);
-  }, [activeCourses]);
 
   const processedCombinations = useMemo(() => {
     let processed = combinations.map((combo) => ({
@@ -134,5 +184,7 @@ export function useScheduleGenerator(activeCourses: Course[], allCourses: Course
     processedCombinations,
     activeComboSessions,
     resetComboIdx,
+    isGenerating,
+    truncated,
   };
 }

@@ -64,7 +64,24 @@ export default function App() {
   const [mySelectedCourseNames, setMySelectedCourseNames] = useState<string[]>(
     () => {
       const stored = localStorage.getItem("unsa_selected_courses");
-      return stored ? JSON.parse(stored) : [];
+      if (!stored) return [];
+      try {
+        const parsed = JSON.parse(stored) as string[];
+        const validNames = new Set(getAllCoursesFlat().map((c) => c.curso));
+        const filtered = parsed.filter((name) => validNames.has(name));
+        // If some stored courses no longer exist (new academic period),
+        // update localStorage so we don't start with an empty selection.
+        if (filtered.length !== parsed.length) {
+          localStorage.setItem(
+            "unsa_selected_courses",
+            JSON.stringify(filtered),
+          );
+        }
+        return filtered;
+      } catch {
+        localStorage.removeItem("unsa_selected_courses");
+        return [];
+      }
     },
   );
 
@@ -111,6 +128,8 @@ export default function App() {
     currentComboIdx,
     setCurrentComboIdx,
     resetComboIdx,
+    isGenerating,
+    truncated,
   } = useScheduleGenerator(activeCourses, courses);
 
   const handleToggleCourse = (curso: string) => {
@@ -229,7 +248,17 @@ export default function App() {
             />
 
             <section className="lg:col-span-3 flex flex-col min-h-0 space-y-4">
-              {processedCombinations.length === 0 ? (
+              {isGenerating ? (
+                <div className="bg-white neo-brutalist p-12 text-center border-4 border-black shadow-[8px_8px_0px_#111] flex-1 flex flex-col items-center justify-center">
+                  <h2 className="text-4xl text-[#2979FF] font-bold uppercase mb-4 animate-pulse">
+                    Generando Horarios...
+                  </h2>
+                  <p className="font-mono text-gray-500">
+                    Esto puede tardar unos segundos si seleccionaste muchos
+                    cursos.
+                  </p>
+                </div>
+              ) : processedCombinations.length === 0 ? (
                 <div className="bg-white neo-brutalist p-12 text-center border-4 border-black shadow-[8px_8px_0px_#111] flex-1 flex flex-col items-center justify-center">
                   <h2 className="text-4xl text-gray-300 font-bold uppercase mb-4">
                     Cruces o Sin Opciones
@@ -255,6 +284,7 @@ export default function App() {
                       <span className="uppercase whitespace-nowrap">
                         Opción {currentComboIdx + 1} de{" "}
                         {processedCombinations.length}
+                        {truncated && "+"}
                       </span>
                       <button
                         disabled={
@@ -267,6 +297,15 @@ export default function App() {
                       </button>
                     </div>
                   </div>
+
+                  {truncated && (
+                    <div className="bg-[#FFEA00] border-2 border-black px-3 py-2 mb-3 font-mono text-xs font-bold shrink-0">
+                      Se encontraron más de {processedCombinations.length}{" "}
+                      opciones. Mostrando las primeras para no congelar el
+                      navegador. Prueba excluir algunas secciones para reducir
+                      la búsqueda.
+                    </div>
+                  )}
 
                   <div className="overflow-x-auto border-4 border-black box-border shadow-[4px_4px_0px_#111] flex-1">
                     <div className="min-w-[800px] h-full relative">

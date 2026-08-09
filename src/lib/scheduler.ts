@@ -38,67 +38,112 @@ function doesSectionConflict(
   return false;
 }
 
-export function generateSchedules(courses: Course[]): ScheduleCombination[] {
-  if (courses.length === 0) return [];
-  
-  const results: ScheduleCombination[] = [];
+export type GenerateSchedulesResult = {
+  combinations: ScheduleCombination[];
+  truncated: boolean;
+};
 
-  function backtrack(index: number, currentSelection: Record<string, CourseSelection>) {
-    if (index === courses.length) {
-      const idStrParts = [];
-      for (const courseName in currentSelection) {
-        const sel = currentSelection[courseName];
-        let p = "";
-        if (sel.teoria) p += `T:${sel.teoria.seccion}`;
-        if (sel.laboratorio) p += `L:${sel.laboratorio.seccion}`;
-        idStrParts.push(p);
+type SelectionOption = {
+  teoria?: Seccion;
+  laboratorio?: Seccion;
+};
+
+function getValidOptions(
+  course: Course,
+  currentSelection: Record<string, CourseSelection>,
+): SelectionOption[] {
+  const teoriaOptions =
+    course.teorias.length > 0 ? course.teorias : [undefined];
+  const labOptions =
+    course.laboratorios.length > 0 ? course.laboratorios : [undefined];
+
+  const options: SelectionOption[] = [];
+  for (const teoria of teoriaOptions) {
+    if (teoria && doesSectionConflict(teoria, currentSelection)) continue;
+
+    for (const lab of labOptions) {
+      if (lab && doesSectionConflict(lab, currentSelection)) continue;
+
+      if (teoria || lab) {
+        options.push({
+          ...(teoria ? { teoria } : {}),
+          ...(lab ? { laboratorio: lab } : {}),
+        });
       }
-      const id = idStrParts.join("-");
-      results.push({
-        id,
-        selection: { ...currentSelection }, // clone
-      });
-      return;
-    }
-
-    const currentCourse = courses[index];
-    
-    const teoriaOptions = currentCourse.teorias.length > 0 ? currentCourse.teorias : [undefined];
-    const labOptions = currentCourse.laboratorios.length > 0 ? currentCourse.laboratorios : [undefined];
-
-    for (const teoria of teoriaOptions) {
-      if (teoria && doesSectionConflict(teoria, currentSelection)) continue;
-      
-      // Temporarily add theory
-      if (teoria) {
-        currentSelection[currentCourse.curso] = { teoria };
-      }
-
-      for (const lab of labOptions) {
-        if (lab && doesSectionConflict(lab, currentSelection)) continue;
-        
-        if (teoria || lab) {
-          currentSelection[currentCourse.curso] = {
-            ...(teoria ? { teoria } : {}),
-            ...(lab ? { laboratorio: lab } : {})
-          };
-        }
-
-        backtrack(index + 1, currentSelection);
-        
-        // Backtrack
-        if (teoria) {
-          currentSelection[currentCourse.curso] = { teoria };
-        } else {
-          delete currentSelection[currentCourse.curso];
-        }
-      }
-      
-      // Backtrack theory
-      delete currentSelection[currentCourse.curso];
     }
   }
+  return options;
+}
 
-  backtrack(0, {});
-  return results;
+function buildCombinationId(
+  currentSelection: Record<string, CourseSelection>,
+): string {
+  const idStrParts = [];
+  for (const courseName in currentSelection) {
+    const sel = currentSelection[courseName];
+    let p = "";
+    if (sel.teoria) p += `T:${sel.teoria.seccion}`;
+    if (sel.laboratorio) p += `L:${sel.laboratorio.seccion}`;
+    idStrParts.push(p);
+  }
+  return idStrParts.join("-");
+}
+
+export function generateSchedules(
+  courses: Course[],
+  maxCombinations = 5000,
+): GenerateSchedulesResult {
+  if (courses.length === 0) return { combinations: [], truncated: false };
+
+  const results: ScheduleCombination[] = [];
+  let truncated = false;
+
+  function backtrack(remaining: Course[]) {
+    return function explore(
+      currentSelection: Record<string, CourseSelection>,
+    ) {
+      if (results.length >= maxCombinations) {
+        truncated = true;
+        return;
+      }
+
+      if (remaining.length === 0) {
+        results.push({
+          id: buildCombinationId(currentSelection),
+          selection: { ...currentSelection },
+        });
+        return;
+      }
+
+      // Dynamic MRV: pick the course with the fewest valid options first.
+      let bestIdx = -1;
+      let bestOptions: SelectionOption[] = [];
+      let bestCount = Infinity;
+
+      for (let i = 0; i < remaining.length; i++) {
+        const options = getValidOptions(remaining[i], currentSelection);
+        if (options.length < bestCount) {
+          bestCount = options.length;
+          bestOptions = options;
+          bestIdx = i;
+          if (options.length === 0) break; // dead end, no need to keep searching
+        }
+      }
+
+      if (bestCount === 0) return;
+
+      const [nextCourse] = remaining.splice(bestIdx, 1);
+
+      for (const option of bestOptions) {
+        currentSelection[nextCourse.curso] = option;
+        backtrack(remaining)(currentSelection);
+        delete currentSelection[nextCourse.curso];
+      }
+
+      remaining.splice(bestIdx, 0, nextCourse);
+    };
+  }
+
+  backtrack([...courses])({});
+  return { combinations: results, truncated };
 }
