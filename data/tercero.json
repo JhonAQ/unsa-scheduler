@@ -174,8 +174,8 @@
 "seccion": "B",
 "total_sesiones_semanales": 2,
 "sesiones": [
-{ "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "19:20" },
-{ "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "15:50", "hora_fin": "17:30" }
+{ "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "17:40", "hora_fin": "20:10" },
+{ "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "16:40", "hora_fin": "18:30" }
 ]
 },
 {
