@@ -31,8 +31,8 @@
           "seccion": "D",
           "total_sesiones_semanales": 2,
           "sesiones": [
-            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" },
-            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "08:40" }
+            { "tipo": "Teoria", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "09:40" },
+            { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "07:00", "hora_fin": "10:30" }
           ]
         },
         {
