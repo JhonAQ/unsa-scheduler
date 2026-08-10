@@ -213,7 +213,7 @@
 "seccion": "C",
 "total_sesiones_semanales": 3,
 "sesiones": [
-{ "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "17:40", "hora_fin": "19:20" },
+{ "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "18:30", "hora_fin": "20:10" },
 { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "07:00", "hora_fin": "08:40" },
 { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "08:50", "hora_fin": "10:30" }
 ]
