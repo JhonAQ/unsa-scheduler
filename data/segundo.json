@@ -263,13 +263,6 @@
 "sesiones": [
 { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "16:40" }
 ]
-},
-{
-"seccion": "C",
-"total_sesiones_semanales": 1,
-"sesiones": [
-{ "tipo": "Teoria", "dia": "Martes", "hora_inicio": "09:40", "hora_fin": "12:20" }
-]
 }
 ]
 }
