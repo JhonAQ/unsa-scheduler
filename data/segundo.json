@@ -124,7 +124,7 @@
 "sesiones": [
 { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "11:30", "hora_fin": "13:10" },
 { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" },
-{ "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "7:50", "hora_fin": "9:40" }
+{ "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "07:50", "hora_fin": "09:40" }
 ]
 },
 {
