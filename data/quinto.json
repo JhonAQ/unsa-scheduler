@@ -148,7 +148,7 @@
           "seccion": "C",
           "total_sesiones_semanales": 1,
           "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "15:40", "hora_fin": "17:30" }
+            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "15:50", "hora_fin": "17:30" }
           ]
         },
         {
