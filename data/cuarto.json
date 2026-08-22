@@ -158,13 +158,6 @@
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "08:50", "hora_fin": "10:30" }
           ]
-        },
-        {
-          "seccion": "F",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
-          ]
         }
       ]
     },
@@ -192,13 +185,6 @@
           "total_sesiones_semanales": 2,
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "14:50", "hora_fin": "16:40" }
-          ]
-        },
-        {
-          "seccion": "D",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "09:40", "hora_fin": "11:30" }
           ]
         }
       ]
@@ -228,13 +214,6 @@
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "10:40", "hora_fin": "12:20" }
           ]
-        },
-        {
-          "seccion": "D",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "13:10", "hora_fin": "14:50" }
-          ]
         }
       ]
     },
@@ -262,13 +241,6 @@
           "total_sesiones_semanales": 1,
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "10:40", "hora_fin": "12:20" }
-          ]
-        },
-        {
-          "seccion": "D",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "14:00", "hora_fin": "15:40" }
           ]
         }
       ]
@@ -312,13 +284,6 @@
           "total_sesiones_semanales": 1,
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "18:30", "hora_fin": "20:10" }
-          ]
-        },
-        {
-          "seccion": "F",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "12:20", "hora_fin": "14:00" }
           ]
         }
       ]
