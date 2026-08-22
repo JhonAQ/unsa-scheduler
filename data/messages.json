@@ -12,5 +12,26 @@
     "amount": "S/ 15.00",
     "msg": "muy bueno",
     "color": "bg-[#00E5FF]"
+  },
+    {
+    "id": 3,
+    "name": "Segundo mensajeee graciaaasss",
+    "amount": "S/ 6.00",
+    "msg": "aporte humilde porque ando sin plata",
+    "color": "bg-[#00E5FF]"
+  },
+    {
+    "id": 4,
+    "name": "Con este se completa el menú :'D",
+    "amount": "S/ 2.00",
+    "msg": "pasa el github desde la page ps",
+    "color": "bg-[#00E5FF]"
+  },
+    {
+    "id": 5,
+    "name": "Se agradece",
+    "amount": "S/ 0.50",
+    "msg": "",
+    "color": "bg-[#00E5FF]"
   }
 ]
