@@ -89,7 +89,7 @@
 "total_sesiones_semanales": 2,
 "sesiones": [
 { "tipo": "Teoria", "dia": "Jueves", "hora_inicio": "10:40", "hora_fin": "13:10" },
-{ "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "11:30", "hora_fin": "13:10" }
+{ "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" }
 ]
 },
 {
@@ -124,7 +124,7 @@
 "sesiones": [
 { "tipo": "Teoria", "dia": "Miercoles", "hora_inicio": "11:30", "hora_fin": "13:10" },
 { "tipo": "Teoria", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" },
-{ "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "10:40", "hora_fin": "12:20" }
+{ "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "7:50", "hora_fin": "9:40" }
 ]
 },
 {
@@ -156,7 +156,7 @@
 "seccion": "E",
 "total_sesiones_semanales": 1,
 "sesiones": [
-{ "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "10:40", "hora_fin": "12:20" }
+{ "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "10:40", "hora_fin": "12:20" }
 ]
 },
 {
