@@ -83,13 +83,6 @@
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Lunes", "hora_inicio": "07:00", "hora_fin": "08:40" }
           ]
-        },
-        {
-          "seccion": "F",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Viernes", "hora_inicio": "08:50", "hora_fin": "10:30" }
-          ]
         }
       ]
     },
