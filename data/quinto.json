@@ -185,13 +185,6 @@
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" }
           ]
-        },
-        {
-          "seccion": "D",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Jueves", "hora_inicio": "14:00", "hora_fin": "15:40" }
-          ]
         }
       ]
     },
@@ -247,13 +240,6 @@
           "total_sesiones_semanales": 1,
           "sesiones": [
             { "tipo": "Laboratorio", "dia": "Miercoles", "hora_inicio": "14:00", "hora_fin": "15:40" }
-          ]
-        },
-        {
-          "seccion": "D",
-          "total_sesiones_semanales": 1,
-          "sesiones": [
-            { "tipo": "Laboratorio", "dia": "Martes", "hora_inicio": "07:00", "hora_fin": "08:40" }
           ]
         }
       ]
